@@ -146,6 +146,7 @@
     <ClInclude Include="gpftw_array_view.h" />
     <ClInclude Include="gpftw_ascii_color.h" />
     <ClInclude Include="gpftw_ascii_screen.h" />
+    <ClInclude Include="gpftw_error.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ascii_screen.cpp" />

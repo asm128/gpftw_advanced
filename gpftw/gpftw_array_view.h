@@ -14,8 +14,8 @@ namespace gpftw
 
 	public:
 		// Constructors
-											array_view					()															= default;
-											array_view					(_tElement* data, uint32_t size)							: Data(data), Size(size) {
+		inline constexpr					array_view					()															= default;
+		inline								array_view					(_tElement* data, uint32_t size)							: Data(data), Size(size) {
 			if(0 == data && 0 != size)	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 				throw(::std::exception("Invalid parameters."));
 		}

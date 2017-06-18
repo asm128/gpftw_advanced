@@ -27,6 +27,9 @@
     <ClInclude Include="gpftw_array_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpftw_error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ascii_screen.cpp">
