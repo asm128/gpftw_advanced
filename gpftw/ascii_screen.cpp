@@ -109,6 +109,7 @@ void									initWindowsConsoleProperties			(int width, int height, const uint32
 	::free(console.Palette		.begin());	// Release memory back to the system so it can be reused by us or other programs.
 	console.Colors							= {};
 	console.Characters						= {};
+	console.Palette							= {};
 
 	::gpftw_isConsoleCreated					= false;	// set this to false so we can create it back later if we want to.
 	return 0;	// these functions hardly fail.
@@ -156,7 +157,7 @@ void									initWindowsConsoleProperties			(int width, int height, const uint32
 	if(0 == console.Colors.size() || 0 == console.Characters.size())
 		return -1; // return an error value
 
-	initWindowsConsoleProperties(console.Width, console.Height, &console.Palette[0]);
+	::initWindowsConsoleProperties(console.Width, console.Height, &console.Palette[0]);
 
 	int											screenSize				= console.Width * console.Height;
 
@@ -177,7 +178,7 @@ void									initWindowsConsoleProperties			(int width, int height, const uint32
 	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);
 	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);
 
-	const ::HANDLE								hConsoleOut				= GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle
+	const ::HANDLE								hConsoleOut				= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle
 	::CONSOLE_SCREEN_BUFFER_INFO				csbiInfo				= {};
     ::GetConsoleScreenBufferInfo( hConsoleOut, &csbiInfo );
 

@@ -1,5 +1,5 @@
-#include "gpftw_array_view.h"
-#include "gpftw_error.h"
+#include "gpftw_array_view.h"	// for array_view<>
+#include "gpftw_error.h"		// for error_t and failed()
 
 #ifndef GPFTW_ASCII_SCREEN_H
 #define GPFTW_ASCII_SCREEN_H
