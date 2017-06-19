@@ -22,10 +22,10 @@ void													update								(::SApplication& applicationInstance)				{ ++appl
 void													draw								(::SApplication& applicationInstance)				{	
 	// This function now will draw some coloured symbols in each cell of the ASCII screen.
 	::gpftw::SASCIIScreen										&asciiTarget						= applicationInstance.ASCIIScreen;
-	uint32_t													color0								= (0xFF & applicationInstance.FrameCounter * 1) | ((0xFF & applicationInstance.FrameCounter * 17) << 8) | ((0xFF & applicationInstance.FrameCounter * 19) << 16);
-	uint32_t													color1								= (0xFF & applicationInstance.FrameCounter * 2) | ((0xFF & applicationInstance.FrameCounter * 13) << 8) | ((0xFF & applicationInstance.FrameCounter * 31) << 16);
-	uint32_t													color2								= (0xFF & applicationInstance.FrameCounter * 3) | ((0xFF & applicationInstance.FrameCounter * 11) << 8) | ((0xFF & applicationInstance.FrameCounter * 29) << 16);
-	uint32_t													color3								= (0xFF & applicationInstance.FrameCounter * 5) | ((0xFF & applicationInstance.FrameCounter *  7) << 8) | ((0xFF & applicationInstance.FrameCounter * 23) << 16);
+	uint32_t													color0								= (0xFF & applicationInstance.FrameCounter * 1) | ((0xFF & applicationInstance.FrameCounter * 2) << 8) | ((0xFF & applicationInstance.FrameCounter * 5) << 16);
+	uint32_t													color1								= (0xFF & applicationInstance.FrameCounter * 2) | ((0xFF & applicationInstance.FrameCounter * 1) << 8) | ((0xFF & applicationInstance.FrameCounter * 3) << 16);
+	uint32_t													color2								= (0xFF & applicationInstance.FrameCounter * 3) | ((0xFF & applicationInstance.FrameCounter * 5) << 8) | ((0xFF & applicationInstance.FrameCounter * 2) << 16);
+	uint32_t													color3								= (0xFF & applicationInstance.FrameCounter * 5) | ((0xFF & applicationInstance.FrameCounter * 3) << 8) | ((0xFF & applicationInstance.FrameCounter * 1) << 16);
 	asciiTarget.Palette[::gpftw::ASCII_COLOR_INDEX_0]		= color0;
 	asciiTarget.Palette[::gpftw::ASCII_COLOR_INDEX_1]		= color1;
 	asciiTarget.Palette[::gpftw::ASCII_COLOR_INDEX_2]		= color2;

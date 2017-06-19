@@ -89,9 +89,9 @@ void									initWindowsConsoleProperties			(int width, int height, const uint32
 	// thus they're all 0 when we call SetConsoleScreenBufferInfoEx() causing all the colors to be reset to COLOR_BLACK.
 	// Ideally we would have a setConsoleColors() function to do this separately.
 	for(uint32_t iColor = 0; iColor < 16; ++iColor)
-		csbiInfo.ColorTable[iColor]					= palette[iColor];
+		csbiInfo.ColorTable[iColor]				= palette[iColor];
 
-	csbiInfo.wAttributes					= COLOR_WHITE	;
+	csbiInfo.wAttributes					= ::gpftw::ASCII_COLOR_INDEX_15;
 	
 	::SetConsoleScreenBufferInfoEx( hConsoleOut, &csbiInfo );
 }
@@ -104,9 +104,9 @@ void									initWindowsConsoleProperties			(int width, int height, const uint32
 
 	::FreeConsole();	// Tells Windows to close the console
 
-	::free(console.Colors		.begin());	// Release memory back to the system so it can be reused by us or other programs.
-	::free(console.Characters	.begin());	// Release memory back to the system so it can be reused by us or other programs.
-	::free(console.Palette		.begin());	// Release memory back to the system so it can be reused by us or other programs.
+	::free(console.Colors		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
+	::free(console.Characters	.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
+	::free(console.Palette		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
 	console.Colors							= {};
 	console.Characters						= {};
 	console.Palette							= {};
@@ -119,25 +119,25 @@ void									initWindowsConsoleProperties			(int width, int height, const uint32
 	if(::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
-	console.Width							= width							;
-	console.Height							= height						;
+	console.Width							= width		;
+	console.Height							= height	;
 	console.Palette							= ::gpftw::array_view<uint32_t>((uint32_t*)::malloc(sizeof(uint32_t) * 16), 16);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
-	console.Palette[0 ]						= COLOR_0	;
-	console.Palette[1 ]						= COLOR_1	;
-	console.Palette[2 ]						= COLOR_2	;
-	console.Palette[3 ]						= COLOR_3	;
-	console.Palette[4 ]						= COLOR_4	;
-	console.Palette[5 ]						= COLOR_5	;
-	console.Palette[6 ]						= COLOR_6	;
-	console.Palette[7 ]						= COLOR_7	;
-	console.Palette[8 ]						= COLOR_8	;
-	console.Palette[9 ]						= COLOR_9	;
-	console.Palette[10]						= COLOR_10	;
-	console.Palette[11]						= COLOR_11	;
-	console.Palette[12]						= COLOR_12	;
-	console.Palette[13]						= COLOR_13	;
-	console.Palette[14]						= COLOR_14	;
-	console.Palette[15]						= COLOR_15	;
+	console.Palette[0 ]						= ::gpftw::ASCII_COLOR_BLACK		;
+	console.Palette[1 ]						= ::gpftw::ASCII_COLOR_DARKBLUE		;
+	console.Palette[2 ]						= ::gpftw::ASCII_COLOR_DARKGREEN	;
+	console.Palette[3 ]						= ::gpftw::ASCII_COLOR_DARKCYAN		;
+	console.Palette[4 ]						= ::gpftw::ASCII_COLOR_DARKRED		;
+	console.Palette[5 ]						= ::gpftw::ASCII_COLOR_DARKMAGENTA	;
+	console.Palette[6 ]						= ::gpftw::ASCII_COLOR_DARKYELLOW	;
+	console.Palette[7 ]						= ::gpftw::ASCII_COLOR_LIGHTGREY	;
+	console.Palette[8 ]						= ::gpftw::ASCII_COLOR_DARKGREY		;
+	console.Palette[9 ]						= ::gpftw::ASCII_COLOR_BLUE			;
+	console.Palette[10]						= ::gpftw::ASCII_COLOR_GREEN		;
+	console.Palette[11]						= ::gpftw::ASCII_COLOR_CYAN			;
+	console.Palette[12]						= ::gpftw::ASCII_COLOR_RED			;
+	console.Palette[13]						= ::gpftw::ASCII_COLOR_MAGENTA		;
+	console.Palette[14]						= ::gpftw::ASCII_COLOR_YELLOW		;
+	console.Palette[15]						= ::gpftw::ASCII_COLOR_WHITE		;
 
 	::initWindowsConsole();
 	::initWindowsConsoleFont();
