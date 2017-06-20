@@ -8,8 +8,7 @@
 
 #include "tilemap.h"
 
-#include <stdio.h>      // for printf()
-#include <crtdbg.h>      // for printf()
+#include <crtdbg.h>      // for _CrtSetDbgFlag()
 #include <windows.h>    // for interacting with Windows
 
 static constexpr		const int										SCREEN_WIDTH						= 48	;
@@ -19,7 +18,7 @@ template<typename _tValue>	static inline constexpr	const _tValue		max									(c
 template<typename _tValue>	static inline constexpr	const _tValue		min									(const _tValue& a, const _tValue& b)				{ return (a < b) ? a : b; }
 
 struct SApplication {
-	::gpftw::SASCIIScreen													ASCIIScreen							= {};
+	::ftwlib::SScreenASCII													ScreenASCII							= {};
 	int																		FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 
 	STileMap																TileMap								= {};
@@ -28,11 +27,11 @@ struct SApplication {
 // Cleanup application resources.
 void																	cleanup								(::SApplication& applicationInstance)				{ 
 	::destroyTileMap		(applicationInstance.TileMap);									
-	::gpftw::destroyConsole	(applicationInstance.ASCIIScreen);									
+	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);									
 }
 
 void																	setupRoom							
-	(	::gpftw::grid_view<uint32_t>	& asciiMap
+	(	::ftwlib::grid_view<uint32_t>	& asciiMap
 	,	uint32_t						offsetX
 	,	uint32_t						offsetZ
 	,	uint32_t						sizeX
@@ -82,32 +81,32 @@ void																	setupMap							(::STileMap& tileMapInstance)						{
 }
 
 static constexpr	const STileASCII									tileDescriptions[]					= 
-	{	{' '	, ::gpftw::ASCII_COLOR_INDEX_0}
-	,	{'~'	, ::gpftw::ASCII_COLOR_INDEX_1}
-	,	{'.'	, ::gpftw::ASCII_COLOR_INDEX_2}
-	,	{'#'	, ::gpftw::ASCII_COLOR_INDEX_12}
-	,	{'^'	, ::gpftw::ASCII_COLOR_INDEX_10}
-	,	{'-'	, ::gpftw::ASCII_COLOR_INDEX_5}
-	,	{'\\'	, ::gpftw::ASCII_COLOR_INDEX_5}
-	,	{'|'	, ::gpftw::ASCII_COLOR_INDEX_5}
-	,	{'/'	, ::gpftw::ASCII_COLOR_INDEX_5}
-	,	{'|'	, ::gpftw::ASCII_COLOR_INDEX_5}
+	{	{' '	, ::ftwlib::ASCII_COLOR_INDEX_0}
+	,	{'~'	, ::ftwlib::ASCII_COLOR_INDEX_1}
+	,	{'.'	, ::ftwlib::ASCII_COLOR_INDEX_2}
+	,	{'#'	, ::ftwlib::ASCII_COLOR_INDEX_12}
+	,	{'^'	, ::ftwlib::ASCII_COLOR_INDEX_10}
+	,	{'-'	, ::ftwlib::ASCII_COLOR_INDEX_5}
+	,	{'\\'	, ::ftwlib::ASCII_COLOR_INDEX_5}
+	,	{'|'	, ::ftwlib::ASCII_COLOR_INDEX_5}
+	,	{'/'	, ::ftwlib::ASCII_COLOR_INDEX_5}
+	,	{'|'	, ::ftwlib::ASCII_COLOR_INDEX_5}
 	};
 
 template<typename _tElement, size_t _arraySize>
 static constexpr	const uint32_t										size								(const _tElement (&)[_arraySize])					{ return (uint32_t)_arraySize; }
 
 void																	setup								(::SApplication& applicationInstance)				{ 
-	::gpftw::createConsole	(applicationInstance.ASCIIScreen, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	
+	::ftwlib::createConsole	(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	
 	::initializeTileMap		(applicationInstance.TileMap	, ::SCREEN_WIDTH, ::SCREEN_HEIGHT, tileDescriptions, size(tileDescriptions));	
 	::setupMap				(applicationInstance.TileMap	);
 }	
 
 void																	update								(::SApplication& applicationInstance)				{ 
-	::gpftw::presentConsole(applicationInstance.ASCIIScreen);	// Present the current image if any.
+	::ftwlib::presentConsole(applicationInstance.ScreenASCII);	// Present the current image if any.
 
-	::gpftw::ASCII_COLOR														oldColor							= (::gpftw::ASCII_COLOR)applicationInstance.ASCIIScreen.Palette[::gpftw::ASCII_COLOR_INDEX_1];
-	applicationInstance.ASCIIScreen.Palette[::gpftw::ASCII_COLOR_INDEX_1]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)-0x40000) : (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)+0x40000);
+	::ftwlib::ASCII_COLOR														oldColor							= (::ftwlib::ASCII_COLOR)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_INDEX_1];
+	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_INDEX_1]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)-0x40000) : (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)+0x40000);
 
 
 	++applicationInstance.FrameCounter;																		
@@ -115,7 +114,7 @@ void																	update								(::SApplication& applicationInstance)				{
 
 void																	draw								(::SApplication& applicationInstance)				{	
 	// This function now will draw some coloured symbols in each cell of the ASCII screen.
-	::gpftw::SASCIIScreen														& asciiTarget						= applicationInstance.ASCIIScreen;
+	::ftwlib::SScreenASCII														& asciiTarget						= applicationInstance.ScreenASCII;
 	::STileMap																	& tileMap							= applicationInstance.TileMap;
 
 	// 2d loop
@@ -158,5 +157,5 @@ int	WINAPI																WinMain
 	)
 {
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	return ::gpftw::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwlib::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

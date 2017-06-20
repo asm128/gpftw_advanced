@@ -146,11 +146,15 @@
     <ClInclude Include="gpftw_array_view.h" />
     <ClInclude Include="gpftw_ascii_color.h" />
     <ClInclude Include="gpftw_ascii_screen.h" />
+    <ClInclude Include="gpftw_coord.h" />
     <ClInclude Include="gpftw_error.h" />
+    <ClInclude Include="gpftw_grid.h" />
     <ClInclude Include="gpftw_grid_view.h" />
+    <ClInclude Include="gpftw_timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ascii_screen.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

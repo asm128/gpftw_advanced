@@ -13,47 +13,38 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="array">
-      <UniqueIdentifier>{2dda4a7d-99b3-4105-a6ff-564961d053e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ascii">
-      <UniqueIdentifier>{41a8d726-f157-4faa-8832-a7efaa0456f3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="gpftw_error.h">
+    <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_array_view.h">
-      <Filter>array</Filter>
-    </ClInclude>
-    <ClInclude Include="gpftw_grid_view.h">
-      <Filter>array</Filter>
-    </ClInclude>
-    <ClInclude Include="gpftw_ascii_screen.h">
-      <Filter>ascii</Filter>
-    </ClInclude>
-    <ClInclude Include="gpftw_ascii_color.h">
-      <Filter>ascii</Filter>
-    </ClInclude>
-    <ClInclude Include="gpftw_coord.h">
+    <ClInclude Include="tilemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_timer.h">
+    <ClInclude Include="application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_grid.h">
+    <ClInclude Include="mob.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ascii_screen.cpp">
-      <Filter>ascii</Filter>
+    <ClCompile Include="game_draw.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="timer.cpp">
+    <ClCompile Include="game_setup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_update.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tilemap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_cleanup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,7 +3,7 @@
 #ifndef GPFTW_ASCII_COLOR_H
 #define GPFTW_ASCII_COLOR_H
 
-namespace gpftw 
+namespace ftwlib 
 {
 	// This type is used to represent the palette array of the ASCII console. Having : uint16_t here makes ASCII_COLOR_INDEX to have the same memory footprint as an unsigned short.
 	enum ASCII_COLOR_INDEX : uint16_t		

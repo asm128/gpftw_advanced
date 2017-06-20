@@ -90,14 +90,14 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	for(uint32_t iColor = 0; iColor < 16; ++iColor)
 		csbiInfo.ColorTable[iColor]						= palette[iColor];
 
-	csbiInfo.wAttributes							= ::gpftw::ASCII_COLOR_INDEX_15;
+	csbiInfo.wAttributes							= ::ftwlib::ASCII_COLOR_INDEX_15;
 	
 	::SetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo);
 }
 
 
 // ------------------------------------------------- 
-::gpftw::error_t								gpftw::destroyConsole			(::gpftw::SASCIIScreen& console)											{
+::ftwlib::error_t								ftwlib::destroyConsole			(::ftwlib::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -114,42 +114,42 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;	// these functions hardly fail.
 }	
 
-::gpftw::error_t								gpftw::createConsole			(::gpftw::SASCIIScreen& console, int width, int height)						{
+::ftwlib::error_t								ftwlib::createConsole			(::ftwlib::SScreenASCII& console, int width, int height)						{
 	if(::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
 	console.Width									= width		;
 	console.Height									= height	;
-	console.Palette									= ::gpftw::array_view<uint32_t>((uint32_t*)::malloc(sizeof(uint32_t) * 16), 16);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
-	console.Palette[0 ]								= ::gpftw::ASCII_COLOR_BLACK		;
-	console.Palette[1 ]								= ::gpftw::ASCII_COLOR_DARKBLUE		;
-	console.Palette[2 ]								= ::gpftw::ASCII_COLOR_DARKGREEN	;
-	console.Palette[3 ]								= ::gpftw::ASCII_COLOR_DARKCYAN		;
-	console.Palette[4 ]								= ::gpftw::ASCII_COLOR_DARKRED		;
-	console.Palette[5 ]								= ::gpftw::ASCII_COLOR_DARKMAGENTA	;
-	console.Palette[6 ]								= ::gpftw::ASCII_COLOR_DARKYELLOW	;
-	console.Palette[7 ]								= ::gpftw::ASCII_COLOR_LIGHTGREY	;
-	console.Palette[8 ]								= ::gpftw::ASCII_COLOR_DARKGREY		;
-	console.Palette[9 ]								= ::gpftw::ASCII_COLOR_BLUE			;
-	console.Palette[10]								= ::gpftw::ASCII_COLOR_GREEN		;
-	console.Palette[11]								= ::gpftw::ASCII_COLOR_CYAN			;
-	console.Palette[12]								= ::gpftw::ASCII_COLOR_RED			;
-	console.Palette[13]								= ::gpftw::ASCII_COLOR_MAGENTA		;
-	console.Palette[14]								= ::gpftw::ASCII_COLOR_YELLOW		;
-	console.Palette[15]								= ::gpftw::ASCII_COLOR_WHITE		;
+	console.Palette									= ::ftwlib::array_view<uint32_t>((uint32_t*)::malloc(sizeof(uint32_t) * 16), 16);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
+	console.Palette[0 ]								= ::ftwlib::ASCII_COLOR_BLACK		;
+	console.Palette[1 ]								= ::ftwlib::ASCII_COLOR_DARKBLUE		;
+	console.Palette[2 ]								= ::ftwlib::ASCII_COLOR_DARKGREEN	;
+	console.Palette[3 ]								= ::ftwlib::ASCII_COLOR_DARKCYAN		;
+	console.Palette[4 ]								= ::ftwlib::ASCII_COLOR_DARKRED		;
+	console.Palette[5 ]								= ::ftwlib::ASCII_COLOR_DARKMAGENTA	;
+	console.Palette[6 ]								= ::ftwlib::ASCII_COLOR_DARKYELLOW	;
+	console.Palette[7 ]								= ::ftwlib::ASCII_COLOR_LIGHTGREY	;
+	console.Palette[8 ]								= ::ftwlib::ASCII_COLOR_DARKGREY		;
+	console.Palette[9 ]								= ::ftwlib::ASCII_COLOR_BLUE			;
+	console.Palette[10]								= ::ftwlib::ASCII_COLOR_GREEN		;
+	console.Palette[11]								= ::ftwlib::ASCII_COLOR_CYAN			;
+	console.Palette[12]								= ::ftwlib::ASCII_COLOR_RED			;
+	console.Palette[13]								= ::ftwlib::ASCII_COLOR_MAGENTA		;
+	console.Palette[14]								= ::ftwlib::ASCII_COLOR_YELLOW		;
+	console.Palette[15]								= ::ftwlib::ASCII_COLOR_WHITE		;
 
 	::initWindowsConsole			();
 	::initWindowsConsoleFont		();
 	::initWindowsConsoleProperties	(width, height, &console.Palette[0]);
 
-	console.Characters								= ::gpftw::array_view<uint8_t	>((uint8_t	*)::malloc(sizeof(uint8_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
-	console.Colors									= ::gpftw::array_view<uint16_t	>((uint16_t	*)::malloc(sizeof(uint16_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
+	console.Characters								= ::ftwlib::array_view<uint8_t	>((uint8_t	*)::malloc(sizeof(uint8_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
+	console.Colors									= ::ftwlib::array_view<uint16_t	>((uint16_t	*)::malloc(sizeof(uint16_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
 
 	::SetConsoleTitle("ASCII Console for the Win");	// I don't need to explain this one, right?
 	return 0;
 }
 
-::gpftw::error_t								gpftw::presentConsole			(::gpftw::SASCIIScreen& console)											{
+::ftwlib::error_t								ftwlib::presentConsole			(::ftwlib::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -172,7 +172,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;
 }
 
-::gpftw::error_t								gpftw::clearConsole			(::gpftw::SASCIIScreen& console)												{
+::ftwlib::error_t								ftwlib::clearConsole			(::ftwlib::SScreenASCII& console)												{
 	int													screenSize				= console.Width * console.Height;
 	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);
 	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);

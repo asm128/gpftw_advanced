@@ -10,10 +10,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial0 (screen)", "Tutor
 		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial1 (printf)", "Tutorial1\Tutorial1.vcxproj", "{2E078239-F35C-4063-89A8-B7551C9C8A19}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial1 (tilemap)", "Tutorial1\Tutorial1.vcxproj", "{2E078239-F35C-4063-89A8-B7551C9C8A19}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial2 (loop)", "Tutorial2\Tutorial2.vcxproj", "{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,14 @@ Global
 		{2E078239-F35C-4063-89A8-B7551C9C8A19}.Release|Win32.Build.0 = Release|Win32
 		{2E078239-F35C-4063-89A8-B7551C9C8A19}.Release|x64.ActiveCfg = Release|x64
 		{2E078239-F35C-4063-89A8-B7551C9C8A19}.Release|x64.Build.0 = Release|x64
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Debug|Win32.Build.0 = Debug|Win32
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Debug|x64.ActiveCfg = Debug|x64
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Debug|x64.Build.0 = Debug|x64
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Release|Win32.ActiveCfg = Release|Win32
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Release|Win32.Build.0 = Release|Win32
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Release|x64.ActiveCfg = Release|x64
+		{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
