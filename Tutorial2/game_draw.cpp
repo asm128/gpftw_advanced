@@ -40,16 +40,16 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_12;
 				}
 				else if( dirVector.x < (-GAME_EPSILON) || dirVector.x > GAME_EPSILON ) {
-					targetCharacterGrid[linearIndex]											= '-'; // draw the shot as an ascii character
+					targetCharacterGrid	[linearIndex]											= '-'; // draw the shot as an ascii character
 					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_12;
 				}
 				else {
-					targetCharacterGrid[linearIndex]											= '|'; // draw the shot as an ascii character
+					targetCharacterGrid	[linearIndex]											= '|'; // draw the shot as an ascii character
 					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_12;
 				}
 			}
 			else {
-				targetCharacterGrid[linearIndex]											= char(gameObject.Map.Floor.Cells[z][x] ? gameObject.Map.Floor.Cells[z][x] : ' '); // draw the tile as an ascii character
+				targetCharacterGrid	[linearIndex]											= char(gameObject.Map.Floor.Cells[z][x] ? gameObject.Map.Floor.Cells[z][x] : ' '); // draw the tile as an ascii character
 				targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_0;
 			}
 		}
