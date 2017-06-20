@@ -1,4 +1,4 @@
-#include "gpftw_grid_view.h"
+#include "ftw_grid_view.h"
 
 #ifndef GPFTW_GRID_H_92813740928374092387498237
 #define GPFTW_GRID_H_92813740928374092387498237

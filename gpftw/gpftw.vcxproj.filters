@@ -19,34 +19,43 @@
     <Filter Include="ascii">
       <UniqueIdentifier>{41a8d726-f157-4faa-8832-a7efaa0456f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="timer">
+      <UniqueIdentifier>{a23b1b20-2ab3-4533-8a47-b123691b7b4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{898b42ed-f4dd-49ad-99dd-bbd226228c17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gpftw_error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpftw_array_view.h">
+    <ClInclude Include="ftw_array_view.h">
       <Filter>array</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_grid_view.h">
+    <ClInclude Include="ftw_grid_view.h">
       <Filter>array</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_ascii_screen.h">
+    <ClInclude Include="ftw_ascii_color.h">
       <Filter>ascii</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_ascii_color.h">
+    <ClInclude Include="ftw_ascii_screen.h">
       <Filter>ascii</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_coord.h">
+    <ClInclude Include="ftw_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_timer.h">
+    <ClInclude Include="ftw_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpftw_grid.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ftw_timer.h">
+      <Filter>timer</Filter>
+    </ClInclude>
+    <ClInclude Include="ftw_coord.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="ftw_math.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -54,7 +63,7 @@
       <Filter>ascii</Filter>
     </ClCompile>
     <ClCompile Include="timer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>timer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

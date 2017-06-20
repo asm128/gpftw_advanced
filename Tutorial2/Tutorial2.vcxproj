@@ -29,7 +29,6 @@
     <ClCompile Include="game_setup.cpp" />
     <ClCompile Include="game_update.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="tilemap.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}</ProjectGuid>

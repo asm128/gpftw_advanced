@@ -1,8 +1,8 @@
-#include "gpftw_ascii_screen.h"
+#include "ftw_ascii_screen.h"
 
-#include "gpftw_ascii_color.h"
+#include "ftw_ascii_color.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <Windows.h>
 
 // We need this function because we give its pointer to Windows so it can report to our program when CTRL_C was pressed

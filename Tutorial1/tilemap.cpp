@@ -1,5 +1,5 @@
 #include "tilemap.h"
-#include "gpftw_ascii_color.h"
+#include "ftw_ascii_color.h"
 
 
 ::ftwlib::error_t								initializeTileMap					(STileMap& tileMapToInitialize, uint32_t width, uint32_t height, const STileASCII* tileDescriptions, uint32_t tileDescriptionCount)		{ 

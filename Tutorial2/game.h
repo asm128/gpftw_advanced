@@ -1,7 +1,7 @@
 #include "tilemap.h"
 #include "mob.h"
 
-#include "gpftw_grid.h"
+#include "ftw_grid.h"
 
 #include <vector>		// for std::vector
 

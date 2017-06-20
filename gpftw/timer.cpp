@@ -1,4 +1,4 @@
-#include "gpftw_timer.h"
+#include "ftw_timer.h"
 #include <windows.h>
 
 void							ftwlib::STimer::Reset											()								{

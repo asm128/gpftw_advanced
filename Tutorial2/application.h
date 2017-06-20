@@ -1,11 +1,8 @@
 #include "game.h"
 
-#include "gpftw_ascii_screen.h"
+#include "ftw_ascii_screen.h"
 
-#include "gpftw_timer.h"
-
-template<typename _tValue>	static inline constexpr	const _tValue		max									(const _tValue& a, const _tValue& b)				{ return (a > b) ? a : b; }
-template<typename _tValue>	static inline constexpr	const _tValue		min									(const _tValue& a, const _tValue& b)				{ return (a < b) ? a : b; }
+#include "ftw_timer.h"
 
 namespace ftwapp {
 	struct SApplication {

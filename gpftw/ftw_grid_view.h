@@ -1,4 +1,4 @@
-#include "gpftw_array_view.h"		// for ftwlib::array_view<>
+#include "ftw_array_view.h"		// for ftwlib::array_view<>
 
 #ifndef GPFTW_GRID_VIEW_H
 #define GPFTW_GRID_VIEW_H

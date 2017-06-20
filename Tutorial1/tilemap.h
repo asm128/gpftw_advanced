@@ -1,5 +1,5 @@
-#include "gpftw_grid_view.h"
-#include "gpftw_error.h"
+#include "ftw_grid_view.h"
+#include "ftw_error.h"
 
 #ifndef GPFTW_MAP_H
 #define GPFTW_MAP_H

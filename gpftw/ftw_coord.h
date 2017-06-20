@@ -1,17 +1,11 @@
-#include <cmath>
-#include <cstdint>
+#include "ftw_math.h"
 
 #ifndef GPFTW_COORD_H_928374982364923642
 #define GPFTW_COORD_H_928374982364923642
 
 namespace ftwlib {
+
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	template<typename _tNumber>	inline constexpr	double				sqrt_safe				(_tNumber _valueSquared)											noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;						}
-
-	struct											SPairSinCos			{ double Sin, Cos; };	
-
-	static inline									SPairSinCos			getSinCos				(double theta)														noexcept	{ return {sin(theta), cos(theta)};										}
-
 	template<typename _tBase>
 	struct SCoord2 {
 		typedef			SCoord2<_tBase>	TCoord2;

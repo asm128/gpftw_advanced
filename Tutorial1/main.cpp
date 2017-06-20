@@ -3,8 +3,8 @@
 //
 #define NOMINMAX
 
-#include "gpftw_ascii_screen.h"
-#include "gpftw_ascii_color.h"
+#include "ftw_ascii_screen.h"
+#include "ftw_ascii_color.h"
 
 #include "tilemap.h"
 

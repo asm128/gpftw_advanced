@@ -144,14 +144,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gpftw_array_view.h" />
-    <ClInclude Include="gpftw_ascii_color.h" />
-    <ClInclude Include="gpftw_ascii_screen.h" />
-    <ClInclude Include="gpftw_coord.h" />
-    <ClInclude Include="gpftw_error.h" />
-    <ClInclude Include="gpftw_grid.h" />
-    <ClInclude Include="gpftw_grid_view.h" />
-    <ClInclude Include="gpftw_timer.h" />
+    <ClInclude Include="ftw_array_view.h" />
+    <ClInclude Include="ftw_ascii_color.h" />
+    <ClInclude Include="ftw_ascii_screen.h" />
+    <ClInclude Include="ftw_coord.h" />
+    <ClInclude Include="ftw_error.h" />
+    <ClInclude Include="ftw_grid.h" />
+    <ClInclude Include="ftw_grid_view.h" />
+    <ClInclude Include="ftw_math.h" />
+    <ClInclude Include="ftw_timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ascii_screen.cpp" />

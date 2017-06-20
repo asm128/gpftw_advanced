@@ -1,5 +1,5 @@
 #include "game.h"
-#include "gpftw_ascii_color.h"
+#include "ftw_ascii_color.h"
 
 #include <stdio.h>
 

@@ -2,7 +2,7 @@
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 //
 #include "game.h"			// for our game functions
-#include "gpftw_timer.h"	// for our STimer struct
+#include "ftw_timer.h"	// for our STimer struct
 
 #include "application.h"	// for
 
