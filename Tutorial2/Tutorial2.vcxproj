@@ -25,7 +25,6 @@
     <ClInclude Include="tilemap.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="game_cleanup.cpp" />
     <ClCompile Include="game_draw.cpp" />
     <ClCompile Include="game_setup.cpp" />
     <ClCompile Include="game_update.cpp" />
@@ -36,7 +35,7 @@
     <ProjectGuid>{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Tutorial2</RootNamespace>
-    <ProjectName>Tutorial2 (loop)</ProjectName>
+    <ProjectName>Tutorial2 (game)</ProjectName>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
