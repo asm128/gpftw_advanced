@@ -66,22 +66,15 @@
 	static ::game::STileFloor														descriptionsTableTileFloor	[::game::TILE_TYPE_COUNT		]	= {};
 	static ::game::STileASCII														imageTableTileFloor			[::game::TILE_TYPE_COUNT		]	= {};
 	
-	descriptionsTableTileFloor	[::game::TILE_TYPE_GRASS	].ShotThrough		= 1;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_GRASS	].Transitable		= 1;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_GRASS	].Name				= "Grass";
+#define SET_FLOOR_TILE_RECORD(_tileType, _shotThrough, _transitable, _name)	\
+	descriptionsTableTileFloor	[_tileType].ShotThrough		= _shotThrough;	\
+	descriptionsTableTileFloor	[_tileType].Transitable		= _transitable;	\
+	descriptionsTableTileFloor	[_tileType].Name			= _name;
 
-	descriptionsTableTileFloor	[::game::TILE_TYPE_WALL		].ShotThrough		= 0;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_WALL		].Transitable		= 0;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_WALL		].Name				= "Wall";
-
-	descriptionsTableTileFloor	[::game::TILE_TYPE_WATER	].ShotThrough		= 1;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_WATER	].Transitable		= 0;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_WATER	].Name				= "Water";
-
-	descriptionsTableTileFloor	[::game::TILE_TYPE_LAVA		].ShotThrough		= 1;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_LAVA		].Transitable		= 1;
-	descriptionsTableTileFloor	[::game::TILE_TYPE_LAVA		].Name				= "Lava";
-	descriptionsTableTileFloor	[::game::TILE_TYPE_LAVA		].Damage			= 10;
+	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_WALL	, 0, 0, "Wall"	);
+	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_GRASS	, 1, 1, "Grass"	);
+	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_WATER	, 1, 0, "Water"	);
+	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_LAVA	, 1, 1, "Lava"	);
 	gameObject.Descriptions.Floor												= {descriptionsTableTileFloor, ::ftwlib::size(descriptionsTableTileFloor)};
 
 	imageTableTileFloor			[::game::TILE_TYPE_GRASS	]					= {'.', ::ftwlib::ASCII_COLOR_GREEN		| (::ftwlib::ASCII_COLOR_DARKGREEN	<< 4)};
