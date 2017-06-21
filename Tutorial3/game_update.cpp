@@ -2,13 +2,11 @@
 
 #include <Windows.h>
 
-
 #define INVALID_ENEMY		::game::CHARACTER_TYPE_INVALID
 #define INVALID_SHOT		::game::SHOT_TYPE_INVALID
 
-
 void																refreshPosFromDeltas			( ::game::SMovingObject& character )															{
-	::game::SVector2													& charDeltas						= character.PositionDeltas; // get pointer to deltas
+	::game::SVector2														& charDeltas					= character.PositionDeltas; // get pointer to deltas
 	
 	// Now we increase cell units and decrease deltas until the deltas are between 0 and 0.9999999999999999999999
 	// Update X coordinate

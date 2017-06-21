@@ -1,7 +1,7 @@
-#include "tilemap.h"
-#include "mob.h"
+#include "tilemap.h"	// for STileMapASCII
+#include "mob.h"		// for SMovingObject, SCharacter, SShot
 
-#include "ftw_grid.h"
+#include "ftw_error.h"	// for ::ftwlib::error_t
 
 #include <vector>		// for ::std::vector
 

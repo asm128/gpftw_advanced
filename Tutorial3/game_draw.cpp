@@ -1,8 +1,7 @@
 #include "game.h"
-#include "ftw_ascii_color.h"
-#include "ftw_size.h"
 
-//#include <stdio.h>
+#include "ftw_ascii_color.h"	// for ::ftwlib::ASCII_COLOR
+#include "ftw_size.h"			// for ::ftwlib::size()
 
 #define GAME_EPSILON		::ftwlib::math_epsilon
 #define INVALID_ENEMY		::game::CHARACTER_TYPE_INVALID

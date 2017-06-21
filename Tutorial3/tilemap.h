@@ -1,6 +1,5 @@
 // Best viewed in 1080p with 88% zoom.
-#include "ftw_grid.h"
-#include "ftw_error.h"
+#include "ftw_grid.h"	// for ::ftwlib::SGrid
 
 #ifndef GPFTW_MAP_H
 #define GPFTW_MAP_H

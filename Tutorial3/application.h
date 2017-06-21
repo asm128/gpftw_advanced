@@ -1,8 +1,7 @@
-#include "game.h"
+#include "game.h"				// for ::game::SGame
 
-#include "ftw_ascii_screen.h"
-
-#include "ftw_timer.h"
+#include "ftw_ascii_screen.h"	// for ::ftwlib::SScreenASCII
+#include "ftw_timer.h"			// for ::ftwlib::STimer
 
 namespace ftwapp {
 	struct SApplication {
