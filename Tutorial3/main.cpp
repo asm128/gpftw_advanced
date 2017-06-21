@@ -14,7 +14,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::game::cleanup(applicationInstance.Game);
+	::game::cleanup				(applicationInstance.Game);
 	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);								
 	return 0;
 }
@@ -23,8 +23,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
 	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::srand(0);
-	// call setup game functions
-	::game::setup(applicationInstance.Game);
+	::game::setup(applicationInstance.Game);	// call setup game functions
 	return 0;
 }
 
