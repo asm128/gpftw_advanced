@@ -9,10 +9,10 @@ namespace game
 	typedef	::ftwlib::SCoord2<int32_t>					SMapCoord2;
 
 	struct SMovingObject {
-				SMapCoord2									Position								= {};		// Coordinates in tile map
+				SMapCoord2									Position								= {};	// Coordinates in tile map
 				SVector2									PositionDeltas							= {};	// The position inside the tile	as a range between 0.0 and 0.99999998 or something like that, but in general it's thought as between 0.0 and 1.0.
-				double										Direction								= {};		// rotation angle in radians
-				double										Speed									= {};			// cells/second
+				double										Direction								= {};	// rotation angle in radians
+				double										Speed									= {};	// cells/second
 	};
 
 	enum ACTION_TYPE		// this is pretty much the same as "typedef int ACTION_TYPE;"

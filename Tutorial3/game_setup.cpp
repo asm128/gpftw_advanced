@@ -44,23 +44,14 @@
 
 // Use this function to setup enemy list at level startup.
 ::ftwlib::error_t															setupWorldEnemies												(::game::SGame& gameObject)															{
-	static constexpr const uint32_t													INITIAL_ENEMY_COUNT												= 4;
-
-	for( uint32_t iEnemy = 0; iEnemy < INITIAL_ENEMY_COUNT; ++iEnemy ) {	
-		::game::SCharacter																newEnemy;
-		newEnemy.MaxPoints															= { 10 + 10 * (int32_t)iEnemy, 50, 1000000 }; // HP, MP and XP
-		newEnemy.CurrentPoints														= { 10 + 10 * (int32_t)iEnemy, 50, 0 };
+	::game::SCharacter																newEnemy														= {};
+	for( uint32_t iEnemy = 0; iEnemy < ::game::CHARACTER_TYPE_COUNT; ++iEnemy ) {	
+		newEnemy																	= gameObject.Descriptions.Enemy[iEnemy];
 		newEnemy.Position															= { ::rand() % (int32_t)gameObject.Map.Size.x, ::rand() % (int32_t)gameObject.Map.Size.y };
-		newEnemy.PositionDeltas														= {0, 0};
-		newEnemy.Direction															= 0.0f;
-		newEnemy.Speed																= float(iEnemy); // generate the speed from the enemy index
-		newEnemy.Action																= ::game::ACTION_WALK;
-
 		gameObject.Enemy.push_back( newEnemy ); // copy the new enemy as a new element at the end of our enemy list.
 	}
 	return 0;
 }
-
 
 ::ftwlib::error_t															setupDescriptionsMap											(::game::SGame& gameObject)														{ 
 	static ::game::STileFloor														descriptionsTableTileFloor	[::game::TILE_TYPE_COUNT		]	= {};
@@ -105,7 +96,7 @@
 	imageTableShot				[::game::SHOT_TYPE_FLAME	]					= {'"'		, ::ftwlib::ASCII_COLOR_RED			};
 	imageTableShot				[::game::SHOT_TYPE_COLD		]					= {'o'		, ::ftwlib::ASCII_COLOR_CYAN		};
 	imageTableShot				[::game::SHOT_TYPE_ROCK		]					= {'o'		, ::ftwlib::ASCII_COLOR_DARKGREEN	};
-	imageTableShot				[::game::SHOT_TYPE_ROCKET	]					= {'*'		, ::ftwlib::ASCII_COLOR_DARKCYAN	};
+	imageTableShot				[::game::SHOT_TYPE_ROCKET	]					= {'\xf'	, ::ftwlib::ASCII_COLOR_DARKCYAN	};
 	gameObject.Map.Shots.TileDescriptionTable									= {imageTableShot, ::ftwlib::size(imageTableShot)};
 	return 0; 
 }
@@ -114,14 +105,21 @@
 	static ::game::SCharacter														descriptionsTableEnemy		[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::STileASCII														imageTableEnemy				[::game::CHARACTER_TYPE_COUNT	]	= {};
 
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SHADOW	].Speed				= 2;
 	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SHADOW	].CurrentPoints		=
-	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SHADOW	].MaxPoints			= {160, 0, 0};
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SHADOW	].MaxPoints			= {160, 0, 1};
+
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SPEEDY	].Speed				= 3;
 	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SPEEDY	].CurrentPoints		=
-	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SPEEDY	].MaxPoints			= {80, 0, 0};
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_SPEEDY	].MaxPoints			= {80, 0, 1};
+
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_BASHFUL	].Speed				= 4;
 	descriptionsTableEnemy	[::game::CHARACTER_TYPE_BASHFUL	].CurrentPoints		=
-	descriptionsTableEnemy	[::game::CHARACTER_TYPE_BASHFUL	].MaxPoints			= {40, 0, 0};
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_BASHFUL	].MaxPoints			= {40, 0, 1};
+
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_POKEY	].Speed				= 5;
 	descriptionsTableEnemy	[::game::CHARACTER_TYPE_POKEY	].CurrentPoints		=
-	descriptionsTableEnemy	[::game::CHARACTER_TYPE_POKEY	].MaxPoints			= {20, 0, 0};
+	descriptionsTableEnemy	[::game::CHARACTER_TYPE_POKEY	].MaxPoints			= {20, 0, 1};
 	gameObject.Descriptions.Enemy												= {descriptionsTableEnemy, ::ftwlib::size(descriptionsTableEnemy)};
 
 	imageTableEnemy			[::game::CHARACTER_TYPE_SHADOW	]					= {'\x1', ::ftwlib::ASCII_COLOR_LIGHTGREY	};
