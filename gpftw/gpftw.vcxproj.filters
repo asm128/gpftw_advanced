@@ -45,9 +45,6 @@
     <ClInclude Include="ftw_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ftw_grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ftw_timer.h">
       <Filter>timer</Filter>
     </ClInclude>
@@ -56,6 +53,12 @@
     </ClInclude>
     <ClInclude Include="ftw_math.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="ftw_grid.h">
+      <Filter>array</Filter>
+    </ClInclude>
+    <ClInclude Include="ftw_size.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

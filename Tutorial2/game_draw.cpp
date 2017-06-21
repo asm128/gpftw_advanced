@@ -11,16 +11,16 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 			uint32_t																linearIndex							= z * targetWidth + x;	// The position where we shuold position our next character
 			if( gameObject.Player.Position.x == (int32_t)x && gameObject.Player.Position.y == (int32_t)z ) {
 				targetCharacterGrid	[linearIndex]											= 'P'; // draw the player as an ascii character
-				targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_10;
+				targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_GREEN;
 			}
 			else if( gameObject.Map.Enemy.Cells[z][x] != INVALID_ENEMY ) {
 				if( gameObject.Map.Shots.Cells[z][x] != INVALID_SHOT ) {
 					targetCharacterGrid	[linearIndex]											= '@'; // draw the enemy as an ascii character
-					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_6;
+					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_LIGHTGREY;
 				}
 				else {
 					targetCharacterGrid	[linearIndex]											= char('E' + gameObject.Map.Enemy.Cells[z][x]); // draw the enemy as an ascii character
-					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_4;
+					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_DARKRED;
 				}
 			}
 			else if( gameObject.Map.Shots.Cells[z][x] != INVALID_SHOT ) {
@@ -31,26 +31,26 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 					|| ( dirVector.x > GAME_EPSILON && dirVector.y > GAME_EPSILON )
 					) {
 					targetCharacterGrid	[linearIndex]											= '\\'; // draw the shot as an ascii character
-					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_12;
+					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_RED;
 				}
 				else if( ( dirVector.x < (-GAME_EPSILON) && dirVector.y > GAME_EPSILON )
 					|| ( dirVector.x > GAME_EPSILON && dirVector.y < (-GAME_EPSILON) )
 					) {
 					targetCharacterGrid	[linearIndex]											= '/'; // draw the shot as an ascii character
-					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_12;
+					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_RED;
 				}
 				else if( dirVector.x < (-GAME_EPSILON) || dirVector.x > GAME_EPSILON ) {
 					targetCharacterGrid	[linearIndex]											= '-'; // draw the shot as an ascii character
-					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_12;
+					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_RED;
 				}
 				else {
 					targetCharacterGrid	[linearIndex]											= '|'; // draw the shot as an ascii character
-					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_12;
+					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_RED;
 				}
 			}
 			else {
 				targetCharacterGrid	[linearIndex]											= char(gameObject.Map.Floor.Cells[z][x] ? gameObject.Map.Floor.Cells[z][x] : ' '); // draw the tile as an ascii character
-				targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_INDEX_0;
+				targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_DARKGREY;
 			}
 		}
 	}
@@ -66,7 +66,7 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	char																	compositeText	[1024]				= {};
 	uint16_t																compositeColors	[1024]				;
 	for(uint32_t i = 0; i < 1024; ++i) {
-		compositeColors[i]													= ::ftwlib::ASCII_COLOR_INDEX_14 | ((playerDead ? ::ftwlib::ASCII_COLOR_INDEX_12 : ::ftwlib::ASCII_COLOR_INDEX_2) << 4);
+		compositeColors[i]													= ::ftwlib::ASCII_COLOR_YELLOW | ((playerDead ? ::ftwlib::ASCII_COLOR_RED : ::ftwlib::ASCII_COLOR_DARKGREEN) << 4);
 	}
 
 	uint32_t																offsetCell							= (::game::MAP_DEPTH * targetWidth);
@@ -75,7 +75,7 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	textLength	= ::sprintf_s(compositeText, "- Player health: %i, Mana: %i, Experience: %i."																												, player.CurrentPoints.HP, player.CurrentPoints.MP, player.CurrentPoints.XP					); ::memcpy(&targetCharacterGrid[offsetCell], compositeText, textLength); ::memcpy(&targetColorGrid[offsetCell], compositeColors, textLength * 2); offsetCell += targetWidth;
 	textLength	= ::sprintf_s(compositeText, "- Player position: (%i, %i), deltas: (%f, %f)."																												, player.Position.x, player.Position.y, player.PositionDeltas.x, player.PositionDeltas.y	); ::memcpy(&targetCharacterGrid[offsetCell], compositeText, textLength); ::memcpy(&targetColorGrid[offsetCell], compositeColors, textLength * 2); offsetCell += targetWidth;
 	textLength	= ::sprintf_s(compositeText, "- Player direction: (%f, %f). Player angle: %f radians or %f degrees."																						, dirVector.x, dirVector.y, (float)player.Direction, degrees								); ::memcpy(&targetCharacterGrid[offsetCell], compositeText, textLength); ::memcpy(&targetColorGrid[offsetCell], compositeColors, textLength * 2); offsetCell += targetWidth;
-	textLength	= ::sprintf_s(compositeText, "- Enemy count: %u, Shot count: %u."																															, (uint32_t)gameObject.Enemy.size(), (uint32_t)gameObject.Shots.size()				); ::memcpy(&targetCharacterGrid[offsetCell], compositeText, textLength); ::memcpy(&targetColorGrid[offsetCell], compositeColors, textLength * 2); offsetCell += targetWidth;
+	textLength	= ::sprintf_s(compositeText, "- Enemy count: %u, Shot count: %u."																															, (uint32_t)gameObject.Enemy.size(), (uint32_t)gameObject.Shots.size()						); ::memcpy(&targetCharacterGrid[offsetCell], compositeText, textLength); ::memcpy(&targetColorGrid[offsetCell], compositeColors, textLength * 2); offsetCell += targetWidth;
 	textLength	= ::sprintf_s(compositeText, "- Shoot with Space key. Run by holding LEFT SHIFT while moving. - Move (P)layer by pressing the arrow keys to prevent being touched by enemies E, F, G and H."); 
 	::memcpy(&targetCharacterGrid	[offsetCell], compositeText, textLength); 
 	::memcpy(&targetColorGrid		[offsetCell], compositeColors, textLength * 2); 
@@ -93,7 +93,7 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	char																	compositeText	[32]											= {};
 	uint16_t																compositeColors	[32]											;
 	for(uint32_t i = 0; i < 32; ++i) {
-		compositeColors[i]													= ::ftwlib::ASCII_COLOR_INDEX_14 | ((playerDead ? ::ftwlib::ASCII_COLOR_INDEX_12 : ::ftwlib::ASCII_COLOR_INDEX_2) << 4);
+		compositeColors[i]													= ::ftwlib::ASCII_COLOR_YELLOW | ((playerDead ? ::ftwlib::ASCII_COLOR_RED : ::ftwlib::ASCII_COLOR_DARKGREEN) << 4);
 	}
 
 	int32_t																	textLength														= ::sprintf_s(compositeText, winText.c_str());

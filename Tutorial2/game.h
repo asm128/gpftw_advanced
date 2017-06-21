@@ -9,9 +9,6 @@
 #define GAME_H_90237409238740923749023
 //-------------------------------------------------------------------------
 
-#define MAX_MAP_WIDTH		48 // define a maximum size to our game map
-#define MAX_MAP_DEPTH		48   
-
 #define TILE_GRASS			0  // define some values to represent our terrain tiles
 #define TILE_WALL			1
 #define TILE_WATER			2

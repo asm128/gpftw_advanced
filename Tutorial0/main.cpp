@@ -25,10 +25,10 @@ void													draw								(::SApplication& applicationInstance)				{
 	uint32_t													color1								= (0xFF & applicationInstance.FrameCounter * 2) | ((0xFF & applicationInstance.FrameCounter * 1) << 8) | ((0xFF & applicationInstance.FrameCounter * 3) << 16);
 	uint32_t													color2								= (0xFF & applicationInstance.FrameCounter * 3) | ((0xFF & applicationInstance.FrameCounter * 5) << 8) | ((0xFF & applicationInstance.FrameCounter * 2) << 16);
 	uint32_t													color3								= (0xFF & applicationInstance.FrameCounter * 5) | ((0xFF & applicationInstance.FrameCounter * 3) << 8) | ((0xFF & applicationInstance.FrameCounter * 1) << 16);
-	asciiTarget.Palette[::ftwlib::ASCII_COLOR_INDEX_0]		= color0;
-	asciiTarget.Palette[::ftwlib::ASCII_COLOR_INDEX_1]		= color1;
-	asciiTarget.Palette[::ftwlib::ASCII_COLOR_INDEX_2]		= color2;
-	asciiTarget.Palette[::ftwlib::ASCII_COLOR_INDEX_3]		= color3;
+	asciiTarget.Palette[0]									= color0;
+	asciiTarget.Palette[1]									= color1;
+	asciiTarget.Palette[2]									= color2;
+	asciiTarget.Palette[3]									= color3;
 
 	// 2d loop
 	for(uint32_t y = 0; y < asciiTarget.Height	; ++y)
@@ -37,7 +37,7 @@ void													draw								(::SApplication& applicationInstance)				{
 		
 		// Set the target cell with a given character and color.
 		asciiTarget.Characters	[linearIndex]					= (((applicationInstance.FrameCounter % 2) + y + x) % 2) ? '!' : '?';
-		asciiTarget.Colors		[linearIndex]					= (((applicationInstance.FrameCounter % 2) + y + x) % 2) ? ::ftwlib::ASCII_COLOR_INDEX_0 | (::ftwlib::ASCII_COLOR_INDEX_2 << 4) : ::ftwlib::ASCII_COLOR_INDEX_1 | (::ftwlib::ASCII_COLOR_INDEX_3 << 4) ;
+		asciiTarget.Colors		[linearIndex]					= (((applicationInstance.FrameCounter % 2) + y + x) % 2) ? 0 | (2 << 4) : 1 | (3 << 4) ;
 	}
 }
 

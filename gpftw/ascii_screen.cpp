@@ -90,7 +90,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	for(uint32_t iColor = 0; iColor < 16; ++iColor)
 		csbiInfo.ColorTable[iColor]						= palette[iColor];
 
-	csbiInfo.wAttributes							= ::ftwlib::ASCII_COLOR_INDEX_15;
+	csbiInfo.wAttributes							= ::ftwlib::ASCII_COLOR_WHITE;
 	
 	::SetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo);
 }
@@ -121,22 +121,22 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	console.Width									= width		;
 	console.Height									= height	;
 	console.Palette									= ::ftwlib::array_view<uint32_t>((uint32_t*)::malloc(sizeof(uint32_t) * 16), 16);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
-	console.Palette[0 ]								= ::ftwlib::ASCII_COLOR_BLACK		;
-	console.Palette[1 ]								= ::ftwlib::ASCII_COLOR_DARKBLUE		;
-	console.Palette[2 ]								= ::ftwlib::ASCII_COLOR_DARKGREEN	;
-	console.Palette[3 ]								= ::ftwlib::ASCII_COLOR_DARKCYAN		;
-	console.Palette[4 ]								= ::ftwlib::ASCII_COLOR_DARKRED		;
-	console.Palette[5 ]								= ::ftwlib::ASCII_COLOR_DARKMAGENTA	;
-	console.Palette[6 ]								= ::ftwlib::ASCII_COLOR_DARKYELLOW	;
-	console.Palette[7 ]								= ::ftwlib::ASCII_COLOR_LIGHTGREY	;
-	console.Palette[8 ]								= ::ftwlib::ASCII_COLOR_DARKGREY		;
-	console.Palette[9 ]								= ::ftwlib::ASCII_COLOR_BLUE			;
-	console.Palette[10]								= ::ftwlib::ASCII_COLOR_GREEN		;
-	console.Palette[11]								= ::ftwlib::ASCII_COLOR_CYAN			;
-	console.Palette[12]								= ::ftwlib::ASCII_COLOR_RED			;
-	console.Palette[13]								= ::ftwlib::ASCII_COLOR_MAGENTA		;
-	console.Palette[14]								= ::ftwlib::ASCII_COLOR_YELLOW		;
-	console.Palette[15]								= ::ftwlib::ASCII_COLOR_WHITE		;
+	console.Palette[0 ]								= ::ftwlib::ASCII_COLOR_INDEX_0 ;
+	console.Palette[1 ]								= ::ftwlib::ASCII_COLOR_INDEX_1 ;
+	console.Palette[2 ]								= ::ftwlib::ASCII_COLOR_INDEX_2 ;
+	console.Palette[3 ]								= ::ftwlib::ASCII_COLOR_INDEX_3 ;
+	console.Palette[4 ]								= ::ftwlib::ASCII_COLOR_INDEX_4 ;
+	console.Palette[5 ]								= ::ftwlib::ASCII_COLOR_INDEX_5 ;
+	console.Palette[6 ]								= ::ftwlib::ASCII_COLOR_INDEX_6 ;
+	console.Palette[7 ]								= ::ftwlib::ASCII_COLOR_INDEX_7 ;
+	console.Palette[8 ]								= ::ftwlib::ASCII_COLOR_INDEX_8 ;
+	console.Palette[9 ]								= ::ftwlib::ASCII_COLOR_INDEX_9 ;
+	console.Palette[10]								= ::ftwlib::ASCII_COLOR_INDEX_10;
+	console.Palette[11]								= ::ftwlib::ASCII_COLOR_INDEX_11;
+	console.Palette[12]								= ::ftwlib::ASCII_COLOR_INDEX_12;
+	console.Palette[13]								= ::ftwlib::ASCII_COLOR_INDEX_13;
+	console.Palette[14]								= ::ftwlib::ASCII_COLOR_INDEX_14;
+	console.Palette[15]								= ::ftwlib::ASCII_COLOR_INDEX_15;
 
 	::initWindowsConsole			();
 	::initWindowsConsoleFont		();

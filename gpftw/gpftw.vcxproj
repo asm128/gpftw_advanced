@@ -152,6 +152,7 @@
     <ClInclude Include="ftw_grid.h" />
     <ClInclude Include="ftw_grid_view.h" />
     <ClInclude Include="ftw_math.h" />
+    <ClInclude Include="ftw_size.h" />
     <ClInclude Include="ftw_timer.h" />
   </ItemGroup>
   <ItemGroup>

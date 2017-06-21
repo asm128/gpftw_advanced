@@ -81,16 +81,15 @@ void																	setupMap							(::STileMap& tileMapInstance)						{
 }
 
 static constexpr	const STileASCII									tileDescriptions[]					= 
-	{	{' '	, ::ftwlib::ASCII_COLOR_INDEX_0}
-	,	{'~'	, ::ftwlib::ASCII_COLOR_INDEX_1}
-	,	{'.'	, ::ftwlib::ASCII_COLOR_INDEX_2}
-	,	{'#'	, ::ftwlib::ASCII_COLOR_INDEX_12}
-	,	{'^'	, ::ftwlib::ASCII_COLOR_INDEX_10}
-	,	{'-'	, ::ftwlib::ASCII_COLOR_INDEX_5}
-	,	{'\\'	, ::ftwlib::ASCII_COLOR_INDEX_5}
-	,	{'|'	, ::ftwlib::ASCII_COLOR_INDEX_5}
-	,	{'/'	, ::ftwlib::ASCII_COLOR_INDEX_5}
-	,	{'|'	, ::ftwlib::ASCII_COLOR_INDEX_5}
+	{	{' '	, ::ftwlib::ASCII_COLOR_BLACK		}
+	,	{'~'	, ::ftwlib::ASCII_COLOR_DARKBLUE	}
+	,	{'.'	, ::ftwlib::ASCII_COLOR_GREEN		}
+	,	{'#'	, ::ftwlib::ASCII_COLOR_DARKRED		}
+	,	{'^'	, ::ftwlib::ASCII_COLOR_DARKGREEN	}
+	,	{'-'	, ::ftwlib::ASCII_COLOR_RED			}
+	,	{'\\'	, ::ftwlib::ASCII_COLOR_RED			}
+	,	{'|'	, ::ftwlib::ASCII_COLOR_RED			}
+	,	{'/'	, ::ftwlib::ASCII_COLOR_RED			}
 	};
 
 template<typename _tElement, size_t _arraySize>
@@ -105,8 +104,8 @@ void																	setup								(::SApplication& applicationInstance)				{
 void																	update								(::SApplication& applicationInstance)				{ 
 	::ftwlib::presentConsole(applicationInstance.ScreenASCII);	// Present the current image if any.
 
-	::ftwlib::ASCII_COLOR														oldColor							= (::ftwlib::ASCII_COLOR)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_INDEX_1];
-	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_INDEX_1]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)-0x40000) : (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)+0x40000);
+	::ftwlib::ASCII_COLOR_INDEX													oldColor							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
+	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)-0x40000) : (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)+0x40000);
 
 
 	++applicationInstance.FrameCounter;																		
