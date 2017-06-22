@@ -18,10 +18,11 @@ namespace ftwlib
 			if(0 == dataElements && 0 != elementCount)	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 				throw(::std::exception("Invalid parameters."));
 		}
+		template <size_t _elementCount>
+		inline										array_view					(_tElement (&_dataElements)[_elementCount])					: Data(_dataElements), Count(_elementCount) {}
 		// Operators
 							_tElement&				operator[]					(uint32_t index)											{ if(index >= Count) throw(::std::exception("Invalid index.")); return Data[index]; }
 							const _tElement&		operator[]					(uint32_t index)									const	{ if(index >= Count) throw(::std::exception("Invalid index.")); return Data[index]; }
-
 		// Methods
 		inline				_tElement*				begin						()															{ return Data;			}
 		inline constexpr	const _tElement*		begin						()													const	{ return Data;			}

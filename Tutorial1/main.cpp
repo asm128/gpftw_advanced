@@ -104,13 +104,15 @@ void																	setup								(::SApplication& applicationInstance)				{
 void																	update								(::SApplication& applicationInstance)				{ 
 	::ftwlib::presentConsole(applicationInstance.ScreenASCII);	// Present the current image if any.
 
-	::ftwlib::ASCII_COLOR_INDEX													oldColor							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
-	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)-0x40000) : (oldColor & 0x00FFFF) | ((oldColor & 0xFF0000)+0x40000);
+	::ftwlib::ASCII_COLOR_INDEX													oldColor0							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
+	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)+0x30000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)-0x30000);
+	//::ftwlib::ASCII_COLOR_INDEX													oldColor1							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_BLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_BLUE]		= ((applicationInstance.FrameCounter % 48) <  24) ? (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)-0x30000) : (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)+0x30000);
 
 
-	++applicationInstance.FrameCounter;																		
-}	// Increase our frame counter by 1.
-
+	++applicationInstance.FrameCounter;		// Increase our frame counter by 1.
+																
+}	
 void																	draw								(::SApplication& applicationInstance)				{	
 	// This function now will draw some coloured symbols in each cell of the ASCII screen.
 	::ftwlib::SScreenASCII														& asciiTarget						= applicationInstance.ScreenASCII;
@@ -124,7 +126,10 @@ void																	draw								(::SApplication& applicationInstance)				{
 		
 		// Set the target cell with the character and color for to the current tile found in the map.
 		asciiTarget.Characters	[linearIndex]									= tileMap.TileDescriptionTable[tileDescriptionIndex].Character	;
-		asciiTarget.Colors		[linearIndex]									= tileMap.TileDescriptionTable[tileDescriptionIndex].Color		;
+		if('~' == asciiTarget.Characters[linearIndex])
+			asciiTarget.Colors		[linearIndex]									= (((applicationInstance.FrameCounter % 2) + z + x) % 2) ? ::ftwlib::ASCII_COLOR_DARKBLUE | (::ftwlib::ASCII_COLOR_BLACK << 4) : ::ftwlib::ASCII_COLOR_BLACK | (::ftwlib::ASCII_COLOR_DARKBLUE << 4) ;
+		else
+			asciiTarget.Colors		[linearIndex]									= tileMap.TileDescriptionTable[tileDescriptionIndex].Color		;
 	}
 }
 
