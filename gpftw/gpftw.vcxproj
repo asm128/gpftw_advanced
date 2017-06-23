@@ -149,6 +149,7 @@
     <ClInclude Include="ftw_ascii_screen.h" />
     <ClInclude Include="ftw_coord.h" />
     <ClInclude Include="ftw_error.h" />
+    <ClInclude Include="ftw_eval.h" />
     <ClInclude Include="ftw_grid.h" />
     <ClInclude Include="ftw_grid_view.h" />
     <ClInclude Include="ftw_math.h" />

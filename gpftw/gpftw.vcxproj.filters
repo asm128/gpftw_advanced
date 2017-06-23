@@ -60,6 +60,9 @@
     <ClInclude Include="ftw_size.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ftw_eval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ascii_screen.cpp">
