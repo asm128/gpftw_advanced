@@ -17,7 +17,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial1 (tilemap)", "Tuto
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial2 (game)", "Tutorial2\Tutorial2.vcxproj", "{A79B6B3D-43FA-4D9F-AE7B-CF926EC9451E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial3 (tilemap)", "Tutorial3\Tutorial3.vcxproj", "{08B6DE2B-C8F5-42CA-BA1A-4D789EF86344}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial3 (terrain)", "Tutorial3\Tutorial3.vcxproj", "{08B6DE2B-C8F5-42CA-BA1A-4D789EF86344}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial4 (update)", "Tutorial4\Tutorial4.vcxproj", "{D4E3D442-6E9D-4678-B65A-DEE685A565EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,14 @@ Global
 		{08B6DE2B-C8F5-42CA-BA1A-4D789EF86344}.Release|Win32.Build.0 = Release|Win32
 		{08B6DE2B-C8F5-42CA-BA1A-4D789EF86344}.Release|x64.ActiveCfg = Release|x64
 		{08B6DE2B-C8F5-42CA-BA1A-4D789EF86344}.Release|x64.Build.0 = Release|x64
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Debug|Win32.Build.0 = Debug|Win32
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Debug|x64.ActiveCfg = Debug|x64
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Debug|x64.Build.0 = Debug|x64
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Release|Win32.ActiveCfg = Release|Win32
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Release|Win32.Build.0 = Release|Win32
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Release|x64.ActiveCfg = Release|x64
+		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
