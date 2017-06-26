@@ -24,16 +24,22 @@ void																shoot								( ::game::SGame& gameObject, const ::game::SVec
 // Use this function to update the map tiles
 void																updateMap							( ::game::SGame& /*gameObject*/, double /*fLastFrameTime*/ )										{}
 
-// Use this function to update the player
-void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime  )												{
+void																updatePlayerInput					( ::game::SGame& gameObject)																		{
+	::game::SCharacter														& playerInstance					= gameObject.Player;
 	// Query key states
 	bool																	_keyUP								= ::GetAsyncKeyState('W') ? true : false,
 																			_keyDOWN							= ::GetAsyncKeyState('S') ? true : false,
 																			_keyLEFT							= ::GetAsyncKeyState('A') ? true : false,
 																			_keyRIGHT							= ::GetAsyncKeyState('D') ? true : false;
 
-	::game::SVector2														dir									= {0,0};
+	bool																	noKeysPressed						= !_keyRIGHT && !_keyLEFT && !_keyUP && !_keyDOWN;
+	if( noKeysPressed ) {
+		playerInstance.Action												= ::game::ACTION_STAND;
+		return;
+	}
+
 	// set target direction from keys pressed
+	::game::SVector2														dir									= {0,0};
 	if(_keyRIGHT)	++dir.x; //dir.x = 1;
 	if(_keyLEFT)	--dir.x; //dir.x = -1;
 	if(_keyUP)		--dir.y; //dir.y = -1;
@@ -41,29 +47,28 @@ void																updatePlayer						( ::game::SGame& gameObject, double fLastF
 
 	dir.Normalize();	// normalize the new direction vector (make it a unit length so we can multiply it by speed to get velocity vector).
 
-	::game::SCharacter														& playerInstance					= gameObject.Player;
 	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];
 
-	bool																	noKeysPressed						= !_keyRIGHT && !_keyLEFT && !_keyUP && !_keyDOWN;
-	if( noKeysPressed )
-		playerInstance.Action												= ::game::ACTION_STAND;
-	else {																		
-		playerInstance.Action												= ::game::ACTION_WALK;
-		playerBody.Direction												= ::game::SVector2{1, 0}.AngleWith(dir);
-		if( dir.y < 0 )
-			playerBody.Direction												*= -1; 
-	}
+	playerInstance.Action												= ::game::ACTION_WALK;
+	playerBody.Direction												= ::game::SVector2{1, 0}.AngleWith(dir);
+	if( dir.y < 0 )
+		playerBody.Direction												*= -1; 
+}
 
+// Use this function to update the player
+void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime  )												{
+	::game::SCharacter														& playerInstance					= gameObject.Player;
+	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];
 	// Increase 50% speed if left shift pressed.
 	double																	fSpeed								= ::GetAsyncKeyState(VK_LSHIFT) ? playerBody.Speed * 1.5 : playerBody.Speed;
 
-	::game::SEntityCoord2													& playerPosition						= playerBody.Position;
-	::game::STileCoord2														& playerCell							= playerPosition.Tile;
-	::game::SVector2														& playerDeltas							= playerPosition.Deltas;
+	::game::SEntityCoord2													& playerPosition					= playerBody.Position;
+	::game::STileCoord2														& playerCell						= playerPosition.Tile;
+	::game::SVector2														& playerDeltas						= playerPosition.Deltas;
 	if( gameObject.Player.Action == ::game::ACTION_WALK ) {
-		dir.Scale(fSpeed*fLastFrameTime);
-		// integrate our calculated displacement
-		playerDeltas														+= dir;
+		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( playerBody.Direction );
+		dirVector.Scale(fSpeed*fLastFrameTime);
+		playerDeltas														+= dirVector;	// integrate our calculated displacement
 	}
 
 	// refresh tile coords now that we have accumulated the distance walked this frame
@@ -173,6 +178,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	gameInstance.FrameInfo.LastFrameMicroseconds						= timeElapsedMicroseconds;
 	gameInstance.FrameInfo.TotalTime									+= timeElapsedMicroseconds;
 
+	::updatePlayerInput(gameInstance);
 	// call update game functions
 	::updateMap		( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
 	::updatePlayer	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
