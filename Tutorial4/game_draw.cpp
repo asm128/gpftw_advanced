@@ -4,7 +4,7 @@
 #include "ftw_size.h"			// for ::ftwlib::size()
 
 #define GAME_EPSILON		::ftwlib::math_epsilon
-#define INVALID_ENEMY		::game::CHARACTER_TYPE_INVALID
+#define INVALID_CHARACTER		::game::CHARACTER_TYPE_INVALID
 #define INVALID_SHOT		::game::SHOT_TYPE_INVALID
 
 // This function prints the game map on the console
@@ -18,18 +18,14 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 		for( uint32_t x = 0; x < gameObject.Map.Size.x; x++ ) { // iterate over every column for the z row
 			::ftwlib::ASCII_COLOR													backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color & 0xF0);
 			uint32_t																linearIndex							= z * targetWidth + x;	// The position where we shuold position our next character
-			if( gameObject.Player.Position.x == (int32_t)x && gameObject.Player.Position.y == (int32_t)z ) {
-				targetCharacterGrid	[linearIndex]									= 'P'; // draw the player as an ascii character
-				targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_GREEN | backgroundColor;
-			}
-			else if( gameObject.Map.Enemy.Cells[z][x] != INVALID_ENEMY ) {
+			if( gameObject.Map.Enemy.Cells[z][x] != INVALID_CHARACTER ) {
 				if( gameObject.Map.Shots.Cells[z][x] != INVALID_SHOT ) {
 					targetCharacterGrid	[linearIndex]									= '@'; // draw the enemy as an ascii character
 					targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_LIGHTGREY | backgroundColor;
 				}
 				else {
-					targetCharacterGrid	[linearIndex]									= gameObject.Map.Enemy.TileDescriptionTable[gameObject.Map.Enemy.Cells[z][x]].Character; // draw the enemy as an ascii character
-					targetColorGrid		[linearIndex]									= gameObject.Map.Enemy.TileDescriptionTable[gameObject.Map.Enemy.Cells[z][x]].Color | backgroundColor;
+					targetCharacterGrid	[linearIndex]									= enemyDescriptionTable[gameObject.Map.Enemy.Cells[z][x]].Character; // draw the enemy as an ascii character
+					targetColorGrid		[linearIndex]									= enemyDescriptionTable[gameObject.Map.Enemy.Cells[z][x]].Color | backgroundColor;
 				}
 			}
 			else if( gameObject.Map.Shots.Cells[z][x] != INVALID_SHOT ) {
@@ -37,33 +33,35 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 				::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( shot->Direction );
 
 				targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_RED | backgroundColor;
-				if( ( dirVector.x < (-GAME_EPSILON) && dirVector.y < (-GAME_EPSILON) )
-					|| ( dirVector.x > GAME_EPSILON && dirVector.y > GAME_EPSILON )
-					) 
+				if( (dirVector.x < (-GAME_EPSILON)	&& dirVector.y < (-GAME_EPSILON))
+				 || (dirVector.x >   GAME_EPSILON	&& dirVector.y >   GAME_EPSILON )
+				 ) 
 					targetCharacterGrid	[linearIndex]									= '\\'; // draw the shot as an ascii character
-				else if( ( dirVector.x < (-GAME_EPSILON) && dirVector.y > GAME_EPSILON )
-					|| ( dirVector.x > GAME_EPSILON && dirVector.y < (-GAME_EPSILON) )
-					) 
+				else if(( dirVector.x < (-GAME_EPSILON)	&& dirVector.y >   GAME_EPSILON)
+				 ||		( dirVector.x >   GAME_EPSILON	&& dirVector.y < (-GAME_EPSILON))
+				 )
 					targetCharacterGrid	[linearIndex]									= '/'; // draw the shot as an ascii character
-				else if( dirVector.x < (-GAME_EPSILON) || dirVector.x > GAME_EPSILON ) 
-					targetCharacterGrid	[linearIndex]									= '-'; // draw the shot as an ascii character
-				else 
-					targetCharacterGrid	[linearIndex]									= '|'; // draw the shot as an ascii character
+				else
+					targetCharacterGrid	[linearIndex]									= ( dirVector.x < (-GAME_EPSILON) || dirVector.x > GAME_EPSILON ) ? '-' : '|'; // draw the shot as an ascii character
 			}
 			else {
-				targetCharacterGrid	[linearIndex]									= gameObject.Map.Floor.TileDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Character; // draw the enemy as an ascii character
-				targetColorGrid		[linearIndex]									= gameObject.Map.Floor.TileDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color;
-				//targetCharacterGrid	[linearIndex]									= char(gameObject.Map.Floor.Cells[z][x] ? gameObject.Map.Floor.Cells[z][x] : ' '); // draw the tile as an ascii character
-				//targetColorGrid		[linearIndex]									= backgroundColor;
+				targetCharacterGrid	[linearIndex]									= floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Character; // draw the enemy as an ascii character
+				targetColorGrid		[linearIndex]									= floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color;
 			}
 		}
 	}
+
+	// We draw the player outside the loop.
+	::game::STileCoord2														playerPosition						= gameObject.Player.Position;
+	uint32_t							linearIndex						= playerPosition.y * targetWidth + playerPosition.x;
+	::ftwlib::ASCII_COLOR													backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[gameObject.Map.Floor.Cells[playerPosition.y][playerPosition.x]].Color & 0xF0);
+	targetCharacterGrid	[linearIndex]									= 'P';	// draw the player as an ascii character
+	targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_GREEN | backgroundColor;
 }
 
 // This function prints miscelaneous game info
 void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t *targetColorGrid)													{
-	// Calculate another ways of representing the direction
-	::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate(gameObject.Player.Direction);
+	::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate(gameObject.Player.Direction);	// Calculate other ways of representing the direction
 	float																	degrees								= (float)(gameObject.Player.Direction / ::ftwlib::math_2pi * 360.0);
 
 	bool																	playerDead							= gameObject.Player.CurrentPoints.HP <= 0;

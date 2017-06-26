@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-#define INVALID_ENEMY		::game::CHARACTER_TYPE_INVALID
+#define INVALID_CHARACTER		::game::CHARACTER_TYPE_INVALID
 #define INVALID_SHOT		::game::SHOT_TYPE_INVALID
 
 void																refreshPosFromDeltas			( ::game::SMovingObject& character )															{
@@ -92,7 +92,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 	uint32_t																mapWidth							= gameObject.Map.Size.x;
 	uint32_t																mapDepth							= gameObject.Map.Size.y;
 
-	memset( &gameObject.Map.Enemy.Cells[0][0], INVALID_ENEMY, sizeof(int) * mapWidth * mapDepth );	// clear enemy layer to refresh the enemy map layer
+	memset( &gameObject.Map.Enemy.Cells[0][0], INVALID_CHARACTER, sizeof(int) * mapWidth * mapDepth );	// clear enemy layer to refresh the enemy map layer
 
 																									// An iterator is required for std::vector<SCharacter>::erase().
 	std::vector<::game::SCharacter>::iterator								iEnemy								= gameObject.Enemy.begin(); // 
@@ -108,8 +108,8 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 		}
 
 		double																	fEnemySpeed							= currentEnemy.Speed;
-		::game::SMapCoord2														& playerPosition					= gameObject.Player.Position;
-		::game::SMapCoord2														& enemyPosition						= currentEnemy.Position;
+		::game::STileCoord2														& playerPosition					= gameObject.Player.Position;
+		::game::STileCoord2														& enemyPosition						= currentEnemy.Position;
 
 			 if( playerPosition.x < enemyPosition.x )	enemyDeltas.x			-= (float)(fEnemySpeed * fLastFrameTime);	// decrease x 
 		else if( playerPosition.x > enemyPosition.x )	enemyDeltas.x			+= (float)(fEnemySpeed * fLastFrameTime);	// increase x 
@@ -122,7 +122,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 		if( playerPosition.y == enemyPosition.y 
 		 && playerPosition.x == enemyPosition.x 
 		 ) { // Decrease player life if enemy position matches player position
-			gameObject.Player.CurrentPoints.HP									-= max( 1, currentEnemy.CurrentPoints.HP/3 );
+			gameObject.Player.CurrentPoints.HP									-= ::ftwlib::max( 1, currentEnemy.CurrentPoints.HP/3 );
 			enemyPosition.x														= rand() % mapWidth;
 			enemyPosition.y														= rand() % mapDepth;	// set a random position for the enemy so it has to walk again in order to hit the player
 		}
@@ -160,7 +160,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 			continue;
 		}
 		//
-		if( gameObject.Map.Enemy.Cells[currentShot.Position.y][currentShot.Position.x] != INVALID_ENEMY ) { // damage enemy and remove shot
+		if( gameObject.Map.Enemy.Cells[currentShot.Position.y][currentShot.Position.x] != INVALID_CHARACTER ) { // damage enemy and remove shot
 			int32_t																	enemyIndex							= gameObject.Map.Enemy.Cells[currentShot.Position.y][currentShot.Position.x];
 			::game::SCharacterPoints												& currentEnemyPoints				= gameObject.Enemy[enemyIndex].CurrentPoints;	// get a reference in order to reduce verbosity of our code
 			currentEnemyPoints.HP												-= iShot->Damage; // Decrease player life if enemy position matches player position

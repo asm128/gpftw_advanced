@@ -21,6 +21,34 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
+	static uint16_t																	actionKeys[32]													= {};
+	actionKeys[::game::ACTION_INPUT_SALUTE			]							= VK_SPACE;
+	actionKeys[::game::ACTION_INPUT_WALK_FRONT		]							= 'W';
+	actionKeys[::game::ACTION_INPUT_WALK_BACK		]							= 'S';
+	actionKeys[::game::ACTION_INPUT_STRAFE_RIGHT	]							= 'D';
+	actionKeys[::game::ACTION_INPUT_STRAFE_LEFT		]							= 'A';
+	actionKeys[::game::ACTION_INPUT_TURN_RIGHT		]							= VK_RIGHT;
+	actionKeys[::game::ACTION_INPUT_TURN_LEFT		]							= VK_LEFT;
+	actionKeys[::game::ACTION_INPUT_CLIMB_UP		]							= VK_UP;
+	actionKeys[::game::ACTION_INPUT_CLIMB_DOWN		]							= VK_DOWN;
+	actionKeys[::game::ACTION_INPUT_FLY_UP			]							= VK_UP;
+	actionKeys[::game::ACTION_INPUT_FLY_DOWN		]							= VK_DOWN;
+	actionKeys[::game::ACTION_INPUT_SPRINT			]							= VK_SHIFT;
+	actionKeys[::game::ACTION_INPUT_JUMP			]							= VK_SPACE;
+	actionKeys[::game::ACTION_INPUT_CROUCH			]							= 'C';
+	actionKeys[::game::ACTION_INPUT_SNEAK			]							= VK_CONTROL;
+	actionKeys[::game::ACTION_INPUT_SHOOT			]							= VK_RETURN;
+	actionKeys[::game::ACTION_INPUT_MELEE			]							= 'V';
+	actionKeys[::game::ACTION_INPUT_THROW			]							= 'T';
+	actionKeys[::game::ACTION_INPUT_RELOAD			]							= 'R';
+	actionKeys[::game::ACTION_INPUT_USEITEM			]							= 'F';
+	actionKeys[::game::ACTION_INPUT_USEPROP			]							= 'E';
+	actionKeys[::game::ACTION_INPUT_WEAPON_NEXT		]							= 'Q';
+	actionKeys[::game::ACTION_INPUT_WEAPON_PREV		]							= ' ';
+	actionKeys[::game::ACTION_INPUT_ITEM_NEXT		]							= 'Z';
+	actionKeys[::game::ACTION_INPUT_ITEM_PREV		]							= ' ';
+	applicationInstance.ActionInputPlayer										= {actionKeys, ::game::ACTION_INPUT_COUNT};
+
 	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::srand(0);
 	::game::setup(applicationInstance.Game);	// call setup game functions
@@ -32,7 +60,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
 
 	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
-	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
+	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;
 	::game::update(gameInstance, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
 	return 0;

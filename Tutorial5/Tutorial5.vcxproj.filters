@@ -15,20 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="tilemap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mob.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="game_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,8 +27,19 @@
     <ClCompile Include="game_update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mob.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tilemap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

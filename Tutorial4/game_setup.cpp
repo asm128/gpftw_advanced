@@ -66,7 +66,6 @@
 	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_GRASS	, 1, 1, "Grass"	);
 	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_WATER	, 1, 0, "Water"	);
 	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_LAVA	, 1, 1, "Lava"	);
-	descriptionsTableTileFloor[::game::TILE_TYPE_LAVA].Damage					= 10;
 	gameObject.Descriptions.Floor												= {descriptionsTableTileFloor, ::ftwlib::size(descriptionsTableTileFloor)};
 
 	imageTableTileFloor			[::game::TILE_TYPE_GRASS	]					= {'.', ::ftwlib::ASCII_COLOR_GREEN		| (::ftwlib::ASCII_COLOR_DARKGREEN	<< 4)};
@@ -127,7 +126,7 @@
 	imageTableEnemy			[::game::CHARACTER_TYPE_SPEEDY	]					= {'\x2', ::ftwlib::ASCII_COLOR_WHITE		};
 	imageTableEnemy			[::game::CHARACTER_TYPE_BASHFUL	]					= {'\x1', ::ftwlib::ASCII_COLOR_GREEN		};
 	imageTableEnemy			[::game::CHARACTER_TYPE_POKEY	]					= {'\x2', ::ftwlib::ASCII_COLOR_RED			};
-	gameObject.Map.Enemy.TileDescriptionTable									= imageTableEnemy;
+	gameObject.Map.Enemy.TileDescriptionTable									= {imageTableEnemy, ::ftwlib::size(imageTableEnemy)};
 	return 0; 
 } // setup enemies in list
 

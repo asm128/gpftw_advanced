@@ -5,11 +5,11 @@
 
 namespace game
 {
-	typedef	::ftwlib::SCoord2<float>					SVector2;
-	typedef	::ftwlib::SCoord2<int32_t>					SMapCoord2;
+	typedef	::ftwlib::SCoord2<float>					SVector2	;
+	typedef	::ftwlib::SCoord2<int32_t>					STileCoord2	;
 
 	struct SMovingObject {
-				SMapCoord2									Position								= {};	// Coordinates in tile map
+				STileCoord2									Position								= {};	// Coordinates in tile map
 				SVector2									PositionDeltas							= {};	// The position inside the tile	as a range between 0.0 and 0.99999998 or something like that, but in general it's thought as between 0.0 and 1.0.
 				double										Direction								= {};	// rotation angle in radians
 				double										Speed									= {};	// cells/second

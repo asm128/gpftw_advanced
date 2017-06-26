@@ -10,6 +10,7 @@ namespace ftwapp {
 
 		::ftwlib::STimer														Timer								= {};
 		::game::SGame															Game								= {};
+		::ftwlib::array_view<uint16_t>											ActionInputPlayer					= {};
 	};
 
 	::ftwlib::error_t														setup								(::ftwapp::SApplication& applicationInstance);

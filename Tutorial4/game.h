@@ -46,41 +46,40 @@ namespace game
 		};
 
 	struct STileFloor {
-		uint64_t														ShotThrough								: 1;
-		uint64_t														Transitable								: 1;
-		uint64_t														Damage									: 8;
-		::std::string													Name									= "Unnamed tile";
+		uint64_t														ShotThrough				: 1;
+		uint64_t														Transitable				: 1;
+		uint64_t														Damage					: 8;
+		::std::string													Name					= "Unnamed tile";
 	};
 
 	struct SFrameInfo {
-		uint64_t														LastFrameMicroseconds					= 0;
-		uint64_t														TotalMicroseconds						= 0;
-		double															LastFrameSeconds						= 0;
 		uint32_t														FrameNumber								= 0;
+		double															LastFrameTime							= 0;
+		double															TotalTime								= 0;
 	};
 #pragma pack (pop)
 
 	struct SMap { // The struct is a block of variables to be used to store our map information
-		::ftwlib::SCoord2<uint32_t>										Size									= {};		// Declare Width and Depth variables which will hold the active map size
-		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Floor									= {};
-		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Enemy									= {};
-		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Shots									= {};
+		::ftwlib::SCoord2<uint32_t>										Size;		// Declare Width and Depth variables which will hold the active map size
+		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Floor;
+		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Enemy;
+		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Shots;
 	};
 
 	struct SDescriptionTables { // 
-		::ftwlib::array_view<const ::game::SCharacter	>				Enemy									= {};		// 
-		::ftwlib::array_view<const ::game::SShot		>				Shot									= {};		// 
-		::ftwlib::array_view<const ::game::STileFloor	>				Floor									= {};		// 
+		::ftwlib::array_view<const ::game::SCharacter	>				Enemy;		// 
+		::ftwlib::array_view<const ::game::SShot		>				Shot;		// 
+		::ftwlib::array_view<const ::game::STileFloor	>				Floor;		// 
 	};
 
 	struct SGame { // holds the game data
-		::game::SMap													Map										= {};		// declare a variable of type SMap
-		::game::SCharacter												Player									= {};		// Declare a variable of type SCharacter for the player
-		::game::SFrameInfo												FrameInfo								= {};
-		::std::vector<SCharacter>										Enemy									= {};		// Enemy list
-		::std::vector<SShot>											Shots									= {};		// Shot list
+		::game::SMap													Map;		// declare a variable of type SMap
+		::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
+		::game::SFrameInfo												FrameInfo;
+		::std::vector<SCharacter>										Enemy;		// Enemy list
+		::std::vector<SShot>											Shots;		// Shot list
 
-		SDescriptionTables												Descriptions							= {};
+		SDescriptionTables												Descriptions;
 	};
 
 	// -- game functions			

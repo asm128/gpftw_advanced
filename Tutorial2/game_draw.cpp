@@ -13,7 +13,7 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 				targetCharacterGrid	[linearIndex]											= 'P'; // draw the player as an ascii character
 				targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_GREEN;
 			}
-			else if( gameObject.Map.Enemy.Cells[z][x] != INVALID_ENEMY ) {
+			else if( gameObject.Map.Enemy.Cells[z][x] != INVALID_CHARACTER ) {
 				if( gameObject.Map.Shots.Cells[z][x] != INVALID_SHOT ) {
 					targetCharacterGrid	[linearIndex]											= '@'; // draw the enemy as an ascii character
 					targetColorGrid		[linearIndex]											= ::ftwlib::ASCII_COLOR_LIGHTGREY;

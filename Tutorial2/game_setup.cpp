@@ -8,7 +8,7 @@
 	for( uint32_t z = 0; z < gameObject.Map.Size.y; ++z ) {		// iterate over every row
 		for( uint32_t x = 0; x < gameObject.Map.Size.x; ++x ) {		// iterate over every column for the z row
 			gameObject.Map.Floor.Cells[z][x]									= TILE_GRASS;	
-			gameObject.Map.Enemy.Cells[z][x]									= INVALID_ENEMY;
+			gameObject.Map.Enemy.Cells[z][x]									= INVALID_CHARACTER;
 			gameObject.Map.Shots.Cells[z][x]									= INVALID_SHOT;
 		}
 	}
