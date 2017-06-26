@@ -1,5 +1,5 @@
 #include "tilemap.h"	// for STileMapASCII
-#include "mob.h"		// for SMovingObject, SCharacter, SShot
+#include "character.h"		// for SMovingObject, SCharacter, SShot
 
 #include "ftw_error.h"	// for ::ftwlib::error_t
 
@@ -68,7 +68,7 @@ namespace game
 
 	struct SDescriptionTables { // 
 		::ftwlib::array_view<const ::game::SCharacter	>				Enemy;		// 
-		::ftwlib::array_view<const ::game::SShot		>				Shot;		// 
+		::ftwlib::array_view<const ::game::SCharacter	>				Shot;		// 
 		::ftwlib::array_view<const ::game::STileFloor	>				Floor;		// 
 	};
 
@@ -76,8 +76,10 @@ namespace game
 		::game::SMap													Map;		// declare a variable of type SMap
 		::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
 		::game::SFrameInfo												FrameInfo;
-		::std::vector<SCharacter>										Enemy;		// Enemy list
-		::std::vector<SShot>											Shots;		// Shot list
+		::std::vector<SCharacter>										Enemy;				// Enemy list
+		::std::vector<SCharacter>										Shots;				// Shot list
+
+		SRigidBodyEngine												RigidBodyEngine;	// Rigid body list
 
 		SDescriptionTables												Descriptions;
 	};

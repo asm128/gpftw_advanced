@@ -12,24 +12,25 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 	const ::ftwlib::array_view<const ::game::STileASCII>					floorDescriptionTable				= gameObject.Map.Floor.TileDescriptionTable;
 	const ::ftwlib::array_view<const ::game::STileASCII>					enemyDescriptionTable				= gameObject.Map.Enemy.TileDescriptionTable;
 	const ::ftwlib::array_view<const ::game::STileASCII>					shotDescriptionTable				= gameObject.Map.Shots.TileDescriptionTable;
-	
-	// 
+
 	for( uint32_t z = 0; z < gameObject.Map.Size.y; z++ ) { // iterate over every row
 		for( uint32_t x = 0; x < gameObject.Map.Size.x; x++ ) { // iterate over every column for the z row
 			::ftwlib::ASCII_COLOR													backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color & 0xF0);
 			uint32_t																linearIndex							= z * targetWidth + x;	// The position where we shuold position our next character
-			if( gameObject.Map.Enemy.Cells[z][x] != INVALID_CHARACTER ) {
-				if( gameObject.Map.Shots.Cells[z][x] != INVALID_SHOT ) {
+			int32_t																	enemyDescriptionIndex				= gameObject.Map.Enemy.Cells[z][x];
+			int32_t																	shotDescriptionIndex				= gameObject.Map.Shots.Cells[z][x];
+			if( enemyDescriptionIndex != INVALID_CHARACTER ) {
+				if( shotDescriptionIndex != INVALID_SHOT ) {
 					targetCharacterGrid	[linearIndex]									= '@'; // draw the enemy as an ascii character
 					targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_LIGHTGREY | backgroundColor;
 				}
 				else {
-					targetCharacterGrid	[linearIndex]									= enemyDescriptionTable[gameObject.Map.Enemy.Cells[z][x]].Character; // draw the enemy as an ascii character
-					targetColorGrid		[linearIndex]									= enemyDescriptionTable[gameObject.Map.Enemy.Cells[z][x]].Color | backgroundColor;
+					targetCharacterGrid	[linearIndex]									= enemyDescriptionTable[enemyDescriptionIndex].Character; // draw the enemy as an ascii character
+					targetColorGrid		[linearIndex]									= enemyDescriptionTable[enemyDescriptionIndex].Color | backgroundColor;
 				}
 			}
-			else if( gameObject.Map.Shots.Cells[z][x] != INVALID_SHOT ) {
-				const ::game::SShot														* shot								= &gameObject.Shots[gameObject.Map.Shots.Cells[z][x]];
+			else if( shotDescriptionIndex != INVALID_SHOT ) {
+				const ::game::SShot														* shot								= &gameObject.Shots[shotDescriptionIndex];
 				::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( shot->Direction );
 
 				targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_RED | backgroundColor;
@@ -45,15 +46,16 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 					targetCharacterGrid	[linearIndex]									= ( dirVector.x < (-GAME_EPSILON) || dirVector.x > GAME_EPSILON ) ? '-' : '|'; // draw the shot as an ascii character
 			}
 			else {
-				targetCharacterGrid	[linearIndex]									= floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Character; // draw the enemy as an ascii character
-				targetColorGrid		[linearIndex]									= floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color;
+				int32_t																	tileIndex							= gameObject.Map.Floor.Cells[z][x];
+				targetCharacterGrid	[linearIndex]									= floorDescriptionTable[tileIndex].Character; // draw the enemy as an ascii character
+				targetColorGrid		[linearIndex]									= floorDescriptionTable[tileIndex].Color;
 			}
 		}
 	}
 
 	// We draw the player outside the loop.
 	::game::STileCoord2														playerPosition						= gameObject.Player.Position;
-	uint32_t							linearIndex						= playerPosition.y * targetWidth + playerPosition.x;
+	uint32_t																linearIndex							= playerPosition.y * targetWidth + playerPosition.x;
 	::ftwlib::ASCII_COLOR													backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[gameObject.Map.Floor.Cells[playerPosition.y][playerPosition.x]].Color & 0xF0);
 	targetCharacterGrid	[linearIndex]									= 'P';	// draw the player as an ascii character
 	targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_GREEN | backgroundColor;

@@ -19,9 +19,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial2 (game)", "Tutoria
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial3 (terrain)", "Tutorial3\Tutorial3.vcxproj", "{08B6DE2B-C8F5-42CA-BA1A-4D789EF86344}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial4 (shot)", "Tutorial4\Tutorial4.vcxproj", "{D4E3D442-6E9D-4678-B65A-DEE685A565EC}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial5 (enemies)", "Tutorial5\Tutorial5.vcxproj", "{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial4 (physics)", "Tutorial4\Tutorial4.vcxproj", "{D4E3D442-6E9D-4678-B65A-DEE685A565EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,14 +77,6 @@ Global
 		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Release|Win32.Build.0 = Release|Win32
 		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Release|x64.ActiveCfg = Release|x64
 		{D4E3D442-6E9D-4678-B65A-DEE685A565EC}.Release|x64.Build.0 = Release|x64
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Debug|Win32.Build.0 = Debug|Win32
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Debug|x64.ActiveCfg = Debug|x64
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Debug|x64.Build.0 = Debug|x64
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Release|Win32.ActiveCfg = Release|Win32
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Release|Win32.Build.0 = Release|Win32
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Release|x64.ActiveCfg = Release|x64
-		{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
