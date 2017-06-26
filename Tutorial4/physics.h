@@ -8,6 +8,7 @@
 
 namespace game 
 {
+#pragma pack(push, 1)
 	typedef	::ftwlib::SCoord2<float>					SVector2	;
 	typedef	::ftwlib::SCoord2<int32_t>					STileCoord2	;
 	struct SEntityCoord2 {
@@ -24,10 +25,16 @@ namespace game
 				double										Speed							= {};	// Cells/second
 	};
 
+	struct SRigidBodyState {
+				bool										Unused							: 1;
+				bool										Active							: 1;
+	};
+#pragma pack(pop)
+
 	struct SRigidBodyEngine {
 				::std::vector<SRigidBody>					RigidBody						= {};
 				::std::vector<SRigidBody>					RigidBodyNext					= {};
-				::std::vector<bool>							Unused							= {};
+				::std::vector<SRigidBodyState>				RigidBodyState					= {};
 	// Methods
 				::ftwlib::error_t							CalcNextPositions				(double fElapsedTime);
 				::ftwlib::error_t							AddRigidBody					(const SRigidBody& rigidBodyData);

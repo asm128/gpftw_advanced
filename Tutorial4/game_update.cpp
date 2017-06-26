@@ -12,9 +12,9 @@ void																shoot								( ::game::SGame& gameObject, const ::game::SVec
 
 	::game::SRigidBody														shotBody							= {};
 		
-	shotBody.Speed													= 10.0f; // 10 tiles per second
-	shotBody.Position.Deltas										= origin;
-	shotBody.Direction												= direction;
+	shotBody.Speed														= 10.0f; // 10 tiles per second
+	shotBody.Position.Deltas											= origin;
+	shotBody.Direction													= direction;
 	shotBody.Position.RefreshPosFromDeltas(); // update tile coordinates
 	newShot.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(shotBody);
 
@@ -58,7 +58,8 @@ void																updatePlayerInput					( ::game::SGame& gameObject)										
 // Use this function to update the player
 void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime  )												{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
-	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];
+	::game::SRigidBodyEngine												& bodyEngine						= gameObject.RigidBodyEngine;
+	::game::SRigidBody														& playerBody						= bodyEngine.RigidBody[playerInstance.RigidBody];
 	// Increase 50% speed if left shift pressed.
 	double																	fSpeed								= ::GetAsyncKeyState(VK_LSHIFT) ? playerBody.Speed * 1.5 : playerBody.Speed;
 
@@ -66,10 +67,13 @@ void																updatePlayer						( ::game::SGame& gameObject, double fLastF
 	::game::STileCoord2														& playerCell						= playerPosition.Tile;
 	::game::SVector2														& playerDeltas						= playerPosition.Deltas;
 	if( gameObject.Player.Action == ::game::ACTION_WALK ) {
+		bodyEngine.RigidBodyState[playerInstance.RigidBody].Active			= true;
 		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( playerBody.Direction );
 		dirVector.Scale(fSpeed*fLastFrameTime);
 		playerDeltas														+= dirVector;	// integrate our calculated displacement
 	}
+	else if( gameObject.Player.Action == ::game::ACTION_STAND ) 
+		bodyEngine.RigidBodyState[playerInstance.RigidBody].Active			= false;
 
 	// refresh tile coords now that we have accumulated the distance walked this frame
 	playerPosition.RefreshPosFromDeltas();

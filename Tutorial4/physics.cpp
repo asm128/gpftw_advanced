@@ -1,8 +1,8 @@
 #include "physics.h"
 
 		::ftwlib::error_t											game::SRigidBodyEngine::CalcNextPositions			(double fElapsedTime)																{
-	for(uint32_t iBody = 0, bodyCount = (uint32_t)Unused.size(); iBody < bodyCount; ++iBody) {
-		if(Unused[iBody])
+	for(uint32_t iBody = 0, bodyCount = (uint32_t)RigidBodyState.size(); iBody < bodyCount; ++iBody) {
+		if(RigidBodyState[iBody].Unused || false == RigidBodyState[iBody].Active)
 			continue;
 		const ::game::SRigidBody												& bodyCurrent										= RigidBody		[iBody];
 		::game::SRigidBody														& bodyNext											= RigidBodyNext	[iBody]		= bodyCurrent;
@@ -15,19 +15,25 @@
 }
 
 		::ftwlib::error_t											game::SRigidBodyEngine::AddRigidBody			(const SRigidBody& rigidBodyData)								{
-	uint32_t																bodyCount										= (uint32_t)Unused.size();
+	uint32_t																bodyCount										= (uint32_t)RigidBodyState.size();
 	for(uint32_t iBody = 0; iBody < bodyCount; ++iBody) {
-		if(false == Unused[iBody])
+		if(false == RigidBodyState[iBody].Unused)
 			continue;
-		Unused		[iBody]													= false;
-		RigidBody	[iBody]													= rigidBodyData;
+		RigidBodyState	[iBody]											= {false, true};
+		RigidBody		[iBody]											= rigidBodyData;
 		return iBody;
 	}
 	try {
-		Unused		.push_back(false		);
-		RigidBody	.push_back(rigidBodyData);
+		RigidBodyState	.push_back({false, true});
 	}
 	catch(...) {
+		return -1;
+	}
+	try {
+		RigidBody		.push_back(rigidBodyData);
+	}
+	catch(...) {
+		RigidBodyState	.pop_back();
 		return -1;
 	}
 	return bodyCount;
@@ -42,22 +48,18 @@
 	int32_t																	deltaX											= (int)charDeltas.x;
 	int32_t																	deltaY											= (int)charDeltas.y;
 
-	// Add the integer part of the deltas to the tile coordinate.
-	charTile	.x														+= deltaX;
+	charTile	.x														+= deltaX;	// Add the integer part of the deltas to the tile coordinate.
 	charTile	.y														+= deltaY;
 
-	// Remove the integer part of the deltas from the deltas themselves.
-	charDeltas	.x														-= deltaX;
+	charDeltas	.x														-= deltaX;	// Remove the integer part of the deltas from the deltas themselves.
 	charDeltas	.y														-= deltaY;
 
-	// Fix X coordinate if X is between 0 and -0.9999999999999999999
-	if(charDeltas.x < 0) {
+	if(charDeltas.x < 0) {	// Fix X coordinate if X is between 0 and -0.9999999999999999999
 		charTile	.x														-= 1;
 		charDeltas	.x														+= 1;
 	}
-	
-	// Fix Y coordinate if Y is between 0 and -0.9999999999999999999
-	if(charDeltas.y < 0) {
+
+	if(charDeltas.y < 0) {	// Fix Y coordinate if Y is between 0 and -0.9999999999999999999
 		charTile	.y														-= 1;
 		charDeltas	.y														+= 1;
 	}
