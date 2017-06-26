@@ -89,8 +89,6 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 	int32_t																	indexEnemy							= 0; // keep track of enemy index
 	while( indexEnemy < gameObject.Enemy.size() ) {
 		::game::SCharacter														& currentEnemy						= gameObject.Enemy[indexEnemy]; // get the address of the current enemy at [iEnemy] index
-		::game::SRigidBody														& enemyBody							= gameObject.RigidBodyEngine.RigidBody[currentEnemy.RigidBody];
-		::game::SVector2														& enemyDeltas						= enemyBody.Position.Deltas;
 
 		if( currentEnemy.PointsCurrent.HP <= 0 ) {		// remove enemy if zero health
 			currentPlayerPoints.XP												+= currentEnemy.PointsMax.HP;	// Increase experience depending on enemy health.
@@ -98,8 +96,10 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 			continue; // keep at the current index of the list 
 		}
 
-		double																	fEnemySpeed							= enemyBody.Speed;
+		::game::SRigidBody														& enemyBody							= gameObject.RigidBodyEngine.RigidBody[currentEnemy.RigidBody];
+		::game::SVector2														& enemyDeltas						= enemyBody.Position.Deltas;
 		::game::STileCoord2														& enemyCell							= enemyBody.Position.Tile;
+		double																	fEnemySpeed							= enemyBody.Speed;
 
 			 if( playerCell.x < enemyCell.x )	enemyDeltas.x					-= (float)(fEnemySpeed * fLastFrameTime);	// decrease x 
 		else if( playerCell.x > enemyCell.x )	enemyDeltas.x					+= (float)(fEnemySpeed * fLastFrameTime);	// increase x 
@@ -167,12 +167,17 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	if( gameInstance.Player.PointsCurrent.HP <= 0 || gameInstance.Enemy.size() == 0 )
 		return 0; // return if no enemies or if player HP is 0
 
+	// Set last frame time and number.
+	++gameInstance.FrameInfo.FrameNumber;
+	gameInstance.FrameInfo.LastFrameSeconds								= timeElapsedMicroseconds / 1000000.0;
+	gameInstance.FrameInfo.LastFrameMicroseconds						= timeElapsedMicroseconds;
+	gameInstance.FrameInfo.TotalTime									+= timeElapsedMicroseconds;
+
 	// call update game functions
-	double																	timeElapsedSeconds					= timeElapsedMicroseconds / 1000000.0;
-	updateMap		( gameInstance, timeElapsedSeconds );
-	updatePlayer	( gameInstance, timeElapsedSeconds );
-	updateShots		( gameInstance, timeElapsedSeconds );
-	updateEnemies	( gameInstance, timeElapsedSeconds ); // update enemies
+	::updateMap		( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
+	::updatePlayer	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
+	::updateShots	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
+	::updateEnemies	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds ); // update enemies
 
 	return 0;
 }

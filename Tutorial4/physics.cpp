@@ -1,26 +1,26 @@
 #include "physics.h"
 
-		::ftwlib::error_t							game::SRigidBodyEngine::CalcNextPositions		()																{
+		::ftwlib::error_t											game::SRigidBodyEngine::CalcNextPositions			(double fElapsedTime)																{
 	for(uint32_t iBody = 0, bodyCount = (uint32_t)Unused.size(); iBody < bodyCount; ++iBody) {
 		if(Unused[iBody])
 			continue;
-		const ::game::SRigidBody							& bodyCurrent									= RigidBody		[iBody];
-		::game::SRigidBody									& bodyNext										= RigidBodyNext	[iBody]		= bodyCurrent;
+		const ::game::SRigidBody												& bodyCurrent										= RigidBody		[iBody];
+		::game::SRigidBody														& bodyNext											= RigidBodyNext	[iBody]		= bodyCurrent;
 
-		::game::SVector2									dirVector										= ::game::SVector2{1, 0}.Rotate( bodyCurrent.Direction );
-		bodyNext.Position.Deltas						+= dirVector * bodyCurrent.Speed;
+		::game::SVector2														dirVector											= ::game::SVector2{1, 0}.Rotate( bodyCurrent.Direction );
+		bodyNext.Position.Deltas											+= dirVector * bodyCurrent.Speed * fElapsedTime;
 		bodyNext.Position.RefreshPosFromDeltas();
 	}
 	return 0;
 }
 
-		::ftwlib::error_t							game::SRigidBodyEngine::AddRigidBody			(const SRigidBody& rigidBodyData)								{
-	uint32_t												bodyCount										= (uint32_t)Unused.size();
+		::ftwlib::error_t											game::SRigidBodyEngine::AddRigidBody			(const SRigidBody& rigidBodyData)								{
+	uint32_t																bodyCount										= (uint32_t)Unused.size();
 	for(uint32_t iBody = 0; iBody < bodyCount; ++iBody) {
 		if(false == Unused[iBody])
 			continue;
-		Unused		[iBody]									= false;
-		RigidBody	[iBody]									= rigidBodyData;
+		Unused		[iBody]													= false;
+		RigidBody	[iBody]													= rigidBodyData;
 		return iBody;
 	}
 	try {
@@ -34,13 +34,13 @@
 }
 
 // Increase cell units and decrease deltas until the deltas are between 0 and 0.9999999999999999999999
-		void										game::SEntityCoord2::RefreshPosFromDeltas		()																{
-	::game::SVector2														& charDeltas					= Deltas; // get pointer to deltas
-	::game::STileCoord2														& charTile						= Tile; // get pointer to deltas
+		void														game::SEntityCoord2::RefreshPosFromDeltas		()																{
+	::game::SVector2														& charDeltas									= Deltas; // get pointer to deltas
+	::game::STileCoord2														& charTile										= Tile; // get pointer to deltas
 
 	// Get the integer part of the deltas.
-	int32_t																	deltaX							= (int)charDeltas.x;
-	int32_t																	deltaY							= (int)charDeltas.y;
+	int32_t																	deltaX											= (int)charDeltas.x;
+	int32_t																	deltaY											= (int)charDeltas.y;
 
 	// Add the integer part of the deltas to the tile coordinate.
 	charTile	.x														+= deltaX;

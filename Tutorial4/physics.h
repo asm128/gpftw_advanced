@@ -29,7 +29,7 @@ namespace game
 				::std::vector<SRigidBody>					RigidBodyNext					= {};
 				::std::vector<bool>							Unused							= {};
 	// Methods
-				::ftwlib::error_t							CalcNextPositions				();
+				::ftwlib::error_t							CalcNextPositions				(double fElapsedTime);
 				::ftwlib::error_t							AddRigidBody					(const SRigidBody& rigidBodyData);
 	};
 }

@@ -53,9 +53,10 @@ namespace game
 	};
 
 	struct SFrameInfo {
-		uint32_t														FrameNumber								= 0;
-		double															LastFrameTime							= 0;
-		double															TotalTime								= 0;
+		uint64_t														FrameNumber								= 0;
+		uint64_t														TotalTime								= 0;
+		uint64_t														LastFrameMicroseconds					= 0;
+		double															LastFrameSeconds						= 0;
 	};
 #pragma pack (pop)
 
