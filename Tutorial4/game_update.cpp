@@ -9,13 +9,13 @@
 void																shoot								( ::game::SGame& gameObject, const ::game::SVector2& origin, double direction, int32_t damage )		{
 	::game::SCharacter														newShot								= {};
 	newShot.PointsCurrent.DP											= damage; //
+	newShot.Speed														= 10.0f; // 10 tiles per second
+	newShot.Direction													= direction;
 
 	::game::SRigidBody														shotBody							= {};
 		
-	shotBody.Speed														= 10.0f; // 10 tiles per second
 	shotBody.Position.Deltas											= origin;
-	shotBody.Direction													= direction;
-	shotBody.Position.RefreshPosFromDeltas(); // update tile coordinates
+	shotBody.Position.RefreshPosFromDeltas();	// update tile coordinates
 	newShot.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(shotBody);
 
 	gameObject.Shots.push_back( newShot );
@@ -50,9 +50,12 @@ void																updatePlayerInput					( ::game::SGame& gameObject)										
 	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];
 
 	playerInstance.Action												= ::game::ACTION_WALK;
-	playerBody.Direction												= ::game::SVector2{1, 0}.AngleWith(dir);
+	playerInstance.Direction											= ::game::SVector2{1, 0}.AngleWith(dir);
 	if( dir.y < 0 )
-		playerBody.Direction												*= -1; 
+		playerInstance.Direction											*= -1; 
+
+	::game::SVector2														dirVector											= ::game::SVector2{1, 0}.Rotate( playerInstance.Direction );
+	playerBody.Velocity													+= dirVector * playerInstance.Speed;
 }
 
 // Use this function to update the player
@@ -61,15 +64,15 @@ void																updatePlayer						( ::game::SGame& gameObject, double fLastF
 	::game::SRigidBodyEngine												& bodyEngine						= gameObject.RigidBodyEngine;
 	::game::SRigidBody														& playerBody						= bodyEngine.RigidBody[playerInstance.RigidBody];
 	// Increase 50% speed if left shift pressed.
-	double																	fSpeed								= ::GetAsyncKeyState(VK_LSHIFT) ? playerBody.Speed * 1.5 : playerBody.Speed;
+	double																	fSpeed								= ::GetAsyncKeyState(VK_LSHIFT) ? playerInstance.Speed * 1.5 : playerInstance.Speed;
 
 	::game::SEntityCoord2													& playerPosition					= playerBody.Position;
 	::game::STileCoord2														& playerCell						= playerPosition.Tile;
 	::game::SVector2														& playerDeltas						= playerPosition.Deltas;
 	if( gameObject.Player.Action == ::game::ACTION_WALK ) {
 		bodyEngine.RigidBodyState[playerInstance.RigidBody].Active			= true;
-		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( playerBody.Direction );
-		dirVector.Scale(fSpeed*fLastFrameTime);
+		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( playerInstance.Direction );
+		dirVector.Scale( fSpeed *fLastFrameTime );
 		playerDeltas														+= dirVector;	// integrate our calculated displacement
 	}
 	else if( gameObject.Player.Action == ::game::ACTION_STAND ) 
@@ -80,7 +83,7 @@ void																updatePlayer						( ::game::SGame& gameObject, double fLastF
 
 	if(::GetAsyncKeyState(VK_SPACE)) {
 		::game::SVector2														origin								= { playerCell.x + playerDeltas.x, playerCell.y + playerDeltas.y };
-		::shoot( gameObject, origin, playerBody.Direction, playerInstance.PointsCurrent.DP );
+		::shoot( gameObject, origin, playerInstance.Direction, playerInstance.PointsCurrent.DP );
 	}
 }
 
@@ -108,7 +111,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 		::game::SRigidBody														& enemyBody							= gameObject.RigidBodyEngine.RigidBody[currentEnemy.RigidBody];
 		::game::SVector2														& enemyDeltas						= enemyBody.Position.Deltas;
 		::game::STileCoord2														& enemyCell							= enemyBody.Position.Tile;
-		double																	fEnemySpeed							= enemyBody.Speed;
+		double																	fEnemySpeed							= currentEnemy.Speed;
 
 			 if( playerCell.x < enemyCell.x )	enemyDeltas.x					-= (float)(fEnemySpeed * fLastFrameTime);	// decrease x 
 		else if( playerCell.x > enemyCell.x )	enemyDeltas.x					+= (float)(fEnemySpeed * fLastFrameTime);	// increase x 
@@ -144,9 +147,9 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 		::game::SVector2														& shotDeltas						= shotBody.Position.Deltas;
 		::game::STileCoord2														& shotCell							= shotBody.Position.Tile;
 
-		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( shotBody.Direction );
-		shotDeltas.x														+= float(shotBody.Speed * fLastFrameTime * dirVector.x); // add speed*time*direction to our coordinates 
-		shotDeltas.y														+= float(shotBody.Speed * fLastFrameTime * dirVector.y); // add speed*time*direction to our coordinates 
+		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( currentShot.Direction );
+		shotDeltas.x														+= float(currentShot.Speed * fLastFrameTime * dirVector.x); // add speed*time*direction to our coordinates 
+		shotDeltas.y														+= float(currentShot.Speed * fLastFrameTime * dirVector.y); // add speed*time*direction to our coordinates 
 
 		shotBody.Position.RefreshPosFromDeltas();	// refresh cell coordinates now that we have accumulated the distance
 

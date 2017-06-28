@@ -32,7 +32,7 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 			}
 			else if( shotDescriptionIndex != INVALID_SHOT ) {
 				const ::game::SCharacter												& shot								= gameObject.Shots[shotDescriptionIndex];
-				::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( gameObject.RigidBodyEngine.RigidBody[shot.RigidBody].Direction );
+				::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( shot.Direction );
 
 				targetColorGrid		[linearIndex]									= ::ftwlib::ASCII_COLOR_RED | backgroundColor;
 				if( (dirVector.x < (-GAME_EPSILON)	&& dirVector.y < (-GAME_EPSILON))
@@ -67,8 +67,8 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t *targetColorGrid)													{
 	const ::game::SCharacter												& playerInstance					= gameObject.Player;	
 	const ::game::SRigidBody												& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];	
-	::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate(playerBody.Direction);	// Calculate other ways of representing the direction
-	float																	degrees								= (float)(playerBody.Direction / ::ftwlib::math_2pi * 360.0);
+	::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate(playerInstance.Direction);	// Calculate other ways of representing the direction
+	float																	degrees								= (float)(playerInstance.Direction / ::ftwlib::math_2pi * 360.0);
 
 	bool																	playerDead							= playerInstance.PointsCurrent.HP <= 0;
 	char																	compositeText	[1024]				= {};
@@ -90,7 +90,7 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	int32_t																	
 	textLength	= ::sprintf_s(compositeText, "- Player health: %i/%u, Mana: %i/%u, Experience: %i, Damage: %i."			, playerPoints.HP, (uint32_t)playerPointsMax.HP, playerPoints.MP, (uint32_t)playerPointsMax.MP, playerPoints.XP, playerPoints.DP	); COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Player position: (%i, %i), deltas: (%f, %f)."							, playerCell.x, playerCell.y, playerDeltas.x, playerDeltas.y																		); COPY_TO_TARGET();
-	textLength	= ::sprintf_s(compositeText, "- Player direction: (%f, %f). Player angle: %f radians or %f degrees."	, dirVector.x, dirVector.y, (float)playerBody.Direction, degrees																	); COPY_TO_TARGET();
+	textLength	= ::sprintf_s(compositeText, "- Player direction: (%f, %f). Player angle: %f radians or %f degrees."	, dirVector.x, dirVector.y, (float)playerInstance.Direction, degrees																); COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Enemy count: %u, Shot count: %u."										, (uint32_t)gameObject.Enemy.size(), (uint32_t)gameObject.Shots.size()																); COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Shoot with Space key. Run by holding LEFT SHIFT while moving."																																				); COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Move (P)layer by pressing the arrow keys to prevent being touched by enemies E, F, G and H."																												); COPY_TO_TARGET();

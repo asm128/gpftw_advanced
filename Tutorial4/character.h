@@ -22,6 +22,8 @@ namespace game
 				SCharacterPoints							PointsCurrent	;	// The current value of the character points, updated on game events
 				int32_t										RigidBody		;	// For storing position and physics information
 				ACTION_TYPE									Action			;	// The current action the character is performing
+				double										Speed			;	// Cells/second
+				double										Direction		;	// Rotation angle in radians
 	};
 }
 

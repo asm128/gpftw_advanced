@@ -37,9 +37,9 @@
 	playerBody.Position.Tile.x													= 5;
 	playerBody.Position.Tile.y													= 5;
 	playerBody.Position.Deltas													= {0,0};
-	playerBody.Direction														= 0.0f;
-	playerBody.Speed															= 5.5f;
 
+	gameObject.Player.Direction													= 0.0f;
+	gameObject.Player.Speed														= 5.5f;
 	gameObject.Player.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(playerBody);
 	gameObject.Player.PointsMax													= 
 	gameObject.Player.PointsCurrent												= { 100, 20, 0, 15 }; 
@@ -55,7 +55,7 @@
 		::game::SRigidBody																enemyBody														= {};
 		
 		enemyBody.Position															= { ::rand() % (int32_t)gameObject.Map.Size.x, ::rand() % (int32_t)gameObject.Map.Size.y };
-		enemyBody.Speed																= iEnemy;
+		newEnemy.Speed																= iEnemy;
 		newEnemy.RigidBody															= gameObject.RigidBodyEngine.AddRigidBody(enemyBody);
 
 		gameObject.Enemy.push_back( newEnemy ); // copy the new enemy as a new element at the end of our enemy list.
@@ -117,7 +117,7 @@
 	static ::game::STileASCII														imageTableEnemy				[::game::CHARACTER_TYPE_COUNT	]	= {};
 
 #define SET_CHARACTER_RECORD(_charType, _speed, _maxPoints)											\
-	descriptionsTableRigidBody	[_charType].Speed									= _speed;		\
+	descriptionsTableEnemy		[_charType].Speed									= _speed;		\
 	descriptionsTableEnemy		[_charType].PointsCurrent							=				\
 	descriptionsTableEnemy		[_charType].PointsMax								= _maxPoints;
 

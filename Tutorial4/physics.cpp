@@ -7,8 +7,7 @@
 		const ::game::SRigidBody												& bodyCurrent										= RigidBody		[iBody];
 		::game::SRigidBody														& bodyNext											= RigidBodyNext	[iBody]		= bodyCurrent;
 
-		::game::SVector2														dirVector											= ::game::SVector2{1, 0}.Rotate( bodyCurrent.Direction );
-		bodyNext.Position.Deltas											+= dirVector * bodyCurrent.Speed * fElapsedTime;
+		bodyNext.Position.Deltas											+= bodyCurrent.Velocity * fElapsedTime;
 		bodyNext.Position.RefreshPosFromDeltas();
 	}
 	return 0;
@@ -19,8 +18,8 @@
 	for(uint32_t iBody = 0; iBody < bodyCount; ++iBody) {
 		if(false == RigidBodyState[iBody].Unused)
 			continue;
-		RigidBodyState	[iBody]											= {false, true};
-		RigidBody		[iBody]											= rigidBodyData;
+		RigidBodyState	[iBody]												= {false, true};
+		RigidBody		[iBody]												= rigidBodyData;
 		return iBody;
 	}
 	try {

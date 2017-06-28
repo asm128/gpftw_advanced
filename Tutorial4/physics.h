@@ -21,8 +21,6 @@ namespace game
 	struct SRigidBody {
 				::game::SEntityCoord2						Position						= {};	// Coordinates in tile map
 				::game::SVector2							Velocity						= {};	// A vector representing the speed in a given direction 
-				double										Direction						= {};	// Rotation angle in radians
-				double										Speed							= {};	// Cells/second
 	};
 
 	struct SRigidBodyState {
