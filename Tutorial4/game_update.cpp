@@ -120,8 +120,8 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[gameObject.Player.RigidBody];
 	::game::STileCoord2														& playerCell						= playerBody.Position.Tile;
 
-	int32_t																	indexEnemy							= 0; // keep track of enemy index
-	while( indexEnemy < gameObject.Enemy.size() ) {
+	uint32_t																indexEnemy							= 0; // keep track of enemy index
+	while( indexEnemy < (uint32_t)gameObject.Enemy.size() ) {
 		::game::SCharacter														& currentEnemy						= gameObject.Enemy[indexEnemy]; // get the address of the current enemy at [iEnemy] index
 
 		if( currentEnemy.PointsCurrent.HP <= 0 ) {		// remove enemy if zero health
@@ -162,8 +162,8 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 
 	::memset( gameObject.Map.Shots.Cells.begin(), INVALID_SHOT, sizeof(int) * mapWidth * mapDepth );	// clear enemy layer to refresh the enemy map layer
 
-	short 																	indexShot							= 0;
-	while( indexShot < gameObject.Shots.size() ) {
+	uint32_t																indexShot							= 0;
+	while( indexShot < (uint32_t)gameObject.Shots.size() ) {
 		::game::SCharacter														& currentShot						= gameObject.Shots[indexShot]; 
 		::game::SRigidBody														& shotBody							= gameObject.RigidBodyEngine.RigidBody[currentShot.RigidBody];
 		::game::SVector2														& shotDeltas						= shotBody.Position.Deltas;

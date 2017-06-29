@@ -14,6 +14,7 @@ namespace game
 	template <size_t _gridWidth, size_t _gridHeight>
 	struct STileMapASCII {
 		typedef				::ftwlib::SGrid<int32_t, _gridWidth, _gridHeight>		TTileIndexGrid;
+
 		static constexpr	const uint32_t											Width						= (uint32_t)_gridWidth;
 		static constexpr	const uint32_t											Depth						= (uint32_t)_gridHeight;
 
