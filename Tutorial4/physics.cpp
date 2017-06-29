@@ -1,6 +1,7 @@
 #include "physics.h"
 
 		::ftwlib::error_t											game::SRigidBodyEngine::CalcNextPositions			(double fElapsedTime)																{
+	double																	fElapsedTimeHalfSquared								= fElapsedTime * fElapsedTime * 0.5;
 	for(uint32_t iBody = 0, bodyCount = (uint32_t)RigidBodyState.size(); iBody < bodyCount; ++iBody) {
 		if(RigidBodyState[iBody].Unused || false == RigidBodyState[iBody].Active)
 			continue;
@@ -8,28 +9,34 @@
 		::game::SRigidBody														& bodyNext											= RigidBodyNext	[iBody]		= bodyCurrent;
 
 		bodyNext.Position.Deltas											+= bodyCurrent.Velocity * fElapsedTime;
+		bodyNext.Position.Deltas											+= bodyCurrent.Velocity * fElapsedTimeHalfSquared;
+
 		bodyNext.Position.RefreshPosFromDeltas();
 	}
 	return 0;
 }
 
 		::ftwlib::error_t											game::SRigidBodyEngine::AddRigidBody			(const SRigidBody& rigidBodyData)								{
-	uint32_t																bodyCount										= (uint32_t)RigidBodyState.size();
+	const uint32_t															bodyCount										= (uint32_t)RigidBodyState.size();
+	static constexpr const	::game::SRigidBodyState							bodyState										= {false, true};
+
 	for(uint32_t iBody = 0; iBody < bodyCount; ++iBody) {
 		if(false == RigidBodyState[iBody].Unused)
 			continue;
-		RigidBodyState	[iBody]												= {false, true};
-		RigidBody		[iBody]												= rigidBodyData;
+		RigidBodyState	[iBody]												= bodyState;
+		RigidBody		[iBody]												= 
+		RigidBodyNext	[iBody]												= rigidBodyData;
 		return iBody;
 	}
 	try {
-		RigidBodyState	.push_back({false, true});
+		RigidBodyState	.push_back(bodyState);
 	}
 	catch(...) {
 		return -1;
 	}
 	try {
 		RigidBody		.push_back(rigidBodyData);
+		RigidBodyNext	.push_back(rigidBodyData);
 	}
 	catch(...) {
 		RigidBodyState	.pop_back();

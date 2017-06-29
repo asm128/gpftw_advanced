@@ -51,12 +51,11 @@ int																			main															()														{
 	if( 0 == applicationInstance )
 		return -1;	// return error because we couldn't allocate the main instance of our application.
 
-	::ftwapp::setup(*applicationInstance); /// Call setup()
-	
+	::ftwapp::setup		(*applicationInstance); 
+
 	while( true ) { /// Execute code between braces while the condition inside () evaluates to true.
-		::ftwapp::update	(*applicationInstance);		// Update frame.
-		::ftwapp::render	(*applicationInstance);		// Render frame.
-		Sleep(100);
+		::ftwapp::update	(*applicationInstance);		/// Update frame.
+		::ftwapp::render	(*applicationInstance);		/// Render frame.
 		if(::GetAsyncKeyState(VK_ESCAPE))		/// Check for escape key pressed.
 			break;	/// Exit while() loop.
 	}

@@ -5,8 +5,8 @@
 
 // initialize game map
 ::ftwlib::error_t															setupWorldMap													(::game::SGame& gameObject) 														{
-	gameObject.Map.Size.x														= game::MAP_WIDTH; // Set a proper width for our map, which has to be less than MAX_MAP_WIDTH
-	gameObject.Map.Size.y														= game::MAP_DEPTH; // Same for map depth   
+	gameObject.Map.Size.x														= ::game::MAP_WIDTH;	// Set a proper width for our map, which has to be less than MAX_MAP_WIDTH.
+	gameObject.Map.Size.y														= ::game::MAP_DEPTH;	// Same for map depth.
 
 	for( uint32_t z = 0; z < gameObject.Map.Size.y; ++z ) {		// iterate over every row
 		for( uint32_t x = 0; x < gameObject.Map.Size.x; ++x ) {		// iterate over every column for the z row
@@ -18,12 +18,12 @@
 
 	// set a wall border
 	for( uint32_t x = 0; x < gameObject.Map.Size.x; ++x ) {
-		gameObject.Map.Floor.Cells[0][x]											= ::game::TILE_TYPE_WALL; // set all cells in the first row [0]   
-		gameObject.Map.Floor.Cells[gameObject.Map.Size.y - 1][x]					= ::game::TILE_TYPE_WALL; // set all cells in the last row [depth-1]
+		gameObject.Map.Floor.Cells[0][x]											= ::game::TILE_TYPE_WALL;	// set all cells in the first row [0]   
+		gameObject.Map.Floor.Cells[gameObject.Map.Size.y - 1][x]					= ::game::TILE_TYPE_WALL;	// set all cells in the last row [depth-1]
 	}
 	for( uint32_t z = 0; z < gameObject.Map.Size.y; ++z ) {
-		gameObject.Map.Floor.Cells[z][0]											= ::game::TILE_TYPE_WALL; // set all cells for the first column [0]   
-		gameObject.Map.Floor.Cells[z][gameObject.Map.Size.x - 1]					= ::game::TILE_TYPE_WALL; // set all cells for the last column [width-1]
+		gameObject.Map.Floor.Cells[z][0]											= ::game::TILE_TYPE_WALL;	// set all cells for the first column [0]   
+		gameObject.Map.Floor.Cells[z][gameObject.Map.Size.x - 1]					= ::game::TILE_TYPE_WALL;	// set all cells for the last column [width-1]
 	}
 
 	return 0;
@@ -32,18 +32,19 @@
 // Use this function to setup player at level startup.
 ::ftwlib::error_t															setupWorldPlayer												(::game::SGame& gameObject)															{
 	// set some initial configuration to the player character
-
 	::game::SRigidBody																playerBody														= {};
 	playerBody.Position.Tile.x													= 5;
 	playerBody.Position.Tile.y													= 5;
 	playerBody.Position.Deltas													= {0,0};
 
-	gameObject.Player.Direction													= 0.0f;
-	gameObject.Player.Speed														= 5.5f;
+	gameObject.Player.DirectionInRadians										= 0.0f;
+	gameObject.Player.Speed														= 0.0f;
+	gameObject.Player.SpeedMax													= 15.0f;
 	gameObject.Player.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(playerBody);
 	gameObject.Player.PointsMax													= 
 	gameObject.Player.PointsCurrent												= { 100, 20, 0, 15 }; 
-	gameObject.Player.Action													= ::game::ACTION_STAND;
+	gameObject.Player.ActionActive												= {};
+	::memset(gameObject.Player.ActionDirection, 0, sizeof(::game::SDirection) * ::ftwlib::size(gameObject.Player.ActionDirection));
 	return 0;
 }
 
@@ -63,7 +64,7 @@
 	return 0;
 }
 
-::ftwlib::error_t															setupDescriptionsMap											(::game::SGame& gameObject)														{ 
+::ftwlib::error_t															setupDescriptionsMap											(::game::SGame& gameObject)															{ 
 	static ::game::STileFloor														descriptionsTableTileFloor	[::game::TILE_TYPE_COUNT		]	= {};
 	static ::game::STileASCII														imageTableTileFloor			[::game::TILE_TYPE_COUNT		]	= {};
 	
@@ -87,7 +88,7 @@
 	return 0; 
 }
 
-::ftwlib::error_t															setupDescriptionsShot											(::game::SGame& gameObject)														{ 
+::ftwlib::error_t															setupDescriptionsShot											(::game::SGame& gameObject)															{ 
 	static ::game::SCharacter														descriptionsTableShot		[::game::SHOT_TYPE_COUNT		]	= {};
 	static ::game::STileASCII														imageTableShot				[::game::SHOT_TYPE_COUNT		]	= {};
 
@@ -108,10 +109,11 @@
 	imageTableShot				[::game::SHOT_TYPE_ROCK		]					= {'o'		, ::ftwlib::ASCII_COLOR_DARKGREEN	};
 	imageTableShot				[::game::SHOT_TYPE_ROCKET	]					= {'\xf'	, ::ftwlib::ASCII_COLOR_DARKCYAN	};
 	gameObject.Map.Shots.TileDescriptionTable									= {imageTableShot, ::ftwlib::size(imageTableShot)};
+
 	return 0; 
 }
 
-::ftwlib::error_t															setupDescriptionsEnemies										(::game::SGame& gameObject)														{ 
+::ftwlib::error_t															setupDescriptionsEnemies										(::game::SGame& gameObject)															{ 
 	static ::game::SRigidBody														descriptionsTableRigidBody	[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::SCharacter														descriptionsTableEnemy		[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::STileASCII														imageTableEnemy				[::game::CHARACTER_TYPE_COUNT	]	= {};
@@ -132,11 +134,12 @@
 	imageTableEnemy			[::game::CHARACTER_TYPE_BASHFUL	]					= {'\x1', ::ftwlib::ASCII_COLOR_GREEN		};
 	imageTableEnemy			[::game::CHARACTER_TYPE_POKEY	]					= {'\x2', ::ftwlib::ASCII_COLOR_RED			};
 	gameObject.Map.Enemy.TileDescriptionTable									= {imageTableEnemy, ::ftwlib::size(imageTableEnemy)};
+
 	return 0; 
 } // setup enemies in list
 
-::ftwlib::error_t															game::cleanup													(::game::SGame& /*gameObject*/)													{ return 0; }
-::ftwlib::error_t															game::setup														(::game::SGame& gameObject)														{
+::ftwlib::error_t															game::cleanup													(::game::SGame& /*gameObject*/)														{ return 0; }
+::ftwlib::error_t															game::setup														(::game::SGame& gameObject)															{
 	::setupDescriptionsMap		(gameObject);
 	::setupDescriptionsShot		(gameObject);
 	::setupDescriptionsEnemies	(gameObject); // setup enemies in list

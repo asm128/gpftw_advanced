@@ -2,27 +2,28 @@
 
 #include <Windows.h>
 
-#define INVALID_CHARACTER		::game::CHARACTER_TYPE_INVALID
+#define INVALID_CHARACTER	::game::CHARACTER_TYPE_INVALID
 #define INVALID_SHOT		::game::SHOT_TYPE_INVALID
 
 
 void																shoot								( ::game::SGame& gameObject, const ::game::SVector2& origin, double direction, int32_t damage )		{
 	::game::SCharacter														newShot								= {};
 	newShot.PointsCurrent.DP											= damage; //
-	newShot.Speed														= 10.0f; // 10 tiles per second
-	newShot.Direction													= direction;
+	newShot.Speed														= 8.0f; // 10 tiles per second
+	newShot.DirectionInRadians											= direction;
 
 	::game::SRigidBody														shotBody							= {};
-		
 	shotBody.Position.Deltas											= origin;
 	shotBody.Position.RefreshPosFromDeltas();	// update tile coordinates
-	newShot.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(shotBody);
 
+	newShot.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(shotBody);
 	gameObject.Shots.push_back( newShot );
 }
 
 // Use this function to update the map tiles
 void																updateMap							( ::game::SGame& /*gameObject*/, double /*fLastFrameTime*/ )										{}
+
+static constexpr const ::ftwlib::SCoord2<double>					directionFront						= {1, 0};
 
 void																updatePlayerInput					( ::game::SGame& gameObject)																		{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
@@ -33,57 +34,78 @@ void																updatePlayerInput					( ::game::SGame& gameObject)										
 																			_keyRIGHT							= ::GetAsyncKeyState('D') ? true : false;
 
 	bool																	noKeysPressed						= !_keyRIGHT && !_keyLEFT && !_keyUP && !_keyDOWN;
-	if( noKeysPressed ) {
-		playerInstance.Action												= ::game::ACTION_STAND;
+	playerInstance.ActionActive											&= ~(1 << ::game::ACTION_TYPE_WALK);
+	playerInstance.ActionActive											&= ~(1 << ::game::ACTION_TYPE_TURN);
+
+	if( noKeysPressed )
 		return;
-	}
 
 	// set target direction from keys pressed
-	::game::SVector2														dir									= {0,0};
-	if(_keyRIGHT)	++dir.x; //dir.x = 1;
-	if(_keyLEFT)	--dir.x; //dir.x = -1;
-	if(_keyUP)		--dir.y; //dir.y = -1;
-	if(_keyDOWN)	++dir.y; //dir.y = 1;
+	if(_keyLEFT || _keyRIGHT) {
+		playerInstance.ActionActive											|= 1 << ::game::ACTION_TYPE_TURN; 
+		playerInstance.ActionDirection[::game::ACTION_TYPE_TURN].Right		= (_keyRIGHT	) ? 1 : 0;
+		playerInstance.ActionDirection[::game::ACTION_TYPE_TURN].Left		= (_keyLEFT		) ? 1 : 0;
+	}
 
-	dir.Normalize();	// normalize the new direction vector (make it a unit length so we can multiply it by speed to get velocity vector).
-
-	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];
-
-	playerInstance.Action												= ::game::ACTION_WALK;
-	playerInstance.Direction											= ::game::SVector2{1, 0}.AngleWith(dir);
-	if( dir.y < 0 )
-		playerInstance.Direction											*= -1; 
-
-	::game::SVector2														dirVector											= ::game::SVector2{1, 0}.Rotate( playerInstance.Direction );
-	playerBody.Velocity													+= dirVector * playerInstance.Speed;
+	if(_keyUP || _keyDOWN) {
+		playerInstance.ActionActive											|= 1 << ::game::ACTION_TYPE_WALK; 
+		playerInstance.ActionDirection[::game::ACTION_TYPE_WALK].Front		= (_keyUP		) ? 1 : 0; 
+		playerInstance.ActionDirection[::game::ACTION_TYPE_WALK].Back		= (_keyDOWN		) ? 1 : 0;
+	}
 }
 
-// Use this function to update the player
-void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime  )												{
+template<typename _tValue>	
+static inline constexpr	bool										in_range							(const _tValue& value, const _tValue& minValue, const _tValue& maxValue)								{ return value < maxValue && value > minValue; }
+
+void																evaluateAction						( ::game::SCharacter& playerInstance, double fLastFrameTime )											{
+	const double															timeScale							= 3;
+	
+	if(playerInstance.ActionActive & (1 << ::game::ACTION_TYPE_TURN)) {
+		if(playerInstance.ActionDirection[::game::ACTION_TYPE_TURN].Right	== true) playerInstance.DirectionInRadians += fLastFrameTime;
+		if(playerInstance.ActionDirection[::game::ACTION_TYPE_TURN].Left	== true) playerInstance.DirectionInRadians -= fLastFrameTime;
+	}
+
+	if(playerInstance.ActionActive & (1 << ::game::ACTION_TYPE_WALK)) {
+		if(playerInstance.ActionDirection[::game::ACTION_TYPE_WALK].Back)
+			playerInstance.Speed												-= fLastFrameTime * timeScale;
+		else
+			playerInstance.Speed												+= fLastFrameTime * timeScale;
+	}
+
+	playerInstance.Speed												= ::ftwlib::max(0.0, ::ftwlib::min(playerInstance.Speed, playerInstance.SpeedMax));
+}
+
+void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime )													{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
 	::game::SRigidBodyEngine												& bodyEngine						= gameObject.RigidBodyEngine;
-	::game::SRigidBody														& playerBody						= bodyEngine.RigidBody[playerInstance.RigidBody];
-	// Increase 50% speed if left shift pressed.
-	double																	fSpeed								= ::GetAsyncKeyState(VK_LSHIFT) ? playerInstance.Speed * 1.5 : playerInstance.Speed;
-
+	::game::SRigidBody														& playerBody						= bodyEngine.RigidBody		[playerInstance.RigidBody];
+	::game::SRigidBody														& playerBodyNext					= bodyEngine.RigidBodyNext	[playerInstance.RigidBody];
+	::game::SRigidBodyState													& playerBodyState					= bodyEngine.RigidBodyState	[playerInstance.RigidBody];
 	::game::SEntityCoord2													& playerPosition					= playerBody.Position;
 	::game::STileCoord2														& playerCell						= playerPosition.Tile;
 	::game::SVector2														& playerDeltas						= playerPosition.Deltas;
-	if( gameObject.Player.Action == ::game::ACTION_WALK ) {
-		bodyEngine.RigidBodyState[playerInstance.RigidBody].Active			= true;
-		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( playerInstance.Direction );
-		dirVector.Scale( fSpeed *fLastFrameTime );
-		playerDeltas														+= dirVector;	// integrate our calculated displacement
-	}
-	else if( gameObject.Player.Action == ::game::ACTION_STAND ) 
-		bodyEngine.RigidBodyState[playerInstance.RigidBody].Active			= false;
 
-	// refresh tile coords now that we have accumulated the distance walked this frame
-	playerPosition.RefreshPosFromDeltas();
+	::game::STileCoord2														& nextTile							= playerBodyNext.Position.Tile;
+	const ::game::SMap														& gameMap							= gameObject.Map;
+
+	nextTile.x															= ::ftwlib::min((uint32_t)::ftwlib::max(playerBodyNext.Position.Tile.x, 1), gameMap.Size.x - 2);
+	nextTile.y															= ::ftwlib::min((uint32_t)::ftwlib::max(playerBodyNext.Position.Tile.y, 1), gameMap.Size.y - 2);
+
+	if( gameMap.Enemy.Cells[nextTile.y][nextTile.x] == INVALID_CHARACTER
+	 && gameObject.Descriptions.Floor[gameMap.Floor.Cells[nextTile.y][nextTile.x]].Transitable
+	 ) {
+		playerBody															= playerBodyNext;
+		playerBodyState.Active												= true;
+	}
+
+	::evaluateAction(playerInstance, fLastFrameTime);
+
+	::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( playerInstance.DirectionInRadians );
+	playerBody.Velocity													= dirVector * playerInstance.Speed;
 
 	if(::GetAsyncKeyState(VK_SPACE)) {
 		::game::SVector2														origin								= { playerCell.x + playerDeltas.x, playerCell.y + playerDeltas.y };
-		::shoot( gameObject, origin, playerInstance.Direction, playerInstance.PointsCurrent.DP );
+		::shoot( gameObject, origin, playerInstance.DirectionInRadians, playerInstance.PointsCurrent.DP );
 	}
 }
 
@@ -147,7 +169,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 		::game::SVector2														& shotDeltas						= shotBody.Position.Deltas;
 		::game::STileCoord2														& shotCell							= shotBody.Position.Tile;
 
-		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( currentShot.Direction );
+		::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate( currentShot.DirectionInRadians );
 		shotDeltas.x														+= float(currentShot.Speed * fLastFrameTime * dirVector.x); // add speed*time*direction to our coordinates 
 		shotDeltas.y														+= float(currentShot.Speed * fLastFrameTime * dirVector.y); // add speed*time*direction to our coordinates 
 
@@ -185,12 +207,14 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	gameInstance.FrameInfo.LastFrameMicroseconds						= timeElapsedMicroseconds;
 	gameInstance.FrameInfo.TotalTime									+= timeElapsedMicroseconds;
 
-	::updatePlayerInput(gameInstance);
+	gameInstance.RigidBodyEngine.CalcNextPositions(gameInstance.FrameInfo.LastFrameSeconds);
+
 	// call update game functions
 	::updateMap		( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
 	::updatePlayer	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
 	::updateShots	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
 	::updateEnemies	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds ); // update enemies
 
+	::updatePlayerInput(gameInstance);
 	return 0;
 }
