@@ -34,7 +34,7 @@ namespace game
 				::std::vector<SRigidBody>					RigidBody						= {};
 				::std::vector<SRigidBody>					RigidBodyNext					= {};
 				::std::vector<SRigidBodyState>				RigidBodyState					= {};
-	// Methods
+	// --- Methods
 				::ftwlib::error_t							CalcNextPositions				(double fElapsedTime);
 				::ftwlib::error_t							AddRigidBody					(const SRigidBody& rigidBodyData);
 	};

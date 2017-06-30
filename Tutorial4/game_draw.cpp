@@ -16,10 +16,10 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 	// 
 	for( uint32_t z = 0; z < gameObject.Map.Size.y; z++ ) { // iterate over every row
 		for( uint32_t x = 0; x < gameObject.Map.Size.x; x++ ) { // iterate over every column for the z row
-			const ::ftwlib::ASCII_COLOR													backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color & 0xF0);
-			const uint32_t																linearIndex							= z * targetWidth + x;	// The position where we shuold position our next character
-			const int32_t																enemyDescriptionIndex				= gameObject.Map.Enemy.Cells[z][x];
-			const int32_t																shotDescriptionIndex				= gameObject.Map.Shots.Cells[z][x];
+			const ::ftwlib::ASCII_COLOR												backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color & 0xF0);
+			const uint32_t															linearIndex							= z * targetWidth + x;	// The position where we shuold position our next character
+			const int32_t															enemyDescriptionIndex				= gameObject.Map.Enemy.Cells[z][x];
+			const int32_t															shotDescriptionIndex				= gameObject.Map.Shots.Cells[z][x];
 			if( enemyDescriptionIndex != INVALID_CHARACTER ) {
 				if( shotDescriptionIndex != INVALID_SHOT ) {
 					targetCharacterGrid	[linearIndex]									= '@'; // draw the enemy as an ascii character

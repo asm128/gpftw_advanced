@@ -17,39 +17,39 @@ namespace game
 
 	enum TILE_TYPE : uint32_t 
 		{	TILE_TYPE_GRASS				= 0  // define some values to represent our terrain tiles
-		,	TILE_TYPE_WALL					
-		,	TILE_TYPE_WATER					
-		,	TILE_TYPE_LAVA					
+		,	TILE_TYPE_WALL	
+		,	TILE_TYPE_WATER	
+		,	TILE_TYPE_LAVA	
 		,	TILE_TYPE_COUNT
 		,	TILE_TYPE_INVALID			= ~0U
 		};
 
 	enum CHARACTER_TYPE : uint32_t 
 		{	CHARACTER_TYPE_SHADOW		= 0  // define some values to represent our terrain tiles
-		,	CHARACTER_TYPE_SPEEDY			 
+		,	CHARACTER_TYPE_SPEEDY	
 		,	CHARACTER_TYPE_BASHFUL
-		,	CHARACTER_TYPE_POKEY		 
-		,	CHARACTER_TYPE_COUNT			
+		,	CHARACTER_TYPE_POKEY	
+		,	CHARACTER_TYPE_COUNT	
 		,	CHARACTER_TYPE_INVALID		= ~0U
 		};
 
 	enum SHOT_TYPE : uint32_t 
 		{	SHOT_TYPE_ARROW				= 0  // define some values to represent our terrain tiles
-		,	SHOT_TYPE_BULLET				 
+		,	SHOT_TYPE_BULLET	
 		,	SHOT_TYPE_DART
-		,	SHOT_TYPE_FLAME				 
+		,	SHOT_TYPE_FLAME	
 		,	SHOT_TYPE_COLD
 		,	SHOT_TYPE_ROCK	
 		,	SHOT_TYPE_ROCKET 
-		,	SHOT_TYPE_COUNT				
+		,	SHOT_TYPE_COUNT	
 		,	SHOT_TYPE_INVALID			= ~0U
 		};
 
 	struct STileFloor {
-		uint64_t														ShotThrough				: 1;
-		uint64_t														Transitable				: 1;
-		uint64_t														Damage					: 8;
-		::std::string													Name					= "Unnamed tile";
+		uint64_t														ShotThrough								: 1;
+		uint64_t														Transitable								: 1;
+		uint64_t														Damage									: 8;
+		::std::string													Name									= "Unnamed tile";
 	};
 
 	struct SFrameInfo {

@@ -87,7 +87,6 @@ void																updatePlayer						( ::game::SGame& gameObject, double fLastF
 
 	::game::STileCoord2														& nextTile							= playerBodyNext.Position.Tile;
 	const ::game::SMap														& gameMap							= gameObject.Map;
-
 	nextTile.x															= ::ftwlib::min((uint32_t)::ftwlib::max(playerBodyNext.Position.Tile.x, 1), gameMap.Size.x - 2);
 	nextTile.y															= ::ftwlib::min((uint32_t)::ftwlib::max(playerBodyNext.Position.Tile.y, 1), gameMap.Size.y - 2);
 

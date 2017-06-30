@@ -19,7 +19,7 @@ namespace game
 	// These enumerations should be kept small and resolve the complexity of each somewhere else. 
 	enum ACTION_TYPE : uint16_t
 		{	ACTION_TYPE_NONE								= 0
-		,	ACTION_TYPE_WALK								
+		,	ACTION_TYPE_WALK	
 		,	ACTION_TYPE_TURN
 		,	ACTION_TYPE_STRAFE	
 		,	ACTION_TYPE_JUMP	
