@@ -39,7 +39,6 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 	return 0;
 }
 
-
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
 	//::ftwlib::clearConsole															(applicationInstance.ScreenASCII);
 	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());

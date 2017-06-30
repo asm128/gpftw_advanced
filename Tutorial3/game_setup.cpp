@@ -27,7 +27,7 @@
 	}
 
 	return 0;
-};
+}
 
 // Use this function to setup player at level startup.
 ::ftwlib::error_t															setupWorldPlayer												(::game::SGame& gameObject)															{
@@ -141,4 +141,3 @@
 	::setupWorldEnemies			(gameObject); // setup enemies in list
 	return 0;
 }
-

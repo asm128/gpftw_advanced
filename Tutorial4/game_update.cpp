@@ -23,15 +23,16 @@ void																shoot								( ::game::SGame& gameObject, const ::game::SVec
 // Use this function to update the map tiles
 void																updateMap							( ::game::SGame& /*gameObject*/, double /*fLastFrameTime*/ )										{}
 
-static constexpr const ::ftwlib::SCoord2<double>					directionFront						= {1, 0};
+static constexpr const	::ftwlib::SCoord2<double>					directionFront						= {1, 0};
 
 void																updatePlayerInput					( ::game::SGame& gameObject)																		{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
-	// Query key states
-	bool																	_keyUP								= ::GetAsyncKeyState('W') ? true : false,
-																			_keyDOWN							= ::GetAsyncKeyState('S') ? true : false,
-																			_keyLEFT							= ::GetAsyncKeyState('A') ? true : false,
-																			_keyRIGHT							= ::GetAsyncKeyState('D') ? true : false;
+	// --- Query key states
+	bool																	_keyUP								= (::GetAsyncKeyState('W') || ::GetAsyncKeyState(VK_UP		)) ? true : false
+		,																	_keyDOWN							= (::GetAsyncKeyState('S') || ::GetAsyncKeyState(VK_DOWN	)) ? true : false
+		,																	_keyLEFT							= (::GetAsyncKeyState('A') || ::GetAsyncKeyState(VK_LEFT	)) ? true : false
+		,																	_keyRIGHT							= (::GetAsyncKeyState('D') || ::GetAsyncKeyState(VK_RIGHT	)) ? true : false
+		;
 
 	bool																	noKeysPressed						= !_keyRIGHT && !_keyLEFT && !_keyUP && !_keyDOWN;
 	playerInstance.ActionActive											&= ~(1 << ::game::ACTION_TYPE_WALK);
