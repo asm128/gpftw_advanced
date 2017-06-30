@@ -51,8 +51,8 @@
 	::game::STileCoord2														& charTile										= Tile; // get pointer to deltas
 
 	// Get the integer part of the deltas.
-	int32_t																	deltaX											= (int)charDeltas.x;
-	int32_t																	deltaY											= (int)charDeltas.y;
+	int32_t																	deltaX											= (int32_t)charDeltas.x;
+	int32_t																	deltaY											= (int32_t)charDeltas.y;
 
 	charTile	.x														+= deltaX;	// Add the integer part of the deltas to the tile coordinate.
 	charTile	.y														+= deltaY;

@@ -55,7 +55,6 @@ int																			main															()														{
 	while( true ) { /// Execute code between braces while the condition inside () evaluates to true.
 		::ftwapp::update	(*applicationInstance);		// Update frame.
 		::ftwapp::render	(*applicationInstance);		// Render frame.
-		Sleep(100);
 		if(::GetAsyncKeyState(VK_ESCAPE))		/// Check for escape key pressed.
 			break;	/// Exit while() loop.
 	}

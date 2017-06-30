@@ -13,8 +13,8 @@ namespace game
 	typedef	::ftwlib::SCoord2<int32_t>					STileCoord2	;
 
 	struct SEntityCoord2 {
-				STileCoord2									Tile							= {};	// Coordinates in tile map
-				SVector2									Deltas							= {};	// The position inside the tile	as a range between 0.0 and 0.99999998 or something like that, but in general it's thought as between 0.0 and 1.0.
+				::game::STileCoord2							Tile							= {};	// Coordinates in tile map
+				::game::SVector2							Deltas							= {};	// The position inside the tile	as a range between 0.0 and 0.99999998 or something like that, but in general it's thought as between 0.0 and 1.0.
 
 				void										RefreshPosFromDeltas			();
 	};

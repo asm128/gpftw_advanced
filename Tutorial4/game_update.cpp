@@ -9,7 +9,7 @@
 void																shoot								( ::game::SGame& gameObject, const ::game::SVector2& origin, double direction, int32_t damage )		{
 	::game::SCharacter														newShot								= {};
 	newShot.PointsCurrent.DP											= damage; //
-	newShot.Speed														= 8.0f; // 10 tiles per second
+	newShot.Speed														= 8.0f; // tiles per second
 	newShot.DirectionInRadians											= direction;
 
 	::game::SRigidBody														shotBody							= {};

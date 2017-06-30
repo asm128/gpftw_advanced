@@ -13,7 +13,6 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 	const ::ftwlib::array_view<const ::game::STileASCII>					enemyDescriptionTable				= gameObject.Map.Enemy.TileDescriptionTable;
 	const ::ftwlib::array_view<const ::game::STileASCII>					shotDescriptionTable				= gameObject.Map.Shots.TileDescriptionTable;
 	
-	// 
 	for( uint32_t z = 0; z < gameObject.Map.Size.y; z++ ) { // iterate over every row
 		for( uint32_t x = 0; x < gameObject.Map.Size.x; x++ ) { // iterate over every column for the z row
 			const ::ftwlib::ASCII_COLOR												backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[gameObject.Map.Floor.Cells[z][x]].Color & 0xF0);
@@ -108,7 +107,7 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 
 // Use this function to draw our game data
 ::ftwlib::error_t													game::draw							(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t *targetColorGrid)				{	// Accepts an address of an SGame instance
-	::drawASCIIMap( gameObject, targetWidth, targetCharacterGrid, targetColorGrid );
+	::drawASCIIMap(gameObject, targetWidth, targetCharacterGrid, targetColorGrid);
 
 	bool																	playerDead							= gameObject.Player.PointsCurrent.HP <= 0;
 	bool																	playerWon							= gameObject.Enemy.size() == 0;
@@ -123,6 +122,6 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	uint32_t																offsetCell							= (::game::MAP_DEPTH / 2 * targetWidth) + (::game::MAP_WIDTH / 2 - textLength / 2);
 	COPY_TO_TARGET();
 	
-	::drawASCIIGameInfo( gameObject, targetWidth, targetCharacterGrid, targetColorGrid );
+	::drawASCIIGameInfo(gameObject, targetWidth, targetCharacterGrid, targetColorGrid);
 	return 0;
 }

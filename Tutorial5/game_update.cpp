@@ -9,7 +9,7 @@
 void																shoot								( ::game::SGame& gameObject, const ::game::SVector2& origin, double direction, int32_t damage )		{
 	::game::SCharacter														newShot								= {};
 	newShot.PointsCurrent.DP											= damage; //
-	newShot.Speed														= 8.0f; // 10 tiles per second
+	newShot.Speed														= 8.0; // 8 tiles per second
 	newShot.DirectionInRadians											= direction;
 
 	::game::SRigidBody														shotBody							= {};
@@ -56,9 +56,9 @@ void																updatePlayerInput					( ::game::SGame& gameObject)										
 }
 
 template<typename _tValue>	
-static inline constexpr	bool										in_range							(const _tValue& value, const _tValue& minValue, const _tValue& maxValue)								{ return value < maxValue && value > minValue; }
+static inline constexpr	bool										in_range							(const _tValue& value, const _tValue& minValue, const _tValue& maxValue)							{ return value < maxValue && value > minValue; }
 
-void																evaluateAction						( ::game::SCharacter& playerInstance, double fLastFrameTime )											{
+void																evaluateAction						( ::game::SCharacter& playerInstance, double fLastFrameTime )										{
 	const double															timeScale							= 3;
 	
 	if(playerInstance.ActionActive & (1 << ::game::ACTION_TYPE_TURN)) {
@@ -76,7 +76,7 @@ void																evaluateAction						( ::game::SCharacter& playerInstance, do
 	playerInstance.Speed												= ::ftwlib::max(0.0, ::ftwlib::min(playerInstance.Speed, playerInstance.SpeedMax));
 }
 
-void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime )													{
+void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime )												{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
 	::game::SRigidBodyEngine												& bodyEngine						= gameObject.RigidBodyEngine;
 	::game::SRigidBody														& playerBody						= bodyEngine.RigidBody		[playerInstance.RigidBody];
@@ -192,7 +192,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 			gameObject.Shots.erase( gameObject.Shots.begin() + indexShot ); 
 			continue;
 		}
-		gameObject.Map.Shots.Cells[shotCell.y][shotCell.x]			= indexShot; // assign enemy index to the cell corresponding to this enemy
+		gameObject.Map.Shots.Cells[shotCell.y][shotCell.x]					= indexShot; // assign enemy index to the cell corresponding to this enemy
 		++indexShot;
 	}
 }
