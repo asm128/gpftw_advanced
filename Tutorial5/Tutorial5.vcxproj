@@ -180,7 +180,6 @@
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="mob.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="tilemap.h" />
   </ItemGroup>

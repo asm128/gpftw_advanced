@@ -35,9 +35,6 @@
     <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mob.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="tilemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
