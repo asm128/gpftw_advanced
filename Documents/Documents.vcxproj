@@ -111,8 +111,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Image Include="2D Barebone Game Engine Architecture.png" />
     <Image Include="2D Rigid Body-Character Interaction.png" />
     <Image Include="ASCII Barebone Render Pipeline.png" />
+    <Image Include="Input Handling.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

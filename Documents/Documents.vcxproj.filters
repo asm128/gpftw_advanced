@@ -21,5 +21,11 @@
     <Image Include="ASCII Barebone Render Pipeline.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="2D Barebone Game Engine Architecture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Input Handling.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
