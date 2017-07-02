@@ -22,6 +22,8 @@ namespace game
 	struct SRigidBody {
 				::game::SEntityCoord2						Position						= {};	// Coordinates in tile map
 				::game::SVector2							Velocity						= {};	// A vector representing the speed in a given direction 
+				::game::SVector2							Acceleration					= {};	// 
+				double										Mass							= 999999999.999999999;	// 
 	};
 
 	struct SRigidBodyState {
@@ -31,6 +33,8 @@ namespace game
 #pragma pack(pop)
 
 	struct SRigidBodyEngine {
+				::std::vector<SVector2>						AccumulatedForce				= {};
+				::std::vector<SVector2>						AccumulatedTorque				= {};
 				::std::vector<SRigidBody>					RigidBody						= {};
 				::std::vector<SRigidBody>					RigidBodyNext					= {};
 				::std::vector<SRigidBodyState>				RigidBodyState					= {};

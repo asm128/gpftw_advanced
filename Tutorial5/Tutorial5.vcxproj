@@ -179,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="character.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="tilemap.h" />

@@ -15,7 +15,7 @@ namespace ftwlib
 
 							TCell						Cells[_sizeDepth][_sizeWidth]	= {};
 
-		inline constexpr								SGrid							()						: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)																											{}
+		inline constexpr								SGrid							()							: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)					{}
 	};
 #pragma pack(pop)
 }
