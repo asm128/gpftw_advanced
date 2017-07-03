@@ -54,7 +54,7 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 	}
 
 	// We draw the player outside the loop.
-	const ::game::STileCoord2												playerPosition						= gameObject.RigidBodyEngine.RigidBody[gameObject.Player.RigidBody].Position.Tile;
+	const ::game::STileCoord2												playerPosition						= gameObject.RigidBodyEngine.RigidBody[gameObject.Player.RigidBody].Pivot.Position.Tile;
 	const uint32_t															linearIndex							= playerPosition.y * targetWidth + playerPosition.x;
 	const uint32_t															floorDescriptionIndex				= gameObject.Map.Floor.Cells[playerPosition.y][playerPosition.x];
 	const ::ftwlib::ASCII_COLOR												backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[floorDescriptionIndex].Color & 0xF0);
@@ -76,9 +76,9 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	for(uint32_t i = 0; i < ::ftwlib::size(compositeColors); ++i) 
 		compositeColors[i]													= backgroundColor;
 
-	const ::game::STileCoord2												& playerCell						= playerBody.Position.Tile;	
-	const ::game::SVector2													& playerDeltas						= playerBody.Position.Deltas;	
-	const ::game::SVector2													& playerVelocity					= playerBody.Velocity;	
+	const ::game::STileCoord2												& playerCell						= playerBody.Pivot.Position.Tile;	
+	const ::game::SVector2													& playerDeltas						= playerBody.Pivot.Position.Deltas;	
+	const ::game::SVector2													& playerVelocity					= playerBody.Forces.Velocity;	
 	const ::game::SCharacterPoints											& playerPoints						= playerInstance.PointsCurrent;	
 	const ::game::SCharacterPoints											& playerPointsMax					= playerInstance.PointsMax;	
 
@@ -100,7 +100,7 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	textLength	= ::sprintf_s(compositeText, "- Player velocity        : (%f, %f)."						, playerVelocity.x, playerVelocity.y									);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Enemy count            : %u."							, (uint32_t)gameObject.Enemy.size()										);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Shot count             : %u."							, (uint32_t)gameObject.Shots.size()										);	COPY_TO_TARGET();
-	textLength	= ::sprintf_s(compositeText, "- Last frame seconds     : %f."							, (float)gameObject.FrameInfo.LastFrameSeconds							);	COPY_TO_TARGET();
+	textLength	= ::sprintf_s(compositeText, "- Last frame seconds     : %f."							, (float)gameObject.FrameInfo.Seconds.LastFrame							);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Shoot with Space key. Run by holding LEFT SHIFT while moving."																	);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Move (P)layer by pressing the arrow keys to prevent being touched by enemies E, F, G and H."									);	COPY_TO_TARGET();
 }

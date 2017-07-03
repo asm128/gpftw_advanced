@@ -33,9 +33,9 @@
 ::ftwlib::error_t															setupWorldPlayer												(::game::SGame& gameObject)															{
 	// set some initial configuration to the player character
 	::game::SRigidBody																playerBody														= {};
-	playerBody.Position.Tile.x													= 5;
-	playerBody.Position.Tile.y													= 5;
-	playerBody.Position.Deltas													= {0,0};
+	playerBody.Pivot.Position.Tile.x											= 5;
+	playerBody.Pivot.Position.Tile.y											= 5;
+	playerBody.Pivot.Position.Deltas											= {0,0};
 
 	gameObject.Player.DirectionInRadians										= 0.0f;
 	gameObject.Player.Speed														= 0.0f;
@@ -55,7 +55,7 @@
 		newEnemy																	= gameObject.Descriptions.Enemy[iEnemy];
 		::game::SRigidBody																enemyBody														= {};
 		
-		enemyBody.Position															= { ::rand() % (int32_t)gameObject.Map.Size.x, ::rand() % (int32_t)gameObject.Map.Size.y };
+		enemyBody.Pivot.Position													= { ::rand() % (int32_t)gameObject.Map.Size.x, ::rand() % (int32_t)gameObject.Map.Size.y };
 		newEnemy.Speed																= iEnemy;
 		newEnemy.RigidBody															= gameObject.RigidBodyEngine.AddRigidBody(enemyBody);
 

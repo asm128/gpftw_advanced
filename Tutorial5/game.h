@@ -12,8 +12,8 @@
 namespace game 
 {
 #pragma pack (push, 1)
-	static constexpr		const int32_t							MAP_WIDTH								= 64;
-	static constexpr		const int32_t							MAP_DEPTH								= 32;
+	static constexpr		const int32_t									MAP_WIDTH								= 64;
+	static constexpr		const int32_t									MAP_DEPTH								= 32;
 
 	enum TILE_TYPE : uint32_t 
 		{	TILE_TYPE_GRASS				= 0  // define some values to represent our terrain tiles
@@ -46,50 +46,75 @@ namespace game
 		};
 
 	struct STileFloor {
-		uint64_t														ShotThrough								: 1;
-		uint64_t														Transitable								: 1;
-		uint64_t														Damage									: 8;
-		::std::string													Name									= "Unnamed tile";
+				uint64_t														ShotThrough								: 1;
+				uint64_t														Transitable								: 1;
+				uint64_t														Damage									: 8;
+				::std::string													Name									= "Unnamed tile";
+	};
+
+	struct SFrameSeconds {
+				double															Total									;
+				double															LastFrame								;
+				double															LastFrameHalfSquared					;
+		// Helper
+		inline	void															UpdateFromTime							(double timeToAdd)						noexcept	{ Total += LastFrame = timeToAdd; }
+	};
+
+	struct SFrameMicroseconds {
+				uint64_t														Total									;
+				uint64_t														LastFrame								;
+		// Helper
+		inline	void															UpdateFromTime							(uint64_t timeToAdd)					noexcept	{ Total += LastFrame = timeToAdd; }
 	};
 
 	struct SFrameInfo {
-		uint64_t														FrameNumber								= 0;
-		uint64_t														TotalTime								= 0;
-		uint64_t														LastFrameMicroseconds					= 0;
-		double															LastFrameSeconds						= 0;
+				uint64_t														FrameNumber								= 0;
+				uint64_t														FramesPerSecond							= 0;
+				SFrameMicroseconds												Microseconds							= {};
+				SFrameSeconds													Seconds									= {};
+		
+				void															Frame									(uint64_t timeElapsedMicroseconds)					{	// Set last frame time and number.
+					++FrameNumber;
+					Microseconds.Total												+= timeElapsedMicroseconds;
+					Microseconds.LastFrame											= timeElapsedMicroseconds;
+					::game::SFrameSeconds												& frameSeconds							= Seconds;
+					frameSeconds.LastFrame											= timeElapsedMicroseconds / 1000000.0;
+					frameSeconds.Total												+= frameSeconds.LastFrame;
+					frameSeconds.LastFrameHalfSquared								=  frameSeconds.LastFrame * frameSeconds.LastFrame * 0.5;
+				}
 	};
 #pragma pack (pop)
 
 	struct SMap { // The struct is a block of variables to be used to store our map information
-		::ftwlib::SCoord2<uint32_t>										Size;		// Declare Width and Depth variables which will hold the active map size
-		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Floor;
-		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Enemy;
-		::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Shots;
+				::ftwlib::SCoord2<uint32_t>										Size;		// Declare Width and Depth variables which will hold the active map size
+				::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Floor;
+				::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Enemy;
+				::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Shots;
 	};
 
 	struct SDescriptionTables { // 
-		::ftwlib::array_view<const ::game::SCharacter	>				Enemy;		// 
-		::ftwlib::array_view<const ::game::SCharacter	>				Shot;		// 
-		::ftwlib::array_view<const ::game::STileFloor	>				Floor;		// 
+				::ftwlib::array_view<const ::game::SCharacter	>				Enemy;		// 
+				::ftwlib::array_view<const ::game::SCharacter	>				Shot;		// 
+				::ftwlib::array_view<const ::game::STileFloor	>				Floor;		// 
 	};
 
 	struct SGame { // holds the game data
-		::game::SMap													Map;		// declare a variable of type SMap
-		::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
-		::game::SFrameInfo												FrameInfo;
-		::std::vector<SCharacter>										Enemy;				// Enemy list
-		::std::vector<SCharacter>										Shots;				// Shot list
+				::game::SMap													Map;		// declare a variable of type SMap
+				::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
+				::game::SFrameInfo												FrameInfo;
+				::std::vector<SCharacter>										Enemy;				// Enemy list
+				::std::vector<SCharacter>										Shots;				// Shot list
 
-		::game::SRigidBodyEngine										RigidBodyEngine;	// Rigid body list
-		
-		SDescriptionTables												Descriptions;
+				::game::SRigidBodyEngine										RigidBodyEngine;	// Rigid body list
+				
+				SDescriptionTables												Descriptions;
 	};
 
 	// -- game functions			
-	::ftwlib::error_t												setup									(::game::SGame& gameObject);
-	::ftwlib::error_t												cleanup									(::game::SGame& gameObject);
-	::ftwlib::error_t												update									(::game::SGame& gameObject, uint64_t timeElapsedMicroseconds);
-	::ftwlib::error_t												draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
+			::ftwlib::error_t												setup									(::game::SGame& gameObject);
+			::ftwlib::error_t												cleanup									(::game::SGame& gameObject);
+			::ftwlib::error_t												update									(::game::SGame& gameObject, uint64_t timeElapsedMicroseconds);
+			::ftwlib::error_t												draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
 }
 //-------------------------------------------------------------------------
 #endif // GAME_H_90237409238740923749023

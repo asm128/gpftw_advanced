@@ -31,6 +31,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial4 (velocity)", "Tut
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial5 (undefined)", "Tutorial5\Tutorial5.vcxproj", "{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Documents", "Documents\Documents.vcxproj", "{07B42A87-FF53-46CF-9788-A3A41AB99ADE}"
 EndProject

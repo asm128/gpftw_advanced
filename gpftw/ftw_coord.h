@@ -54,7 +54,19 @@ namespace ftwlib {
 			return *this;
 		}
 	};	// struct SCoord2
+
+#define NWOL_DEFAULT_OPERATOR_NE(_otherType)	inline constexpr bool operator !=(const _otherType& other )	const	noexcept	{ return !operator==(other); } 
+	// Geometric figures and other coord-related POD structs.
+	template<typename _tCoord> struct	SRange			{ _tCoord			Offset, Count			; NWOL_DEFAULT_OPERATOR_NE(SRange		<_tCoord>); inline constexpr bool operator==(const	SRange			<_tCoord>	& other) const noexcept { return Offset		== other.Offset		&& Count		== other.Count;							} };
+	template<typename _tCoord> struct	SLine2D			{ SCoord2<_tCoord>	A, B					; NWOL_DEFAULT_OPERATOR_NE(SLine2D		<_tCoord>); inline constexpr bool operator==(const	SLine2D			<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B;								} };
+	template<typename _tCoord> struct	STriangle2D		{ SCoord2<_tCoord>	A, B, C					; NWOL_DEFAULT_OPERATOR_NE(STriangle2D	<_tCoord>); inline constexpr bool operator==(const	STriangle2D		<_tCoord>	& other) const noexcept { return A			== other.A			&& B			== other.B			&& C == other.C;	} };
+	template<typename _tCoord> struct	SRectangle2D	{ SCoord2<_tCoord>	Offset, Size			; NWOL_DEFAULT_OPERATOR_NE(SRectangle2D	<_tCoord>); inline constexpr bool operator==(const	SRectangle2D	<_tCoord>	& other) const noexcept { return Offset		== other.Offset		&& Size			== other.Size;							} };
+	template<typename _tCoord> struct	SCircle2D		{ double Radius;	SCoord2<_tCoord> Center	; NWOL_DEFAULT_OPERATOR_NE(SCircle2D	<_tCoord>); inline constexpr bool operator==(const	SCircle2D		<_tCoord>	& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
+	template<typename _tCoord> struct	SSphere2D		{ double Radius;	SCoord2<_tCoord> Center	; NWOL_DEFAULT_OPERATOR_NE(SSphere2D	<_tCoord>); inline constexpr bool operator==(const	SSphere2D		<_tCoord>	& other) const noexcept { return Center		== other.Center		&& Radius		== other.Radius;						} };
 #pragma pack(pop)
+
+
+
 }
 
 #endif // GPFTW_COORD_H_928374982364923642
