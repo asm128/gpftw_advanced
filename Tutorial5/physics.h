@@ -57,7 +57,6 @@ namespace game
 	// --- Methods
 				::ftwlib::error_t										IntegrateForces							(double fElapsedTime);
 				::ftwlib::error_t										IntegratePositions						(double fElapsedTime, double fHalfSquaredTime);
-				::ftwlib::error_t										CalcNextPositions						(double fElapsedTime, double rHalfSquaredTime);
 				::ftwlib::error_t										AddRigidBody							(const SRigidBody& rigidBodyData);
 	};
 }
