@@ -1,6 +1,7 @@
 #include "physics.h"
 
-		void														integratePosition
+// --------------------------------------------------------------------
+static	void														integratePosition
 	(	const ::game::SPivot2		& pivotCurrent
 	,	const ::game::SForce2		& nextForces
 	,	const double				fElapsedTime
@@ -8,18 +9,19 @@
 	,	::game::SPivot2				& pivotNext
 	)
 {
-			pivotNext															= pivotCurrent;
-			pivotNext.Position.Deltas											+= nextForces.Velocity * fElapsedTime;
-			pivotNext.Position.Deltas											+= nextForces.Velocity * fElapsedTimeHalfSquared;
-			pivotNext.Orientation												+= nextForces.Rotation * fElapsedTime;	// Update angular position.
-			pivotNext.Position.RefreshPosFromDeltas();
+	pivotNext															= pivotCurrent;
+	pivotNext.Position.Deltas											+= nextForces.Velocity * fElapsedTime;
+	pivotNext.Position.Deltas											+= nextForces.Velocity * fElapsedTimeHalfSquared;
+	pivotNext.Orientation												+= nextForces.Rotation * fElapsedTime;	// Update angular position.
+	pivotNext.Position.RefreshPosFromDeltas();
 }
-		void														integrateForce
+// --------------------------------------------------------------------
+static	void														integrateForce
 	(	const ::game::SForce2		& forceCurrent
 	,	const ::game::SMass2		& massCurrent
+	,	const double				fElapsedTime
 	,	::game::SVector2			& accumulatedForce
 	,	double						& accumulatedTorque
-	,	const double				fElapsedTime
 	,	::game::SForce2				& forceNext
 	)
 {
@@ -36,13 +38,15 @@
 	accumulatedTorque													= 0;	// Clear accumulators.
 	accumulatedForce													= {};
 }
+// --------------------------------------------------------------------
 		::ftwlib::error_t											game::SRigidBodyEngine::IntegrateForces				(double fElapsedTime)											{
 	for(uint32_t iBody = 0, bodyCount = (uint32_t)RigidBodyState.size(); iBody < bodyCount; ++iBody)	
 		if(false == RigidBodyState[iBody].Unused && RigidBodyState[iBody].Active) {
-			::integrateForce(RigidBody[iBody].Forces, RigidBody[iBody].Mass, AccumulatedForce[iBody], AccumulatedTorque[iBody], fElapsedTime, RigidBodyNext[iBody].Forces);
+			::integrateForce(RigidBody[iBody].Forces, RigidBody[iBody].Mass, fElapsedTime, AccumulatedForce[iBody], AccumulatedTorque[iBody], RigidBodyNext[iBody].Forces);
 		}
 	return 0;
 }
+// --------------------------------------------------------------------
 		::ftwlib::error_t											game::SRigidBodyEngine::IntegratePositions			(double fElapsedTime, double fElapsedTimeHalfSquared)			{
 	for(uint32_t iBody = 0, bodyCount = (uint32_t)RigidBodyState.size(); iBody < bodyCount; ++iBody)	
 		if(false == RigidBodyState[iBody].Unused && RigidBodyState[iBody].Active) {
@@ -52,9 +56,10 @@
 		}
 	return 0;
 }
+// --------------------------------------------------------------------
 		::ftwlib::error_t											game::SRigidBodyEngine::AddRigidBody				(const SRigidBody& rigidBodyData)								{
 	const uint32_t															bodyCount											= (uint32_t)RigidBodyState.size();
-	static constexpr const	::game::SRigidBodyState							initialBodyState									= {false, true};
+	static constexpr	const ::game::SRigidBodyState						initialBodyState									= {false, true};
 
 	for(uint32_t iBody = 0; iBody < bodyCount; ++iBody) {
 		if(false == RigidBodyState[iBody].Unused)
