@@ -55,7 +55,7 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 	}
 
 	// We draw the player outside the loop.
-	const ::game::STileCoord2												playerPosition						= gameObject.RigidBodyEngine.RigidBody[gameObject.Player.RigidBody].Position.Tile;
+	const ::game::STileCoord2												playerPosition						= gameObject.ParticleEngine.Particle[gameObject.Player.Particle].Position.Tile;
 	const uint32_t															linearIndex							= playerPosition.y * targetWidth + playerPosition.x;
 	const uint32_t															floorDescriptionIndex				= gameObject.Map.Floor.Cells[playerPosition.y][playerPosition.x];
 	const ::ftwlib::ASCII_COLOR												backgroundColor						=::ftwlib::ASCII_COLOR(floorDescriptionTable[floorDescriptionIndex].Color & 0xF0);
@@ -66,7 +66,7 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 // This function prints miscelaneous game info
 void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t *targetColorGrid)													{
 	const ::game::SCharacter												& playerInstance					= gameObject.Player;	
-	const ::game::SRigidBody												& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];	
+	const ::game::SParticle													& playerBody						= gameObject.ParticleEngine.Particle[playerInstance.Particle];	
 	::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate(playerInstance.DirectionInRadians);	// Calculate other ways of representing the direction
 	float																	degrees								= (float)(playerInstance.DirectionInRadians / ::ftwlib::math_2pi * 360.0);
 

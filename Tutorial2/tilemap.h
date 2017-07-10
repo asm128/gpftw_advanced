@@ -2,8 +2,8 @@
 #include "ftw_grid.h"
 #include "ftw_error.h"
 
-#ifndef GPFTW_MAP_H
-#define GPFTW_MAP_H
+#ifndef TILEMAP_H
+#define TILEMAP_H
 
 namespace game 
 {
@@ -24,4 +24,4 @@ namespace game
 	};
 }
 
-#endif // GPFTW_MAP_H
+#endif // TILEMAP_H

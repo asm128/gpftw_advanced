@@ -1,12 +1,12 @@
 #include "physics.h"
 
-		::ftwlib::error_t											game::SRigidBodyEngine::CalcNextPositions			(double fElapsedTime)																{
+		::ftwlib::error_t											game::SParticleEngine::CalcNextPositions			(double fElapsedTime)																{
 	double																	fElapsedTimeHalfSquared								= fElapsedTime * fElapsedTime * 0.5;
-	for(uint32_t iBody = 0, bodyCount = (uint32_t)RigidBodyState.size(); iBody < bodyCount; ++iBody) {
-		if(RigidBodyState[iBody].Unused || false == RigidBodyState[iBody].Active)
+	for(uint32_t iBody = 0, bodyCount = (uint32_t)ParticleState.size(); iBody < bodyCount; ++iBody) {
+		if(ParticleState[iBody].Unused || false == ParticleState[iBody].Active)
 			continue;
-		const ::game::SRigidBody												& bodyCurrent										= RigidBody		[iBody];
-		::game::SRigidBody														& bodyNext											= RigidBodyNext	[iBody]		= bodyCurrent;
+		const ::game::SParticle												& bodyCurrent										= Particle		[iBody];
+		::game::SParticle													& bodyNext											= ParticleNext	[iBody]		= bodyCurrent;
 
 		bodyNext.Position.Deltas											+= bodyCurrent.Velocity * fElapsedTime;
 		bodyNext.Position.Deltas											+= bodyCurrent.Velocity * fElapsedTimeHalfSquared;
@@ -16,37 +16,37 @@
 	return 0;
 }
 
-		::ftwlib::error_t											game::SRigidBodyEngine::AddRigidBody			(const SRigidBody& rigidBodyData)								{
-	const uint32_t															bodyCount										= (uint32_t)RigidBodyState.size();
-	static constexpr const	::game::SRigidBodyState							bodyState										= {false, true};
+		::ftwlib::error_t											game::SParticleEngine::AddParticle					(const SParticle& rigidBodyData)								{
+	const uint32_t															bodyCount											= (uint32_t)ParticleState.size();
+	static constexpr const	::game::SParticleState							bodyState											= {false, true};
 
 	for(uint32_t iBody = 0; iBody < bodyCount; ++iBody) {
-		if(false == RigidBodyState[iBody].Unused)
+		if(false == ParticleState[iBody].Unused)
 			continue;
-		RigidBodyState	[iBody]												= bodyState;
-		RigidBody		[iBody]												= 
-		RigidBodyNext	[iBody]												= rigidBodyData;
+		ParticleState	[iBody]												= bodyState;
+		Particle		[iBody]												= 
+		ParticleNext	[iBody]												= rigidBodyData;
 		return iBody;
 	}
 	try {
-		RigidBodyState	.push_back(bodyState);
+		ParticleState	.push_back(bodyState);
 	}
 	catch(...) {
 		return -1;
 	}
 	try {
-		RigidBody		.push_back(rigidBodyData);
-		RigidBodyNext	.push_back(rigidBodyData);
+		Particle		.push_back(rigidBodyData);
+		ParticleNext	.push_back(rigidBodyData);
 	}
 	catch(...) {
-		RigidBodyState	.pop_back();
+		ParticleState	.pop_back();
 		return -1;
 	}
 	return bodyCount;
 }
 
 // Increase cell units and decrease deltas until the deltas are between 0 and 0.9999999999999999999999
-		void														game::SEntityCoord2::RefreshPosFromDeltas		()																{
+		void														game::SCellCoord2::RefreshPosFromDeltas		()																{
 	::game::SVector2														& charDeltas									= Deltas; // get pointer to deltas
 	::game::STileCoord2														& charTile										= Tile; // get pointer to deltas
 

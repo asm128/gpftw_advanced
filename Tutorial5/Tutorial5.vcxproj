@@ -176,12 +176,15 @@
     <ClCompile Include="game_update.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="physics.cpp" />
+    <ClCompile Include="physics_particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="character.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="game_coord.h" />
     <ClInclude Include="physics.h" />
+    <ClInclude Include="physics_particle.h" />
     <ClInclude Include="tilemap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

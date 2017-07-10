@@ -12,11 +12,11 @@ void																shoot								( ::game::SGame& gameObject, const ::game::SVec
 	newShot.Speed														= 8.0f; // tiles per second
 	newShot.DirectionInRadians											= direction;
 
-	::game::SRigidBody														shotBody							= {};
+	::game::SParticle														shotBody							= {};
 	shotBody.Position.Deltas											= origin;
 	shotBody.Position.RefreshPosFromDeltas();	// update tile coordinates
 
-	newShot.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(shotBody);
+	newShot.Particle													= gameObject.ParticleEngine.AddParticle(shotBody);
 	gameObject.Shots.push_back( newShot );
 }
 
@@ -78,11 +78,11 @@ void																evaluateAction						( ::game::SCharacter& playerInstance, do
 
 void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime )													{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
-	::game::SRigidBodyEngine												& bodyEngine						= gameObject.RigidBodyEngine;
-	::game::SRigidBody														& playerBody						= bodyEngine.RigidBody		[playerInstance.RigidBody];
-	::game::SRigidBody														& playerBodyNext					= bodyEngine.RigidBodyNext	[playerInstance.RigidBody];
-	::game::SRigidBodyState													& playerBodyState					= bodyEngine.RigidBodyState	[playerInstance.RigidBody];
-	::game::SEntityCoord2													& playerPosition					= playerBody.Position;
+	::game::SParticleEngine												& bodyEngine						= gameObject.ParticleEngine;
+	::game::SParticle														& playerBody						= bodyEngine.Particle		[playerInstance.Particle];
+	::game::SParticle														& playerBodyNext					= bodyEngine.ParticleNext	[playerInstance.Particle];
+	::game::SParticleState													& playerBodyState					= bodyEngine.ParticleState	[playerInstance.Particle];
+	::game::SCellCoord2													& playerPosition					= playerBody.Position;
 	::game::STileCoord2														& playerCell						= playerPosition.Tile;
 	::game::SVector2														& playerDeltas						= playerPosition.Deltas;
 
@@ -117,7 +117,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 	::memset( &gameObject.Map.Enemy.Cells[0][0], INVALID_CHARACTER, sizeof(int) * mapWidth * mapDepth );	// clear enemy layer to refresh the enemy map layer
 
 	::game::SCharacterPoints												& currentPlayerPoints				= gameObject.Player.PointsCurrent; // get the address of the current enemy at [iEnemy] index
-	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[gameObject.Player.RigidBody];
+	::game::SParticle														& playerBody						= gameObject.ParticleEngine.Particle[gameObject.Player.Particle];
 	::game::STileCoord2														& playerCell						= playerBody.Position.Tile;
 
 	uint32_t																indexEnemy							= 0; // keep track of enemy index
@@ -130,7 +130,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 			continue; // keep at the current index of the list 
 		}
 
-		::game::SRigidBody														& enemyBody							= gameObject.RigidBodyEngine.RigidBody[currentEnemy.RigidBody];
+		::game::SParticle														& enemyBody							= gameObject.ParticleEngine.Particle[currentEnemy.Particle];
 		::game::SVector2														& enemyDeltas						= enemyBody.Position.Deltas;
 		::game::STileCoord2														& enemyCell							= enemyBody.Position.Tile;
 		double																	fEnemySpeed							= currentEnemy.Speed;
@@ -165,7 +165,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	uint32_t																indexShot							= 0;
 	while( indexShot < (uint32_t)gameObject.Shots.size() ) {
 		::game::SCharacter														& currentShot						= gameObject.Shots[indexShot]; 
-		::game::SRigidBody														& shotBody							= gameObject.RigidBodyEngine.RigidBody[currentShot.RigidBody];
+		::game::SParticle														& shotBody							= gameObject.ParticleEngine.Particle[currentShot.Particle];
 		::game::SVector2														& shotDeltas						= shotBody.Position.Deltas;
 		::game::STileCoord2														& shotCell							= shotBody.Position.Tile;
 
@@ -207,7 +207,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	gameInstance.FrameInfo.LastFrameMicroseconds						= timeElapsedMicroseconds;
 	gameInstance.FrameInfo.TotalTime									+= timeElapsedMicroseconds;
 
-	gameInstance.RigidBodyEngine.CalcNextPositions(gameInstance.FrameInfo.LastFrameSeconds);
+	gameInstance.ParticleEngine.CalcNextPositions(gameInstance.FrameInfo.LastFrameSeconds);
 
 	// call update game functions
 	::updateMap		( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );

@@ -65,7 +65,7 @@ void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_
 // This function prints miscelaneous game info
 void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t *targetColorGrid)													{
 	const ::game::SCharacter												& playerInstance					= gameObject.Player;	
-	const ::game::SRigidBody												& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];	
+	const ::game::SRigidBody2												& playerBody						= gameObject.RigidBodyEngine.RigidBody[playerInstance.RigidBody];	
 	::game::SVector2														dirVector							= ::game::SVector2{1, 0}.Rotate(playerInstance.DirectionInRadians);	// Calculate other ways of representing the direction
 	float																	degrees								= (float)(playerInstance.DirectionInRadians / ::ftwlib::math_2pi * 360.0);
 

@@ -47,7 +47,7 @@ namespace game
 				double										Speed								; // Cells/second
 				double										SpeedMax							; // Cells/second
 				double										DirectionInRadians					; // Rotation angle in radians
-				int32_t										RigidBody							; // For storing position and physics information
+				int32_t										Particle							; // For storing position and physics information
 				uint32_t									ActionActive						; // Bitfield storing a boolean for each action. This works as long as ACTION_TYPE enumerated values are less than 32 
 				SDirection									ActionDirection	[ACTION_TYPE_COUNT]	; // The direction for a given action.
 	};

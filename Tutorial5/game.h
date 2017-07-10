@@ -1,13 +1,13 @@
 #include "tilemap.h"	// for STileMapASCII
-#include "character.h"		// for SMovingObject, SCharacter, SShot
+#include "character.h"	// for SMovingObject, SCharacter, SShot
+#include "physics_particle.h"
 
 #include "ftw_error.h"	// for ::ftwlib::error_t
 
 #include <vector>		// for ::std::vector
 
-#ifndef GAME_H_90237409238740923749023
-#define GAME_H_90237409238740923749023
-//-------------------------------------------------------------------------
+#ifndef GAME_H
+#define GAME_H
 
 namespace game 
 {
@@ -57,14 +57,17 @@ namespace game
 				double															LastFrame								;
 				double															LastFrameHalfSquared					;
 		// Helper
-		inline	void															UpdateFromTime							(double timeToAdd)						noexcept	{ Total += LastFrame = timeToAdd; }
+		inline	void															UpdateFromTime							(double secondsToAdd)						noexcept	{ 
+			Total																	+= LastFrame								= secondsToAdd; 
+			LastFrameHalfSquared													=  secondsToAdd * secondsToAdd * 0.5;
+		}
 	};
 
 	struct SFrameMicroseconds {
 				uint64_t														Total									;
 				uint64_t														LastFrame								;
 		// Helper
-		inline	void															UpdateFromTime							(uint64_t timeToAdd)					noexcept	{ Total += LastFrame = timeToAdd; }
+		inline	void															UpdateFromTime							(uint64_t microsecondsToAdd)				noexcept	{ Total += LastFrame = microsecondsToAdd; }
 	};
 
 	struct SFrameInfo {
@@ -73,14 +76,10 @@ namespace game
 				SFrameMicroseconds												Microseconds							= {};
 				SFrameSeconds													Seconds									= {};
 		
-				void															Frame									(uint64_t timeElapsedMicroseconds)					{	// Set last frame time and number.
+				void															Frame									(uint64_t timeElapsedMicroseconds)						{	// Set last frame time and number.
 					++FrameNumber;
-					Microseconds.Total												+= timeElapsedMicroseconds;
-					Microseconds.LastFrame											= timeElapsedMicroseconds;
-					::game::SFrameSeconds												& frameSeconds							= Seconds;
-					frameSeconds.LastFrame											= timeElapsedMicroseconds / 1000000.0;
-					frameSeconds.Total												+= frameSeconds.LastFrame;
-					frameSeconds.LastFrameHalfSquared								=  frameSeconds.LastFrame * frameSeconds.LastFrame * 0.5;
+					Microseconds	.UpdateFromTime(timeElapsedMicroseconds);
+					Seconds			.UpdateFromTime(timeElapsedMicroseconds / 1000000.0);
 				}
 	};
 #pragma pack (pop)
@@ -99,6 +98,7 @@ namespace game
 	};
 
 	struct SGame { // holds the game data
+				::game::SParticle2Engine<float>									Particle2Engine;
 				::game::SMap													Map;		// declare a variable of type SMap
 				::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
 				::game::SFrameInfo												FrameInfo;
@@ -117,4 +117,4 @@ namespace game
 			::ftwlib::error_t												draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
 }
 //-------------------------------------------------------------------------
-#endif // GAME_H_90237409238740923749023
+#endif // GAME_H

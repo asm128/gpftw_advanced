@@ -32,7 +32,7 @@
 // Use this function to setup player at level startup.
 ::ftwlib::error_t															setupWorldPlayer												(::game::SGame& gameObject)															{
 	// set some initial configuration to the player character
-	::game::SRigidBody																playerBody														= {};
+	::game::SRigidBody2																playerBody														= {};
 	playerBody.Pivot.Position.Tile.x											= 5;
 	playerBody.Pivot.Position.Tile.y											= 5;
 	playerBody.Pivot.Position.Deltas											= {0,0};
@@ -53,7 +53,7 @@
 	::game::SCharacter																newEnemy														= {};
 	for( uint32_t iEnemy = 0; iEnemy < ::game::CHARACTER_TYPE_COUNT; ++iEnemy ) {	
 		newEnemy																	= gameObject.Descriptions.Enemy[iEnemy];
-		::game::SRigidBody																enemyBody														= {};
+		::game::SRigidBody2																enemyBody														= {};
 		
 		enemyBody.Pivot.Position													= { ::rand() % (int32_t)gameObject.Map.Size.x, ::rand() % (int32_t)gameObject.Map.Size.y };
 		newEnemy.Speed																= iEnemy;
@@ -114,7 +114,7 @@
 }
 
 ::ftwlib::error_t															setupDescriptionsEnemies										(::game::SGame& gameObject)															{ 
-	static ::game::SRigidBody														descriptionsTableRigidBody	[::game::CHARACTER_TYPE_COUNT	]	= {};
+	static ::game::SRigidBody2														descriptionsTableRigidBody	[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::SCharacter														descriptionsTableEnemy		[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::STileASCII														imageTableEnemy				[::game::CHARACTER_TYPE_COUNT	]	= {};
 
@@ -147,5 +147,8 @@
 	::setupWorldMap				(gameObject);
 	::setupWorldPlayer			(gameObject);
 	::setupWorldEnemies			(gameObject); // setup enemies in list
+
+	SParticle2<float>			newParticle					= {};
+	gameObject.Particle2Engine.AddParticle(newParticle);
 	return 0;
 }

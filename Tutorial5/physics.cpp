@@ -38,10 +38,11 @@ static	void														integrateForce
 	accumulatedTorque													= 0;	// Clear accumulators.
 	accumulatedForce													= {};
 }
+
 // --------------------------------------------------------------------
 		::ftwlib::error_t											game::SRigidBodyEngine::IntegrateForces				(double fElapsedTime)											{
 	for(uint32_t iBody = 0, bodyCount = (uint32_t)RigidBodyState.size(); iBody < bodyCount; ++iBody)	
-		if(false == RigidBodyState[iBody].Unused && RigidBodyState[iBody].Active) {
+		if(RigidBodyState[iBody].RequiresProcessing()) {
 			::integrateForce(RigidBody[iBody].Forces, RigidBody[iBody].Mass, fElapsedTime, AccumulatedForce[iBody], AccumulatedTorque[iBody], RigidBodyNext[iBody].Forces);
 		}
 	return 0;
@@ -49,7 +50,7 @@ static	void														integrateForce
 // --------------------------------------------------------------------
 		::ftwlib::error_t											game::SRigidBodyEngine::IntegratePositions			(double fElapsedTime, double fElapsedTimeHalfSquared)			{
 	for(uint32_t iBody = 0, bodyCount = (uint32_t)RigidBodyState.size(); iBody < bodyCount; ++iBody)	
-		if(false == RigidBodyState[iBody].Unused && RigidBodyState[iBody].Active) {
+		if(RigidBodyState[iBody].RequiresProcessing()) {
 			::integratePosition(RigidBody[iBody].Pivot, RigidBodyNext[iBody].Forces, fElapsedTime, fElapsedTimeHalfSquared, RigidBodyNext[iBody].Pivot);
 			//RigidBodyState[iBody].OutdatedTransform							= 
 			//RigidBodyState[iBody].OutdatedInverseInertiaTensorWorld			= true;	// Normalize the orientation, and update the matrices with the new position and orientation.
@@ -57,7 +58,7 @@ static	void														integrateForce
 	return 0;
 }
 // --------------------------------------------------------------------
-		::ftwlib::error_t											game::SRigidBodyEngine::AddRigidBody				(const SRigidBody& rigidBodyData)								{
+		::ftwlib::error_t											game::SRigidBodyEngine::AddRigidBody				(const SRigidBody2& rigidBodyData)								{
 	const uint32_t															bodyCount											= (uint32_t)RigidBodyState.size();
 	static constexpr	const ::game::SRigidBodyState						initialBodyState									= {false, true};
 
@@ -91,7 +92,7 @@ static	void														integrateForce
 }
 
 // Increase cell units and decrease deltas until the deltas are between 0 and 0.9999999999999999999999
-		void														game::SBodyCoord2::RefreshPosFromDeltas				()													noexcept	{
+		void														game::SCellCoord2::RefreshPosFromDeltas				()															{
 	::game::SVector2														& charDeltas										= Deltas;	// get pointer to deltas
 	::game::STileCoord2														& charTile											= Tile;		// get pointer to deltas
 

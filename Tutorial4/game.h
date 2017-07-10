@@ -80,7 +80,7 @@ namespace game
 		::std::vector<SCharacter>										Enemy;				// Enemy list
 		::std::vector<SCharacter>										Shots;				// Shot list
 
-		SRigidBodyEngine												RigidBodyEngine;	// Rigid body list
+		SParticleEngine													ParticleEngine;	// Rigid body list
 
 		SDescriptionTables												Descriptions;
 	};

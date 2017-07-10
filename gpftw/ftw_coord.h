@@ -1,7 +1,7 @@
 #include "ftw_math.h"
 
-#ifndef GPFTW_COORD_H_928374982364923642
-#define GPFTW_COORD_H_928374982364923642
+#ifndef FTW_COORD_H_928374982364923642
+#define FTW_COORD_H_928374982364923642
 
 namespace ftwlib {
 
@@ -67,9 +67,9 @@ namespace ftwlib {
 	template<typename _tCoord>	struct SSphere2D		{ double Radius;	SCoord2<_tCoord> Center	; NWOL_DEFAULT_OPERATOR_NE(SSphere2D	<_tCoord>); inline constexpr bool operator==(const	SSphere2D		<_tCoord>& other) const noexcept { return Center	== other.Center	&& Radius	== other.Radius;						} };
 #pragma pack(pop)
 
-	template<typename _tCoord>	static inline constexpr	_tCoord			rise					(const SLine2D<_tCoord>& line)											noexcept	{ return line.B.y - line.A.y;		}
-	template<typename _tCoord>	static inline constexpr	_tCoord			run						(const SLine2D<_tCoord>& line)											noexcept	{ return line.B.x - line.A.x;		}
-	template<typename _tCoord>	static inline constexpr	_tCoord			slope					(const SLine2D<_tCoord>& line)											noexcept	{ return rise(line) / run(line);	}
+	template<typename _tCoord>	static inline constexpr	_tCoord				rise					(const SLine2D<_tCoord>& line)										noexcept	{ return line.B.y - line.A.y;		}
+	template<typename _tCoord>	static inline constexpr	_tCoord				run						(const SLine2D<_tCoord>& line)										noexcept	{ return line.B.x - line.A.x;		}
+	template<typename _tCoord>	static inline constexpr	_tCoord				slope					(const SLine2D<_tCoord>& line)										noexcept	{ return rise(line) / run(line);	}
 }
 
-#endif // GPFTW_COORD_H_928374982364923642
+#endif // FTW_COORD_H_928374982364923642

@@ -12,7 +12,7 @@ void																shoot								( ::game::SGame& gameObject, const ::game::SVec
 	newShot.Speed														= 8.0;		// 8 tiles per second
 	newShot.DirectionInRadians											= direction;
 
-	::game::SRigidBody														shotBody							= {};
+	::game::SRigidBody2														shotBody							= {};
 	shotBody.Pivot.Position.Deltas											= origin;
 	shotBody.Pivot.Position.RefreshPosFromDeltas();	// update tile coordinates
 
@@ -76,8 +76,8 @@ void																evaluateAction						( ::game::SCharacter& playerInstance, do
 
 void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime )												{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
-	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody		[playerInstance.RigidBody];
-	::game::SRigidBody														& playerBodyNext					= gameObject.RigidBodyEngine.RigidBodyNext	[playerInstance.RigidBody];
+	::game::SRigidBody2														& playerBody						= gameObject.RigidBodyEngine.RigidBody		[playerInstance.RigidBody];
+	::game::SRigidBody2														& playerBodyNext					= gameObject.RigidBodyEngine.RigidBodyNext	[playerInstance.RigidBody];
 	::game::SRigidBodyState													& playerBodyState					= gameObject.RigidBodyEngine.RigidBodyState	[playerInstance.RigidBody];
 	::game::STileCoord2														& playerCell						= playerBody.Pivot.Position.Tile;
 	::game::SVector2														& playerDeltas						= playerBody.Pivot.Position.Deltas;
@@ -114,7 +114,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 	::memset( &gameMap.Enemy.Cells[0][0], INVALID_CHARACTER, sizeof(::game::STileMapASCII<gameMap.Enemy.Width, gameMap.Enemy.Depth>::TTileIndex) * mapWidth * mapDepth );	// clear enemy layer to refresh the enemy map layer
 
 	::game::SCharacterPoints												& currentPlayerPoints				= gameObject.Player.PointsCurrent; // get the address of the current enemy at [iEnemy] index
-	::game::SRigidBody														& playerBody						= gameObject.RigidBodyEngine.RigidBody[gameObject.Player.RigidBody];
+	::game::SRigidBody2														& playerBody						= gameObject.RigidBodyEngine.RigidBody[gameObject.Player.RigidBody];
 	::game::STileCoord2														& playerCell						= playerBody.Pivot.Position.Tile;
 
 	uint32_t																indexEnemy							= 0; // keep track of enemy index
@@ -127,7 +127,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 			continue; // keep at the current index of the list 
 		}
 
-		::game::SRigidBody														& enemyBody							= gameObject.RigidBodyEngine.RigidBody[currentEnemy.RigidBody];
+		::game::SRigidBody2														& enemyBody							= gameObject.RigidBodyEngine.RigidBody[currentEnemy.RigidBody];
 		::game::SVector2														& enemyDeltas						= enemyBody.Pivot.Position.Deltas;
 		::game::STileCoord2														& enemyCell							= enemyBody.Pivot.Position.Tile;
 		double																	fEnemySpeed							= currentEnemy.Speed;
@@ -162,7 +162,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	uint32_t																indexShot							= 0;
 	while( indexShot < (uint32_t)gameObject.Shots.size() ) {
 		::game::SCharacter														& currentShot						= gameObject.Shots[indexShot]; 
-		::game::SRigidBody														& shotBody							= gameObject.RigidBodyEngine.RigidBody[currentShot.RigidBody];
+		::game::SRigidBody2														& shotBody							= gameObject.RigidBodyEngine.RigidBody[currentShot.RigidBody];
 		::game::SVector2														& shotDeltas						= shotBody.Pivot.Position.Deltas;
 		::game::STileCoord2														& shotCell							= shotBody.Pivot.Position.Tile;
 
@@ -209,14 +209,20 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	return 0;
 }
 
+::ftwlib::error_t													updateParticlePhysics				(::game::SParticle2Engine<float>& particleEngine, const ::game::SFrameSeconds & frameSeconds)				{
+	particleEngine.Integrate			(frameSeconds.LastFrame, frameSeconds.LastFrameHalfSquared);
+	return 0;
+}
+
 ::ftwlib::error_t													game::update						(::game::SGame& gameInstance, uint64_t timeElapsedMicroseconds)										{
 	if( gameInstance.Player.PointsCurrent.HP <= 0 || gameInstance.Enemy.size() == 0 )
 		return 0; // return if no enemies or if player HP is 0
 
 	gameInstance.FrameInfo.Frame(timeElapsedMicroseconds);	// Set last frame time and number.
 
-	::updatePhysics		(gameInstance.RigidBodyEngine, gameInstance.FrameInfo.Seconds);
-	::updateGame		(gameInstance, gameInstance.FrameInfo.Seconds.LastFrame);
-	::updatePlayerInput	(gameInstance);
+	::updatePhysics				(gameInstance.RigidBodyEngine, gameInstance.FrameInfo.Seconds);
+	::updateParticlePhysics		(gameInstance.Particle2Engine, gameInstance.FrameInfo.Seconds);
+	::updateGame				(gameInstance, gameInstance.FrameInfo.Seconds.LastFrame);
+	::updatePlayerInput			(gameInstance);
 	return 0;
 }

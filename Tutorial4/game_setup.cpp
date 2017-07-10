@@ -32,7 +32,7 @@
 // Use this function to setup player at level startup.
 ::ftwlib::error_t															setupWorldPlayer												(::game::SGame& gameObject)															{
 	// set some initial configuration to the player character
-	::game::SRigidBody																playerBody														= {};
+	::game::SParticle																playerBody														= {};
 	playerBody.Position.Tile.x													= 5;
 	playerBody.Position.Tile.y													= 5;
 	playerBody.Position.Deltas													= {0,0};
@@ -40,7 +40,7 @@
 	gameObject.Player.DirectionInRadians										= 0.0f;
 	gameObject.Player.Speed														= 0.0f;
 	gameObject.Player.SpeedMax													= 15.0f;
-	gameObject.Player.RigidBody													= gameObject.RigidBodyEngine.AddRigidBody(playerBody);
+	gameObject.Player.Particle													= gameObject.ParticleEngine.AddParticle(playerBody);
 	gameObject.Player.PointsMax													= 
 	gameObject.Player.PointsCurrent												= { 100, 20, 0, 15 }; 
 	gameObject.Player.ActionActive												= {};
@@ -53,11 +53,11 @@
 	::game::SCharacter																newEnemy														= {};
 	for( uint32_t iEnemy = 0; iEnemy < ::game::CHARACTER_TYPE_COUNT; ++iEnemy ) {	
 		newEnemy																	= gameObject.Descriptions.Enemy[iEnemy];
-		::game::SRigidBody																enemyBody														= {};
+		::game::SParticle																enemyBody														= {};
 		
 		enemyBody.Position															= { ::rand() % (int32_t)gameObject.Map.Size.x, ::rand() % (int32_t)gameObject.Map.Size.y };
 		newEnemy.Speed																= iEnemy;
-		newEnemy.RigidBody															= gameObject.RigidBodyEngine.AddRigidBody(enemyBody);
+		newEnemy.Particle															= gameObject.ParticleEngine.AddParticle(enemyBody);
 
 		gameObject.Enemy.push_back( newEnemy ); // copy the new enemy as a new element at the end of our enemy list.
 	}
@@ -114,7 +114,7 @@
 }
 
 ::ftwlib::error_t															setupDescriptionsEnemies										(::game::SGame& gameObject)															{ 
-	static ::game::SRigidBody														descriptionsTableRigidBody	[::game::CHARACTER_TYPE_COUNT	]	= {};
+	static ::game::SParticle														descriptionsTableParticle	[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::SCharacter														descriptionsTableEnemy		[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::STileASCII														imageTableEnemy				[::game::CHARACTER_TYPE_COUNT	]	= {};
 
