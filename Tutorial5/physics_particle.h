@@ -4,7 +4,7 @@
 #include "ftw_coord.h"	// for ::ftwlib::SCoord2<>
 #include "ftw_error.h"	// for ::ftwlib::error_t
 
-#include <vector>
+#include <vector>		// for ::std::vector
 
 #ifndef PHYSICS_PARTICLE_H
 #define PHYSICS_PARTICLE_H
