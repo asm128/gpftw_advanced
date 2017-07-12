@@ -18,15 +18,18 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="application.h">
+    <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="physics_particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="frameinfo.h">
+    <ClInclude Include="timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

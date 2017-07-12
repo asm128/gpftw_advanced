@@ -23,8 +23,8 @@ namespace game
 							TCoord												Acceleration								= {};	// A vector representing the speed in a given direction 
 							TCoord												Velocity									= {};	// A vector representing the speed in a given direction 
 
-		inline constexpr	bool												VelocityDepleted							()																					const	{ return (Velocity + Acceleration) < VelocityEpsilon; }
 		// This basically does Acceleration += (Force * 1/Mass) and Velocity += (Acceleration * Time).
+		inline constexpr	bool												VelocityDepleted							()																					const	{ return (Velocity + Acceleration) < VelocityEpsilon; }
 							void												IntegrateAccumulatedForce					(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			{
 			Acceleration															+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
 			AccumulatedForce														= {};											// Clear this out now that we've used it already.
@@ -42,7 +42,7 @@ namespace game
 							_tElement											InverseMass									= 0;
 							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction 
 
-		inline				void												SetMass										(const double mass)																			{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;					}
+		inline				void												SetMass										(const double mass)																			{ InverseMass = mass ? (1.0 / mass) : 0;					}
 		inline constexpr	double												GetMass										()																					const	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
 		inline constexpr	bool												HasFiniteMass								()																					const	{ return InverseMass >= 0.0f;								}
 	};

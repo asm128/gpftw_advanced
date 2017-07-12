@@ -148,7 +148,7 @@
 	::setupWorldPlayer			(gameObject);
 	::setupWorldEnemies			(gameObject); // setup enemies in list
 
-	SParticle2<float>			newParticle					= {};
+	SParticle2<float>																newParticle;
 	gameObject.Particle2Engine.AddParticle(newParticle);
 	return 0;
 }

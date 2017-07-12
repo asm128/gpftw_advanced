@@ -20,7 +20,7 @@ namespace game
 	};
 
 	struct SParticle {
-				::game::SCellCoord2						Position						= {};	// Coordinates in tile map
+				::game::SCellCoord2							Position						= {};	// Coordinates in tile map
 				::game::SVector2							Velocity						= {};	// A vector representing the speed in a given direction 
 	};
 

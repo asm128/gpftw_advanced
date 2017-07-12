@@ -1,20 +1,41 @@
 // Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once. 
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 //
-#include "game.h"			// for our game functions
-#include "ftw_timer.h"	// for our STimer struct
-
 #include "application.h"	// for
+#include "ftw_ascii_color.h"
 
 #include <stdio.h>		// for printf()
 #include <windows.h>	// for interacting with Windows
 
-static constexpr const uint32_t												SCREEN_WIDTH													= game::MAP_WIDTH + 64;
-static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP_DEPTH + 16;
+static constexpr const uint32_t												SCREEN_WIDTH													= 128;
+static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
+
+static ::game::SParticle2<float>											particleDefinitions	[::ftwapp::PARTICLE_TYPE_COUNT]				= {};
+
+void																		setupParticles													()														{
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_SNOW].Position					= 
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_FIRE].Position					= 
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_RAIN].Position					= 
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_LAVA].Position					= {SCREEN_WIDTH/2, SCREEN_HEIGHT/2};
+
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_SNOW].SetMass					( 2);
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_FIRE].SetMass					(-1);
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_RAIN].SetMass					( 1);
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_LAVA].SetMass					( 1);
+
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_SNOW].Damping					= 0.80f;
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_FIRE].Damping					= 0.80f;
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_RAIN].Damping					= 1.0f;
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_LAVA].Damping					= 0.99f;
+
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_SNOW].Forces.Velocity			= {};
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_FIRE].Forces.Velocity			= {(float)0,  (float)(rand() % 40)};
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_RAIN].Forces.Velocity			= {};
+	particleDefinitions	[::ftwapp::PARTICLE_TYPE_LAVA].Forces.Velocity			= {(float)0, -(float)(rand() % 20)-20};
+}
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::game::cleanup				(applicationInstance.Game);
 	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);								
 	return 0;
 }
@@ -22,27 +43,93 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
 	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
-	::srand(0);
-	::game::setup(applicationInstance.Game);	// call setup game functions
+	::setupParticles();
+	srand(0);
 	return 0;
+}
+
+void																		addParticle														
+	(	::ftwapp::PARTICLE_TYPE						particleType
+	,	::std::vector<::ftwapp::SParticleInstance>	& particleInstances
+	,	::game::SParticle2Engine<float>				& particleEngine
+	)														
+{
+	::ftwapp::SParticleInstance														newInstance														= {}; 
+	newInstance.Type															= particleType; 
+	newInstance.PhysicsId														= particleEngine.AddParticle(particleDefinitions[newInstance.Type]); 
+	particleEngine.Particle[newInstance.PhysicsId].Position						= {(float)(rand() % SCREEN_WIDTH), (float)(rand() % SCREEN_HEIGHT)};
+	switch(particleType) {
+	case ::ftwapp::PARTICLE_TYPE_FIRE:	particleEngine.Particle[newInstance.PhysicsId].Position		= {SCREEN_WIDTH/2, SCREEN_HEIGHT/2}; break;
+	case ::ftwapp::PARTICLE_TYPE_LAVA:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= SCREEN_HEIGHT - 1; break;
+	case ::ftwapp::PARTICLE_TYPE_RAIN:	
+	case ::ftwapp::PARTICLE_TYPE_SNOW:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= 0; break;
+	}
+	particleInstances.push_back(newInstance);
 }
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
 	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
 
-	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
-	::game::update(gameInstance, timerInstance.LastTimeMicroseconds);
+	::game::SFrameInfo																& frameInfo														= applicationInstance.FrameInfo;																	
+	frameInfo.Frame(timerInstance.LastTimeMicroseconds);
+	const float																		lastFrameSeconds												= (float)frameInfo.Seconds.LastFrame;
+
+	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
+	::game::SParticle2Engine<float>													& particleEngine												= applicationInstance.ParticleEngine;
+	static float																	windDirection													= 0.1f;
+	if(GetAsyncKeyState('1')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_SNOW, particleInstances, particleEngine);
+	if(GetAsyncKeyState('2')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_FIRE, particleInstances, particleEngine);
+	if(GetAsyncKeyState('3')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_RAIN, particleInstances, particleEngine);
+	if(GetAsyncKeyState('4')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_LAVA, particleInstances, particleEngine);
+
+	windDirection																= (float)sin(frameInfo.Seconds.Total/10.0);
+
+	particleEngine.Integrate(lastFrameSeconds, frameInfo.Seconds.LastFrameHalfSquared);
+
+	for(uint32_t iParticle = 0; iParticle < particleInstances.size(); ++iParticle) {
+		int32_t																			physicsId														= particleInstances[iParticle].PhysicsId;
+		::game::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
+		if( particleNext.Position.x < 0 || particleNext.Position.x >= SCREEN_WIDTH
+		 || particleNext.Position.y < 0 || particleNext.Position.y >= SCREEN_HEIGHT
+		 ) { // Remove the particle instance and related information.
+			particleEngine.ParticleState[physicsId].Unused								= true;
+			particleInstances.erase(particleInstances.begin()+iParticle);
+			--iParticle;
+		}
+		else { // Apply forces from wind and gravity.
+			static constexpr	const double												gravity															= 9.8;
+			::game::SParticle2<float>														& particleCurrent												= particleEngine.Particle[physicsId];
+			particleCurrent																= particleEngine.ParticleNext[physicsId];
+			particleCurrent.Forces.AccumulatedForce										= {0, float(gravity * lastFrameSeconds)};
+			particleCurrent.Forces.AccumulatedForce.x									+= windDirection + float((rand() % 100) / 100.0 - .5);
+		}
+	}
+
 	timerInstance.Frame();
 	return 0;
 }
 
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
 	//::ftwlib::clearConsole															(applicationInstance.ScreenASCII);
-	::memset(applicationInstance.ScreenASCII.Characters	.begin(), 0, applicationInstance.ScreenASCII.Characters	.size());
-	::memset(applicationInstance.ScreenASCII.Colors		.begin(), 0, applicationInstance.ScreenASCII.Colors		.size() * sizeof(uint16_t));
-	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());
+	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
+	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
+	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
+
+	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
+	for(uint32_t iParticle = 0, particleCount = particleInstances.size(); iParticle < particleCount; ++iParticle) {
+		SParticleInstance																& particleInstance												= particleInstances[iParticle];
+		const int32_t																	physicsId														= particleInstance.PhysicsId;
+		const ::ftwlib::SCoord2<float>													particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
+		screenAscii.Characters	[(int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x]	= 1 + particleInstance.Type;
+		screenAscii.Colors		[(int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x]	
+			= (particleInstance.Type == PARTICLE_TYPE_FIRE) ? ::ftwlib::ASCII_COLOR_RED
+			: (particleInstance.Type == PARTICLE_TYPE_SNOW) ? ::ftwlib::ASCII_COLOR_CYAN
+			: (particleInstance.Type == PARTICLE_TYPE_LAVA) ? ::ftwlib::ASCII_COLOR_RED
+			: ::ftwlib::ASCII_COLOR_BLUE
+			;
+	}
 	return 0;
 }
 

@@ -6,12 +6,14 @@
 
 namespace game 
 {
+#pragma pack(push, 1)
 	struct STileASCII {
-							uint8_t												Character;
-							uint16_t											Color;
+							uint8_t												Character								;
+							uint16_t											Color									;
 	};
-	
-	template <size_t _gridWidth, size_t _gridHeight>
+#pragma pack(pop)
+
+template <size_t _gridWidth, size_t _gridHeight>
 	struct STileMapASCII {
 		typedef				int32_t												TTileIndex;
 		typedef				::ftwlib::SGrid<int32_t, _gridWidth, _gridHeight>	TTileIndexGrid;
