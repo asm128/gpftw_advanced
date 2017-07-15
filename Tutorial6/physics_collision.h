@@ -1,5 +1,8 @@
 #include "ftw_coord.h"
 
+#ifndef PHYSICS_COLLISION_H
+#define PHYSICS_COLLISION_H
+
 namespace game 
 {
 	// Represents a bounding sphere that can be tested for overlap.
@@ -53,3 +56,5 @@ namespace game
 		}
 	};
 }
+
+#endif // PHYSICS_COLLISION_H

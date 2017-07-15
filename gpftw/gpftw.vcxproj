@@ -144,6 +144,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ftw_frameinfo.h" />
     <ClInclude Include="ftw_array_view.h" />
     <ClInclude Include="ftw_ascii_color.h" />
     <ClInclude Include="ftw_ascii_screen.h" />

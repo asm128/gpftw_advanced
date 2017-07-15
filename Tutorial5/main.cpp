@@ -59,7 +59,7 @@ void																		addParticle
 	newInstance.PhysicsId														= particleEngine.AddParticle(particleDefinitions[newInstance.Type]); 
 	particleEngine.Particle[newInstance.PhysicsId].Position						= {(float)(rand() % SCREEN_WIDTH), (float)(rand() % SCREEN_HEIGHT)};
 	switch(particleType) {
-	case ::ftwapp::PARTICLE_TYPE_FIRE:	particleEngine.Particle[newInstance.PhysicsId].Position		= {SCREEN_WIDTH/2, SCREEN_HEIGHT/2}; break;
+	case ::ftwapp::PARTICLE_TYPE_FIRE:	particleEngine.Particle[newInstance.PhysicsId].Position		= {SCREEN_WIDTH / 2 + (rand() % 3 - 1.0f) * (SCREEN_WIDTH / 5), SCREEN_HEIGHT / 2 + SCREEN_HEIGHT / 4}; break;
 	case ::ftwapp::PARTICLE_TYPE_LAVA:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= SCREEN_HEIGHT - 1; break;
 	case ::ftwapp::PARTICLE_TYPE_RAIN:	
 	case ::ftwapp::PARTICLE_TYPE_SNOW:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= 0; break;
@@ -84,15 +84,16 @@ void																		addParticle
 	if(GetAsyncKeyState('3')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_RAIN, particleInstances, particleEngine);
 	if(GetAsyncKeyState('4')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_LAVA, particleInstances, particleEngine);
 
-	windDirection																= (float)sin(frameInfo.Seconds.Total/5.0f) * .25f;
-
 	particleEngine.Integrate(lastFrameSeconds, frameInfo.Seconds.LastFrameHalfSquared);
 
+	windDirection																= (float)sin(frameInfo.Seconds.Total/5.0f) * .25f;
+
 	for(uint32_t iParticle = 0; iParticle < particleInstances.size(); ++iParticle) {
-		int32_t																			physicsId														= particleInstances[iParticle].PhysicsId;
+		SParticleInstance																& particleInstance												= particleInstances[iParticle];
+		int32_t																			physicsId														= particleInstance.PhysicsId;
 		::game::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
-		if( particleNext.Position.x < 0 || particleNext.Position.x >= SCREEN_WIDTH
-		 || particleNext.Position.y < 0 || particleNext.Position.y >= SCREEN_HEIGHT
+		if( particleNext.Position.x < 0 || particleNext.Position.x >= applicationInstance.ScreenASCII.Width
+		 || particleNext.Position.y < 0 || particleNext.Position.y >= applicationInstance.ScreenASCII.Height
 		 ) { // Remove the particle instance and related information.
 			particleEngine.ParticleState[physicsId].Unused								= true;
 			particleInstances.erase(particleInstances.begin()+iParticle);
@@ -103,7 +104,7 @@ void																		addParticle
 			::game::SParticle2<float>														& particleCurrent												= particleEngine.Particle[physicsId];
 			particleCurrent																= particleEngine.ParticleNext[physicsId];
 			particleCurrent.Forces.AccumulatedForce										= {0, float(gravity * lastFrameSeconds)};
-			particleCurrent.Forces.AccumulatedForce.x									+= windDirection + float((rand() % 100) / 100.0 - .5);
+			particleCurrent.Forces.AccumulatedForce.x									+= float(windDirection * abs(particleCurrent.Forces.Velocity.y) * .5) + float((rand() % 100) / 100.0 - .5);
 		}
 	}
 

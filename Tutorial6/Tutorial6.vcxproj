@@ -171,7 +171,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="game.cpp" />
+    <ClCompile Include="game_update.cpp" />
+    <ClCompile Include="game_render.cpp" />
+    <ClCompile Include="game_setup.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

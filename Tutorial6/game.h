@@ -1,12 +1,12 @@
 #include "physics_particle.h"
 
-#include "ftw_error.h"
+#include "ftw_frameinfo.h"
+#include "ftw_ascii_screen.h"	// For ::ftwlib::SScreenASCII
 
-#include <cstdint>
-#include <vector>
+#include <vector>				// For ::std::vector<>
 
-#ifndef FRAMEINFO_H
-#define FRAMEINFO_H
+#ifndef GAME_H
+#define GAME_H
 
 namespace game 
 {
@@ -33,88 +33,62 @@ namespace game
 		};
 
 	struct SShotDescription {
-				int32_t															Damage;
-				int32_t															RoundsMax;
-				double															Speed;
-				uint8_t															Image;
+				int32_t															Damage												;
+				int32_t															RoundsMax											;
+				double															Speed												;
+				uint8_t															Image												;
 	};
 
 	struct SShot {
-				int32_t															ShotDescription;
-				int32_t															ParticleIndex;
-				int32_t															RoundsCurrent;
+				int32_t															ShotDescription										;
+				int32_t															ParticleIndex										;
+				int32_t															RoundsCurrent										;
 	};
 
 	struct SShipPoints {
-				int32_t															Health;
-				int32_t															Shield;
+				int32_t															Health												;
+				int32_t															Shield												;
 	};
 
 	struct SShipDescription {
-				SShipPoints														PointsMax;
-				uint8_t															Image;
+				SShipPoints														PointsMax											;
+				uint8_t															Image												;
 	};
 
 	struct SShip {
-				int32_t															ShipDescription;
-				int32_t															SelectedShot;
-				int32_t															ParticleIndex;
-				SShipPoints														PointsCurrent;
-	};
-
-	struct SFrameSeconds {
-				double															Total									;
-				double															LastFrame								;
-				double															LastFrameHalfSquared					;
-		// Helper
-		inline	void															UpdateFromTime							(double secondsToAdd)						noexcept	{ 
-			Total																	+= LastFrame								= secondsToAdd; 
-			LastFrameHalfSquared													=  secondsToAdd * secondsToAdd * 0.5;
-		}
-	};
-
-	struct SFrameMicroseconds {
-				uint64_t														Total									;
-				uint64_t														LastFrame								;
-		// Helper
-		inline	void															UpdateFromTime							(uint64_t microsecondsToAdd)				noexcept	{ Total += LastFrame = microsecondsToAdd; }
-	};
-
-	struct SFrameInfo {
-				uint64_t														FrameNumber								= 0;
-				uint64_t														FramesPerSecond							= 0;
-				SFrameMicroseconds												Microseconds							= {};
-				SFrameSeconds													Seconds									= {};
-		
-				void															Frame									(uint64_t timeElapsedMicroseconds)						{	// Set last frame time and number.
-					++FrameNumber;
-					Microseconds	.UpdateFromTime(timeElapsedMicroseconds);
-					Seconds			.UpdateFromTime(timeElapsedMicroseconds / 1000000.0);
-				}
-	};
-
-	template<typename _tEnum>
-	struct SParticleInstance {
-		_tEnum																	Type								= ~0;
-		int32_t																	PhysicsId							= -1;
+				int32_t															ShipDescription										;
+				int32_t															SelectedShot										;
+				int32_t															ParticleIndex										;
+				SShipPoints														PointsCurrent										;
 	};
 
 	struct SGame {
-				::game::SParticle2Engine<float>									ParticleEngine						= {};
-				::game::SFrameInfo												FrameInfo							= {};
-				::std::vector<SParticleInstance<::game::SHIP_TYPE>>				ShipParticleInstances				= {};
-				::std::vector<SParticleInstance<::game::SHOT_TYPE>>				ShotParticleInstances				= {};
-				::std::vector<SShip>											Ships								= {};
-				::std::vector<SShot>											Shots								= {};
+				::ftwlib::SFrameInfo											FrameInfo											= {};	// -- Stores data such as the frame number and the elapsed frame time since the previous update
+				::game::SParticle2Engine<float>									ParticleEngine										= {};	// -- Physics stuff
+
+				// -- Game object instances
+				::std::vector<SShip>											Ships												= {};
+				::std::vector<SShot>											Shots												= {};
+
+				// -- Screen information
+				::ftwlib::SCoord2<uint32_t>										VisibleSize											= {96, 50};
+				::ftwlib::SCoord2<uint32_t>										MarginSize											= {10, 5};
+
+				// -- Description tables - Game objects
+				::game::SShipDescription										DefinitionsShip			[::game::SHIP_TYPE_COUNT]	= {};
+				::game::SShotDescription										DefinitionsShot			[::game::SHOT_TYPE_COUNT]	= {};
+
+				// -- Description tables - Physics
+				::game::SParticle2<float>										DefinitionsParticleShip	[::game::SHIP_TYPE_COUNT]	= {};
+				::game::SParticle2<float>										DefinitionsParticleShot	[::game::SHOT_TYPE_COUNT]	= {};
 	};
 	// ------
-			::ftwlib::error_t												addShip									(SGame& gameInstance, SHIP_TYPE type);
-			::ftwlib::error_t												addShot									(SGame& gameInstance, SHOT_TYPE type);
+			::ftwlib::error_t												addShip												(SGame& gameInstance, SHIP_TYPE type);
+			::ftwlib::error_t												addShot												(SGame& gameInstance, SHOT_TYPE type);
 	// ------
-			::ftwlib::error_t												setup									(SGame& gameInstance);
-			::ftwlib::error_t												update									(SGame& gameInstance, uint64_t lastTimeMicroseconds);
-			::ftwlib::error_t												render									(SGame& gameInstance);
-			::ftwlib::error_t												cleanup									(SGame& gameInstance);
+			::ftwlib::error_t												setup												(SGame& gameInstance);
+			::ftwlib::error_t												update												(SGame& gameInstance, uint64_t lastTimeMicroseconds);
+			::ftwlib::error_t												render												(SGame& gameInstance, ::ftwlib::SScreenASCII& screenASCII);
 }
 
-#endif // FRAMEINFO_H
+#endif // GAME_H

@@ -27,8 +27,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
 	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;
-	::game::SGame																	& gameInstance													= applicationInstance.Game;
-	::game::update(gameInstance, timerInstance.LastTimeMicroseconds);
+	::game::update(applicationInstance.Game, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
 	return 0;
 }
@@ -38,6 +37,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
+	::game::render(applicationInstance.Game, screenAscii);
 	return 0;
 }
 
@@ -53,6 +53,7 @@ int																			main															()														{
 		::ftwapp::render	(*applicationInstance);		/// Render frame.
 		if(::GetAsyncKeyState(VK_ESCAPE))		/// Check for escape key pressed.
 			break;	/// Exit while() loop.
+		Sleep(1);
 	}
 
 	::ftwapp::cleanup(*applicationInstance);
