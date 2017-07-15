@@ -24,7 +24,7 @@ namespace game
 							TCoord												Velocity									= {};	// A vector representing the speed in a given direction 
 
 		inline constexpr	bool												VelocityDepleted							()																					const	{ return (Velocity + Acceleration) < VelocityEpsilon; }
-		// This basically does Acceleration += (Force * 1/Mass) and Velocity += (Acceleration * Time).
+		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
 							void												IntegrateAccumulatedForce					(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			{
 			Acceleration															+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
 			AccumulatedForce														= {};											// Clear this out now that we've used it already.

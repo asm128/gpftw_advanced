@@ -30,7 +30,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
+	::ftwlib::presentConsole(applicationInstance.ScreenASCII);
 
 	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	

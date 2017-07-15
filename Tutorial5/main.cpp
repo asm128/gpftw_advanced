@@ -84,7 +84,7 @@ void																		addParticle
 	if(GetAsyncKeyState('3')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_RAIN, particleInstances, particleEngine);
 	if(GetAsyncKeyState('4')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_LAVA, particleInstances, particleEngine);
 
-	windDirection																= (float)sin(frameInfo.Seconds.Total/10.0);
+	windDirection																= (float)sin(frameInfo.Seconds.Total/5.0f) * .25f;
 
 	particleEngine.Integrate(lastFrameSeconds, frameInfo.Seconds.LastFrameHalfSquared);
 
@@ -122,8 +122,9 @@ void																		addParticle
 		SParticleInstance																& particleInstance												= particleInstances[iParticle];
 		const int32_t																	physicsId														= particleInstance.PhysicsId;
 		const ::ftwlib::SCoord2<float>													particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
-		screenAscii.Characters	[(int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x]	= 1 + particleInstance.Type;
-		screenAscii.Colors		[(int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x]	
+		const int32_t																	linearIndex														= (int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x;
+		screenAscii.Characters	[linearIndex]	= 1 + particleInstance.Type;
+		screenAscii.Colors		[linearIndex]	
 			= (particleInstance.Type == PARTICLE_TYPE_FIRE) ? ::ftwlib::ASCII_COLOR_RED
 			: (particleInstance.Type == PARTICLE_TYPE_SNOW) ? ::ftwlib::ASCII_COLOR_CYAN
 			: (particleInstance.Type == PARTICLE_TYPE_LAVA) ? ::ftwlib::ASCII_COLOR_RED

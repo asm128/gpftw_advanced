@@ -1,20 +1,16 @@
 // Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once. 
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
-//
-#include "game.h"			// for our game functions
-#include "ftw_timer.h"	// for our STimer struct
-
 #include "application.h"	// for
+#include "ftw_ascii_color.h"
 
 #include <stdio.h>		// for printf()
 #include <windows.h>	// for interacting with Windows
 
-static constexpr const uint32_t												SCREEN_WIDTH													= game::MAP_WIDTH + 64;
-static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP_DEPTH + 16;
+static constexpr const uint32_t												SCREEN_WIDTH													= 128;
+static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::game::cleanup				(applicationInstance.Game);
 	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);								
 	return 0;
 }
@@ -22,17 +18,16 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
 	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
-	::srand(0);
-	::game::setup(applicationInstance.Game);	// call setup game functions
+	::game::setup(applicationInstance.Game);
+	srand(0);
 	return 0;
 }
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
 	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
-
-	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
-	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
+	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;
+	::game::SGame																	& gameInstance													= applicationInstance.Game;
 	::game::update(gameInstance, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
 	return 0;
@@ -40,9 +35,9 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
 	//::ftwlib::clearConsole															(applicationInstance.ScreenASCII);
-	::memset(applicationInstance.ScreenASCII.Characters	.begin(), 0, applicationInstance.ScreenASCII.Characters	.size());
-	::memset(applicationInstance.ScreenASCII.Colors		.begin(), 0, applicationInstance.ScreenASCII.Colors		.size() * sizeof(uint16_t));
-	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());
+	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
+	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
+	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
 	return 0;
 }
 

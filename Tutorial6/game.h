@@ -1,55 +1,65 @@
-#include "tilemap.h"	// for STileMapASCII
-#include "character.h"	// for SMovingObject, SCharacter, SShot
 #include "physics_particle.h"
 
-#include "ftw_error.h"	// for ::ftwlib::error_t
+#include "ftw_error.h"
 
-#include <vector>		// for ::std::vector
+#include <cstdint>
+#include <vector>
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef FRAMEINFO_H
+#define FRAMEINFO_H
 
 namespace game 
 {
-#pragma pack (push, 1)
-	static constexpr		const int32_t									MAP_WIDTH								= 64;
-	static constexpr		const int32_t									MAP_DEPTH								= 32;
-
-	enum TILE_TYPE : uint32_t 
-		{	TILE_TYPE_GRASS				= 0  // define some values to represent our terrain tiles
-		,	TILE_TYPE_WALL	
-		,	TILE_TYPE_WATER	
-		,	TILE_TYPE_LAVA	
-		,	TILE_TYPE_COUNT
-		,	TILE_TYPE_INVALID			= ~0U
+	enum SHOT_TYPE 
+		{	SHOT_TYPE_DEFAULT  
+		,	SHOT_TYPE_ROCK
+		,	SHOT_TYPE_ARROW
+		,	SHOT_TYPE_FIREBALL
+		,	SHOT_TYPE_LASER
+		,	SHOT_TYPE_POISON
+		,	SHOT_TYPE_PLASMA
+		,	SHOT_TYPE_BOMB
+		,	SHOT_TYPE_COUNT
 		};
 
-	enum CHARACTER_TYPE : uint32_t 
-		{	CHARACTER_TYPE_SHADOW		= 0  // define some values to represent our terrain tiles
-		,	CHARACTER_TYPE_SPEEDY	
-		,	CHARACTER_TYPE_BASHFUL
-		,	CHARACTER_TYPE_POKEY	
-		,	CHARACTER_TYPE_COUNT	
-		,	CHARACTER_TYPE_INVALID		= ~0U
+	enum SHIP_TYPE 
+		{	SHIP_TYPE_DEFAULT  
+		,	SHIP_TYPE_FASTER
+		,	SHIP_TYPE_STRONGER
+		,	SHIP_TYPE_BETTER
+		,	SHIP_TYPE_NICER
+		,	SHIP_TYPE_GOOD_LOOKING
+		,	SHIP_TYPE_COUNT
 		};
 
-	enum SHOT_TYPE : uint32_t 
-		{	SHOT_TYPE_ARROW				= 0  // define some values to represent our terrain tiles
-		,	SHOT_TYPE_BULLET	
-		,	SHOT_TYPE_DART
-		,	SHOT_TYPE_FLAME	
-		,	SHOT_TYPE_COLD
-		,	SHOT_TYPE_ROCK	
-		,	SHOT_TYPE_ROCKET 
-		,	SHOT_TYPE_COUNT	
-		,	SHOT_TYPE_INVALID			= ~0U
-		};
+	struct SShotDescription {
+				int32_t															Damage;
+				int32_t															RoundsMax;
+				double															Speed;
+				uint8_t															Image;
+	};
 
-	struct STileFloor {
-				uint64_t														ShotThrough								: 1;
-				uint64_t														Transitable								: 1;
-				uint64_t														Damage									: 8;
-				::std::string													Name									= "Unnamed tile";
+	struct SShot {
+				int32_t															ShotDescription;
+				int32_t															ParticleIndex;
+				int32_t															RoundsCurrent;
+	};
+
+	struct SShipPoints {
+				int32_t															Health;
+				int32_t															Shield;
+	};
+
+	struct SShipDescription {
+				SShipPoints														PointsMax;
+				uint8_t															Image;
+	};
+
+	struct SShip {
+				int32_t															ShipDescription;
+				int32_t															SelectedShot;
+				int32_t															ParticleIndex;
+				SShipPoints														PointsCurrent;
 	};
 
 	struct SFrameSeconds {
@@ -82,39 +92,29 @@ namespace game
 					Seconds			.UpdateFromTime(timeElapsedMicroseconds / 1000000.0);
 				}
 	};
-#pragma pack (pop)
 
-	struct SMap { // The struct is a block of variables to be used to store our map information
-				::ftwlib::SCoord2<uint32_t>										Size;		// Declare Width and Depth variables which will hold the active map size
-				::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Floor;
-				::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Enemy;
-				::game::STileMapASCII<::game::MAP_WIDTH, ::game::MAP_DEPTH>		Shots;
+	template<typename _tEnum>
+	struct SParticleInstance {
+		_tEnum																	Type								= ~0;
+		int32_t																	PhysicsId							= -1;
 	};
 
-	struct SDescriptionTables { // 
-				::ftwlib::array_view<const ::game::SCharacter	>				Enemy;		// 
-				::ftwlib::array_view<const ::game::SCharacter	>				Shot;		// 
-				::ftwlib::array_view<const ::game::STileFloor	>				Floor;		// 
+	struct SGame {
+				::game::SParticle2Engine<float>									ParticleEngine						= {};
+				::game::SFrameInfo												FrameInfo							= {};
+				::std::vector<SParticleInstance<::game::SHIP_TYPE>>				ShipParticleInstances				= {};
+				::std::vector<SParticleInstance<::game::SHOT_TYPE>>				ShotParticleInstances				= {};
+				::std::vector<SShip>											Ships								= {};
+				::std::vector<SShot>											Shots								= {};
 	};
-
-	struct SGame { // holds the game data
-				::game::SParticle2Engine<float>									Particle2Engine;
-				::game::SMap													Map;		// declare a variable of type SMap
-				::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
-				::game::SFrameInfo												FrameInfo;
-				::std::vector<SCharacter>										Enemy;				// Enemy list
-				::std::vector<SCharacter>										Shots;				// Shot list
-
-				::game::SRigidBodyEngine										RigidBodyEngine;	// Rigid body list
-				
-				SDescriptionTables												Descriptions;
-	};
-
-	// -- game functions			
-			::ftwlib::error_t												setup									(::game::SGame& gameObject);
-			::ftwlib::error_t												cleanup									(::game::SGame& gameObject);
-			::ftwlib::error_t												update									(::game::SGame& gameObject, uint64_t timeElapsedMicroseconds);
-			::ftwlib::error_t												draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
+	// ------
+			::ftwlib::error_t												addShip									(SGame& gameInstance, SHIP_TYPE type);
+			::ftwlib::error_t												addShot									(SGame& gameInstance, SHOT_TYPE type);
+	// ------
+			::ftwlib::error_t												setup									(SGame& gameInstance);
+			::ftwlib::error_t												update									(SGame& gameInstance, uint64_t lastTimeMicroseconds);
+			::ftwlib::error_t												render									(SGame& gameInstance);
+			::ftwlib::error_t												cleanup									(SGame& gameInstance);
 }
-//-------------------------------------------------------------------------
-#endif // GAME_H
+
+#endif // FRAMEINFO_H

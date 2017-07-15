@@ -26,7 +26,7 @@ struct SApplication {
 
 // Cleanup application resources.
 void																	cleanup								(::SApplication& applicationInstance)				{ 
-	::destroyTileMap		(applicationInstance.TileMap);									
+	::destroyTileMap			(applicationInstance.TileMap);									
 	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);									
 }
 
@@ -38,18 +38,18 @@ void																	setupRoom
 	,	uint32_t						sizeZ
 	)
 { 
-	for(uint32_t z = offsetZ; z < (offsetZ+sizeZ); ++z)
-	for(uint32_t x = offsetX; x < (offsetX+sizeX); ++x) {
+	for(uint32_t z = offsetZ; z < (offsetZ + sizeZ); ++z)
+	for(uint32_t x = offsetX; x < (offsetX + sizeX); ++x) {
 		asciiMap[z][x]															= 2;
 		asciiMap[z][x]															= 2;
 	}
 
-	for(uint32_t z = offsetZ; z < (offsetZ+sizeZ); ++z) {
+	for(uint32_t z = offsetZ; z < (offsetZ + sizeZ); ++z) {
 		asciiMap[z][offsetX				]										= 3;
 		asciiMap[z][offsetX + sizeX	- 1	]										= 3;
 	}
 
-	for(uint32_t x = offsetX; x < (offsetX+sizeX); ++x) {
+	for(uint32_t x = offsetX; x < (offsetX + sizeX); ++x) {
 		asciiMap[offsetZ			][x]										= 3;
 		asciiMap[offsetZ + sizeZ - 1][x]										= 3;
 	}
@@ -105,9 +105,9 @@ void																	update								(::SApplication& applicationInstance)				{
 	::ftwlib::presentConsole(applicationInstance.ScreenASCII);	// Present the current image if any.
 
 	::ftwlib::ASCII_COLOR_INDEX													oldColor0							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
-	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)+0x30000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)-0x30000);
+	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)+0x40000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)-0x40000);
 	//::ftwlib::ASCII_COLOR_INDEX													oldColor1							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_BLUE];
-	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_BLUE]		= ((applicationInstance.FrameCounter % 48) <  24) ? (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)-0x30000) : (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)+0x30000);
+	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_BLUE]		= ((applicationInstance.FrameCounter % 48) <  24) ? (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)-0x40000) : (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)+0x40000);
 
 
 	++applicationInstance.FrameCounter;		// Increase our frame counter by 1.
