@@ -53,6 +53,7 @@ namespace game
 	struct SShot {
 				int32_t															ShotDescription										;
 				int32_t															ParticleIndex										;
+				int32_t															ShipIndex											;
 				int32_t															RoundsCurrent										;
 	};
 
@@ -96,7 +97,7 @@ namespace game
 	};
 	// ------
 			::ftwlib::error_t												addShip												(SGame& gameInstance, SHIP_TYPE type);
-			::ftwlib::error_t												addShot												(SGame& gameInstance, SHOT_TYPE type);
+			::ftwlib::error_t												addShot												(SGame& gameInstance, SHOT_TYPE type, int32_t shipIndex);
 	// ------
 			::ftwlib::error_t												setup												(SGame& gameInstance);
 			::ftwlib::error_t												update												(SGame& gameInstance, uint64_t lastTimeMicroseconds);

@@ -5,7 +5,7 @@ template <typename _tElem>
 			int32_t																			renderParticle													(::ftwlib::SScreenASCII& screenAscii, const ::game::SParticle2Engine<_tElem>& particleEngine, int32_t particleIndex, uint8_t image, uint16_t color)				{
 	const ::ftwlib::SCoord2<_tElem>																	particlePosition												= particleEngine.Particle[particleIndex].Position;
 	const ::game::SParticle2<_tElem>																& particle														= particleEngine.Particle[particleIndex];
-	::ftwlib::SCoord2<int32_t>																		screenPosition													= particleEngine.Particle[particleIndex].Position.Cast<int32_t>();
+	::ftwlib::SCoord2<int32_t>																		screenPosition													= (particleEngine.Particle[particleIndex].Position + ::ftwlib::SCoord2<_tElem>{.5f, .5f}).Cast<int32_t>();
 	screenPosition.y																			/= 2;
 	if( particle.Position.x < 0 || screenPosition.x >= (int32_t)screenAscii.Width
 	 || particle.Position.y < 0 || screenPosition.y >= (int32_t)screenAscii.Height				
