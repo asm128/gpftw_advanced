@@ -12,7 +12,7 @@
 				void																		setupShots														(::game::SGame& gameInstance)							{
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_ROCK			]					= {10, 100, 1,   6	, ::ftwlib::ASCII_COLOR_DARKGREY	};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_ARROW		]					= {10, 100, 1,  25	, ::ftwlib::ASCII_COLOR_LIGHTGREY	};
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_FIREBALL		]					= {10, 100, 1,  14	, ::ftwlib::ASCII_COLOR_DARKYELLOW	};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_FIREBALL		]					= {10, 100, 1,  14	, ::ftwlib::ASCII_COLOR_RED			};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_LASER		]					= {10, 100, 1, 195	, ::ftwlib::ASCII_COLOR_RED			};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_POISON		]					= {10, 100, 1, 236	, ::ftwlib::ASCII_COLOR_GREEN		};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_PLASMA		]					= {10, 100, 1, 246	, ::ftwlib::ASCII_COLOR_CYAN		};
@@ -29,7 +29,7 @@
 
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ROCK			].Damping			= 0.8f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ARROW		].Damping			= 0.9f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL		].Damping			= 1.0f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL		].Damping			= 0.98f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_LASER		].Damping			= 1.0f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_POISON		].Damping			= 0.7f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_PLASMA		].Damping			= 1.0f;
@@ -70,5 +70,6 @@ static inline	void																		setupParticles													(::game::SGame& g
 
 	addShip(gameInstance, ::game::SHIP_TYPE_GOOD_LOOKING);
 	gameInstance.Ships[0].SelectedShot															= ::game::SHOT_TYPE_ROCK; 
+	gameInstance.ParticleEngine.Particle[gameInstance.Ships[0].ParticleIndex].Position			= {gameInstance.CombatAreaSizeVisible.x * .25f, gameInstance.CombatAreaSizeVisible.y * .5f}; 
 	return 0;
 }

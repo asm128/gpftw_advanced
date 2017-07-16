@@ -82,26 +82,24 @@
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
 	::std::vector<::game::SShot>																	& shotInstances													= gameInstance.Shots;
 	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngine;
-	::game::SShip																					& playerShip													= shipInstances[0];
 
-		 if(::GetAsyncKeyState('1') || ::GetAsyncKeyState(VK_NUMPAD1)) playerShip.SelectedShot = ::game::SHOT_TYPE_ROCK		; 
-	else if(::GetAsyncKeyState('2') || ::GetAsyncKeyState(VK_NUMPAD2)) playerShip.SelectedShot = ::game::SHOT_TYPE_ARROW	; 
-	else if(::GetAsyncKeyState('3') || ::GetAsyncKeyState(VK_NUMPAD3)) playerShip.SelectedShot = ::game::SHOT_TYPE_FIREBALL	; 
-	else if(::GetAsyncKeyState('4') || ::GetAsyncKeyState(VK_NUMPAD4)) playerShip.SelectedShot = ::game::SHOT_TYPE_LASER	; 
-	else if(::GetAsyncKeyState('5') || ::GetAsyncKeyState(VK_NUMPAD5)) playerShip.SelectedShot = ::game::SHOT_TYPE_POISON	; 
-	else if(::GetAsyncKeyState('6') || ::GetAsyncKeyState(VK_NUMPAD6)) playerShip.SelectedShot = ::game::SHOT_TYPE_PLASMA	; 
-	else if(::GetAsyncKeyState('7') || ::GetAsyncKeyState(VK_NUMPAD7)) playerShip.SelectedShot = ::game::SHOT_TYPE_BOMB		; 
+		 if(::GetAsyncKeyState('1') || ::GetAsyncKeyState(VK_NUMPAD1)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_ROCK		; 
+	else if(::GetAsyncKeyState('2') || ::GetAsyncKeyState(VK_NUMPAD2)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_ARROW	; 
+	else if(::GetAsyncKeyState('3') || ::GetAsyncKeyState(VK_NUMPAD3)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_FIREBALL	; 
+	else if(::GetAsyncKeyState('4') || ::GetAsyncKeyState(VK_NUMPAD4)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_LASER	; 
+	else if(::GetAsyncKeyState('5') || ::GetAsyncKeyState(VK_NUMPAD5)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_POISON	; 
+	else if(::GetAsyncKeyState('6') || ::GetAsyncKeyState(VK_NUMPAD6)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_PLASMA	; 
+	else if(::GetAsyncKeyState('7') || ::GetAsyncKeyState(VK_NUMPAD7)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_BOMB		; 
 
 	if(::GetAsyncKeyState(VK_SPACE))	{ 
-		int32_t																							shotIndex														= ::game::addShot(gameInstance, playerShip.SelectedShot); 
-		::game::SParticle2<float>																		& playerParticle												= particleEngine.Particle[playerShip.ParticleIndex];
-		particleEngine.Particle[shotInstances[shotIndex].ParticleIndex].Position					= playerParticle.Position; 
+		int32_t																							shotIndex														= ::game::addShot(gameInstance, shipInstances[0].SelectedShot); 
+		particleEngine.Particle[shotInstances[shotIndex].ParticleIndex].Position					= particleEngine.Particle[shipInstances[0].ParticleIndex].Position; 
 	}
-	::game::SParticle2<float>																		& playerParticle												= particleEngine.Particle[playerShip.ParticleIndex];
-	if(::GetAsyncKeyState('W'))		{ playerParticle.Position.y -= lastFrameSeconds * 10; }
-	if(::GetAsyncKeyState('A'))		{ playerParticle.Position.x -= lastFrameSeconds * 10; }
-	if(::GetAsyncKeyState('S'))		{ playerParticle.Position.y += lastFrameSeconds * 10; }
-	if(::GetAsyncKeyState('D'))		{ playerParticle.Position.x += lastFrameSeconds * 10; }
+	::game::SParticle2<float>																		& playerParticle												= particleEngine.Particle[shipInstances[0].ParticleIndex];
+	if(::GetAsyncKeyState('W')) playerParticle.Position.y											-= lastFrameSeconds * 10;
+	if(::GetAsyncKeyState('A')) playerParticle.Position.x											-= lastFrameSeconds * 10;
+	if(::GetAsyncKeyState('S')) playerParticle.Position.y											+= lastFrameSeconds * 10;
+	if(::GetAsyncKeyState('D')) playerParticle.Position.x											+= lastFrameSeconds * 10;
 	if( !::GetAsyncKeyState('W')
 	 && !::GetAsyncKeyState('A')
 	 && !::GetAsyncKeyState('S')
