@@ -18,8 +18,8 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 48;
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
 	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
-	applicationInstance.Game.CombatAreaSizeEffective							= {::SCREEN_WIDTH, ::SCREEN_HEIGHT};
-	applicationInstance.Game.CombatAreaSizeVisible								= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT - 5};
+	applicationInstance.Game.CombatAreaSizeEffective							= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
+	applicationInstance.Game.CombatAreaSizeVisible								= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
 	::game::setup(applicationInstance.Game);
 	srand(0);
 	return 0;
@@ -27,7 +27,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 48;
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
+	::ftwlib::presentConsole(applicationInstance.ScreenASCII);
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;
 	::game::update(applicationInstance.Game, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
@@ -35,7 +35,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 48;
 }
 
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::clearConsole															(applicationInstance.ScreenASCII);
+	//::ftwlib::clearConsole(applicationInstance.ScreenASCII);
 	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
@@ -58,7 +58,7 @@ int																			main															()														{
 		Sleep(1);
 	}
 
-	::ftwapp::cleanup(*applicationInstance);
+	::ftwapp::cleanup	(*applicationInstance);
 
 	delete( applicationInstance );	// Destroy the applcation instance and release its memory.
 	return 0; /// Exit from the function returning an (int)eger.
@@ -68,7 +68,7 @@ int	WINAPI																	WinMain
 	(	_In_		::HINSTANCE		// hInstance
 	,	_In_opt_	::HINSTANCE		// hPrevInstance
 	,	_In_		::LPSTR			// lpCmdLine
-	,	_In_		::INT				// nShowCmd
+	,	_In_		::INT			// nShowCmd
 	)
 {
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF);

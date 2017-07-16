@@ -119,7 +119,7 @@ void																		addParticle
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
 
 	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
-	for(uint32_t iParticle = 0, particleCount = particleInstances.size(); iParticle < particleCount; ++iParticle) {
+	for(uint32_t iParticle = 0, particleCount = (uint32_t)particleInstances.size(); iParticle < particleCount; ++iParticle) {
 		SParticleInstance																& particleInstance												= particleInstances[iParticle];
 		const int32_t																	physicsId														= particleInstance.PhysicsId;
 		const ::ftwlib::SCoord2<float>													particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
