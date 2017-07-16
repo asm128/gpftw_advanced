@@ -12,13 +12,16 @@ template <typename _tElem>
 	 ) return 1;
 	const int32_t																					linearIndex														= (int32_t)screenPosition.y * screenAscii.Width + (int32_t)screenPosition.x;
 	screenAscii.Characters	[linearIndex]														= image;
-	screenAscii.Colors		[linearIndex]														= color;
+	screenAscii.Colors		[linearIndex]														= color | (screenAscii.Colors[linearIndex] & 0xF0);
 	return 0;
 }
 			::ftwlib::error_t																game::render													(SGame& gameInstance, ::ftwlib::SScreenASCII& screenAscii)									{ 
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
 	::std::vector<::game::SShot>																	& shotInstances													= gameInstance.Shots;
 	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngine;
+	for(uint32_t iCell = 0, cellCount = screenAscii.Colors.size(); iCell < cellCount; ++iCell) {
+		screenAscii.Colors[iCell]																	= ::ftwlib::ASCII_COLOR_DARKBLUE << 4;
+	}
 
 	for(uint32_t iShot = 0; iShot < shotInstances.size(); ++iShot) {
 		const SShot																						& shotInstance													= shotInstances[iShot];

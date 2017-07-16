@@ -20,6 +20,8 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 48;
 	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	applicationInstance.Game.CombatAreaSizeEffective							= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
 	applicationInstance.Game.CombatAreaSizeVisible								= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
+	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= 0x100000;
+
 	::game::setup(applicationInstance.Game);
 	srand(0);
 	return 0;

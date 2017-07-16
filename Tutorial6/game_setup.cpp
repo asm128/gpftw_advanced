@@ -55,22 +55,21 @@ static inline	void																		setupParticles													(::game::SGame& g
 	::setupParticleShots(gameInstance);
 }
 				::ftwlib::error_t															game::setup														(::game::SGame& gameInstance)							{
-	//gameInstance																				= {};
 	::setupParticles	(gameInstance);
 	::setupShips		(gameInstance);
 	::setupShots		(gameInstance);
 
-	gameInstance.Spawners.resize(10);
+	gameInstance.Spawners.resize(100);
 	for(uint32_t iSpawner = 0, spawnerCount = (uint32_t)gameInstance.Spawners.size(); iSpawner < spawnerCount; ++ iSpawner) {
 		::game::SSpawner																				& spawner														= gameInstance.Spawners[iSpawner];
 		spawner.Position																			= {(int32_t)gameInstance.CombatAreaSizeVisible.x - 3, (int32_t)((iSpawner * 10) % gameInstance.CombatAreaSizeVisible.y)};
-		spawner.Records.resize(10);
+		spawner.Records.resize(100);
 		for(uint32_t iSpawnRecord = 0; iSpawnRecord < spawner.Records.size(); ++iSpawnRecord) {
 			spawner.Records[iSpawnRecord].ShipTypeToSpawn												= ::game::SHIP_TYPE(iSpawner % ::game::SHIP_TYPE_COUNT);
-			spawner.Records[iSpawnRecord].TimeSinceGameStarted											= 5 + (iSpawner + 1) * (iSpawnRecord + 1);
+			spawner.Records[iSpawnRecord].TimeSinceGameStarted											= 5 + (iSpawnRecord * 100 + 1) + (iSpawner);
 		}
 	}
-	::game::addShip(gameInstance, ::game::SHIP_TYPE_GOOD_LOOKING);
+	::game::addShip(gameInstance, ::game::SHIP_TYPE_STRONGER);
 	gameInstance.Ships[0].SelectedShot															= ::game::SHOT_TYPE_ROCK; 
 	gameInstance.ParticleEngine.Particle[gameInstance.Ships[0].ParticleIndex].Position			= {gameInstance.CombatAreaSizeVisible.x * .25f, gameInstance.CombatAreaSizeVisible.y * .5f}; 
 	return 0;
