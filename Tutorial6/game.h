@@ -37,6 +37,7 @@ namespace game
 				int32_t															RoundsMax											;
 				double															Speed												;
 				uint8_t															Image												;
+				uint16_t														Color												;
 	};
 
 	struct SShot {
@@ -53,6 +54,7 @@ namespace game
 	struct SShipDescription {
 				SShipPoints														PointsMax											;
 				uint8_t															Image												;
+				uint16_t														Color												;
 	};
 
 	struct SShip {

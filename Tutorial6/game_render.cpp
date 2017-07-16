@@ -15,7 +15,7 @@
 		 ) continue;
 		const int32_t																					linearIndex														= (int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x;
 		screenAscii.Characters	[linearIndex]														= 1 + gameInstance.DefinitionsShot[shotInstances[iShot].ShotDescription].Image;
-		screenAscii.Colors		[linearIndex]														= ::ftwlib::ASCII_COLOR_RED;
+		screenAscii.Colors		[linearIndex]														= gameInstance.DefinitionsShot[shotInstances[iShot].ShotDescription].Color;
 	}
 
 	for(uint32_t iShip = 0; iShip < shipInstances.size(); ++iShip) {

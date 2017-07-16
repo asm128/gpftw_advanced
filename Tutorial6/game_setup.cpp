@@ -1,20 +1,22 @@
 #include "game.h"
 
+#include "ftw_ascii_color.h"
+
 				void																		setupShips														(::game::SGame& gameInstance)							{
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_FASTER		]					= {100, 100, 231	};
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_STRONGER		]					= {100, 100, 20		};
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_BETTER		]					= {100, 100, 237	};
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_GOOD_LOOKING	]					= {100, 100, 227	};
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_NICER		]					= {100, 100, 66		};
-}
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_FASTER		]					= {100, 100, 231	, };
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_STRONGER		]					= {100, 100, 20		, };
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_BETTER		]					= {100, 100, 237	, };
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_GOOD_LOOKING	]					= {100, 100, 227	, };
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_NICER		]					= {100, 100, 66		, };
+}																													
 				void																		setupShots														(::game::SGame& gameInstance)							{
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_ROCK			]					= {10, 100, 1,   6	};
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_ARROW		]					= {10, 100, 1,  25	};
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_FIREBALL		]					= {10, 100, 1,  14	};
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_LASER		]					= {10, 100, 1, 195	};
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_POISON		]					= {10, 100, 1, 236	};
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_PLASMA		]					= {10, 100, 1, 246	};
-	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_BOMB			]					= {10, 100, 1, 161	};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_ROCK			]					= {10, 100, 1,   6	, ::ftwlib::ASCII_COLOR_DARKGREY	};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_ARROW		]					= {10, 100, 1,  25	, ::ftwlib::ASCII_COLOR_LIGHTGREY	};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_FIREBALL		]					= {10, 100, 1,  14	, ::ftwlib::ASCII_COLOR_DARKYELLOW	};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_LASER		]					= {10, 100, 1, 195	, ::ftwlib::ASCII_COLOR_RED			};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_POISON		]					= {10, 100, 1, 236	, ::ftwlib::ASCII_COLOR_GREEN		};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_PLASMA		]					= {10, 100, 1, 246	, ::ftwlib::ASCII_COLOR_CYAN		};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_BOMB			]					= {10, 100, 1, 161	, ::ftwlib::ASCII_COLOR_DARKRED		};
 }
 				void																		setupParticleShots												(::game::SGame& gameInstance)							{
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ROCK			].SetMass			(1);

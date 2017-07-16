@@ -7,11 +7,11 @@
 #include <windows.h>	// for interacting with Windows
 
 static constexpr const uint32_t												SCREEN_WIDTH													= 128;
-static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
+static constexpr const uint32_t												SCREEN_HEIGHT													= 48;
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);								
+	::ftwlib::destroyConsole(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
@@ -64,7 +64,7 @@ int																			main															()														{
 	return 0; /// Exit from the function returning an (int)eger.
 }
 
-int	WINAPI														WinMain								
+int	WINAPI																	WinMain								
 	(	_In_		::HINSTANCE		// hInstance
 	,	_In_opt_	::HINSTANCE		// hPrevInstance
 	,	_In_		::LPSTR			// lpCmdLine
