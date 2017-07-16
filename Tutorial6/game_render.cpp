@@ -27,7 +27,7 @@
 		 ) continue;
 		const int32_t																					linearIndex														= (int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x;
 		screenAscii.Characters	[linearIndex]														= 1 + gameInstance.DefinitionsShip[shipInstances[iShip].ShipDescription].Image;
-		screenAscii.Colors		[linearIndex]														= ::ftwlib::ASCII_COLOR_BLUE;
+		screenAscii.Colors		[linearIndex]														= ::ftwlib::ASCII_COLOR_YELLOW;
 	}				
 	return 0; 
 }

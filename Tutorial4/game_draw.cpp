@@ -84,9 +84,9 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	const ::game::SCharacterPoints											& playerPointsMax					= playerInstance.PointsMax;	
 
 	uint32_t																offsetCell							= (::game::MAP_DEPTH * targetWidth);
-#define COPY_TO_TARGET()																	\
-		::memcpy(&targetCharacterGrid	[offsetCell], compositeText		, textLength); 		\
-		::memcpy(&targetColorGrid		[offsetCell], compositeColors	, textLength * 2); 	\
+#define COPY_TO_TARGET()																					\
+		::memcpy(&targetCharacterGrid	[offsetCell], compositeText		, textLength); 						\
+		::memcpy(&targetColorGrid		[offsetCell], compositeColors	, textLength * sizeof(uint16_t)); 	\
 		offsetCell															+= targetWidth;
 	int32_t																	
 	textLength	= ::sprintf_s(compositeText, "- Player health          : %i / %u."						, playerPoints.HP, (uint32_t)playerPointsMax.HP							);	COPY_TO_TARGET();
@@ -116,8 +116,8 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	char																	compositeText	[32]				= {};
 	uint16_t																compositeColors	[32]				;
 	uint16_t																backgroundColor						= ::ftwlib::ASCII_COLOR_YELLOW | ((playerDead ? ::ftwlib::ASCII_COLOR_DARKRED : ::ftwlib::ASCII_COLOR_BLUE) << 4);
-	for(uint32_t i = 0; i < ::ftwlib::size(compositeColors); ++i) 
-		compositeColors[i]													= backgroundColor;
+	for(uint32_t iColor = 0; iColor < ::ftwlib::size(compositeColors); ++iColor) 
+		compositeColors[iColor]												= backgroundColor;
 
 	int32_t																	textLength							= ::sprintf_s(compositeText, winText.c_str());
 	uint32_t																offsetCell							= (::game::MAP_DEPTH / 2 * targetWidth) + (::game::MAP_WIDTH / 2 - textLength / 2);

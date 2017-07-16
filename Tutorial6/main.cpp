@@ -18,6 +18,8 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
 	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	applicationInstance.Game.CombatAreaSizeEffective							= {::SCREEN_WIDTH, ::SCREEN_HEIGHT};
+	applicationInstance.Game.CombatAreaSizeVisible								= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT - 5};
 	::game::setup(applicationInstance.Game);
 	srand(0);
 	return 0;

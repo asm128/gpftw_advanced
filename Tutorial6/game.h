@@ -57,7 +57,7 @@ namespace game
 
 	struct SShip {
 				int32_t															ShipDescription										;
-				int32_t															SelectedShot										;
+				SHOT_TYPE														SelectedShot										;
 				int32_t															ParticleIndex										;
 				SShipPoints														PointsCurrent										;
 	};
@@ -71,8 +71,8 @@ namespace game
 				::std::vector<SShot>											Shots												= {};
 
 				// -- Screen information
-				::ftwlib::SCoord2<uint32_t>										VisibleSize											= {96, 50};
-				::ftwlib::SCoord2<uint32_t>										MarginSize											= {10, 5};
+				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeVisible								= {96, 50};
+				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeEffective								= {10, 5};
 
 				// -- Description tables - Game objects
 				::game::SShipDescription										DefinitionsShip			[::game::SHIP_TYPE_COUNT]	= {};

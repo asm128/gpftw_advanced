@@ -11,14 +11,14 @@ namespace game
 		typedef	::ftwlib::SCoord2<_tElement>	TCoord;
 
 		TCoord									Center;
-		double									Radius;
+		_tElement								Radius;
 	public:
-												SBoundingSphere				(const TCoord &center, double radius)											: Center(center), Radius(radius)	{}
+												SBoundingSphere				(const TCoord &center, _tElement radius)										: Center(center), Radius(radius)	{}
 
 	// Creates a bounding sphere to enclose the two given bounding spheres.
 												SBoundingSphere				(const SBoundingSphere &one, const SBoundingSphere &two)						{
 		const TCoord									centerOffset				= two.Center - one.Center;
-		const double									distanceSquared				= centreOffset.LengthSquared();
+		const double									distanceSquared				= centerOffset.LengthSquared();
 		const double									radiusDiff					= two.Radius - one.Radius;
 
 		if (radiusDiff * radiusDiff >= distanceSquared) {	// Check if the larger sphere encloses the small one
