@@ -32,6 +32,16 @@ namespace game
 		,	SHIP_TYPE_COUNT
 		};
 
+	struct SSpawnerRecord {
+				SHIP_TYPE														ShipTypeToSpawn										;
+				double															TimeSinceGameStarted								;
+	};
+
+	struct SSpawner	{
+				::ftwlib::SCoord2<int32_t>										Position											;
+				::std::vector<SSpawnerRecord>									Records												;
+	};
+
 	struct SShotDescription {
 				int32_t															Damage												;
 				int32_t															RoundsMax											;
@@ -71,11 +81,11 @@ namespace game
 				// -- Game object instances
 				::std::vector<SShip>											Ships												= {};
 				::std::vector<SShot>											Shots												= {};
+				::std::vector<SSpawner>											Spawners											= {};
 
 				// -- Screen information
 				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeVisible								= {96, 50};
 				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeEffective								= {10, 5};
-
 				// -- Description tables - Game objects
 				::game::SShipDescription										DefinitionsShip			[::game::SHIP_TYPE_COUNT]	= {};
 				::game::SShotDescription										DefinitionsShot			[::game::SHOT_TYPE_COUNT]	= {};

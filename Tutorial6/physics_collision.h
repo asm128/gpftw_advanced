@@ -10,8 +10,8 @@ namespace game
 	struct SBoundingSphere {
 		typedef	::ftwlib::SCoord2<_tElement>	TCoord;
 
-		TCoord									Center;
-		_tElement								Radius;
+				TCoord							Center;
+				_tElement						Radius;
 	public:
 												SBoundingSphere				(const TCoord &center, _tElement radius)										: Center(center), Radius(radius)	{}
 
@@ -41,16 +41,16 @@ namespace game
 		}
 	}
 		// Returns the volume of thiS bounding volume. This is used to calculate how to recurse into the bounding volume tree. For a bounding sphere it is a simple calculation.
-		double									GetSize						()																const			{ return 1.333333 * R_PI * Radius * Radius * Radius; }
+				double							GetSize						()																const			{ return 1.333333 * R_PI * Radius * Radius * Radius; }
 
-		bool									Overlaps					(const SBoundingSphere &other)									const			{
+				bool							Overlaps					(const SBoundingSphere &other)									const			{
 			const double								distanceSquared				= (Center - other.Center).squareMagnitude();
 			const double								radiiSum					= (Radius + other.Radius);
 			return distanceSquared < (radiiSum * radiiSum);	// check squared distance against squared radius
 		}
 		// Reports how much this bouNding sphere would have to grow by to incorporate the given bounding sphere. Note that this calculation returns a value not in any particular units (i.e. its not a volume growth). 
 		// In fact the best implemenTation takes into account the growth in surface area (after the * Goldsmith-Salmon algorithm for tree construction).
-		double									GetGrowth					(const SBoundingSphere &other)									const			{
+				double							GetGrowth					(const SBoundingSphere &other)									const			{
 			SBoundingSphere								newSphere					= {*this, other};
 			return newSphere.Radius * newSphere.Radius - Radius * Radius;	// We return a value proportional to the change in surface area of the sphere.
 		}
