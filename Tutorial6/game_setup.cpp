@@ -4,7 +4,7 @@
 
 				void																		setupEffects													(::game::SGame& gameInstance)							{
 	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_ROCKET			]				= {'.', ::ftwlib::ASCII_COLOR_RED		};
-	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_STARS			]				= {'.', ::ftwlib::ASCII_COLOR_LIGHTGREY	};
+	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_STARS			]				= {'.', ::ftwlib::ASCII_COLOR_WHITE		};
 }	
 				void																		setupShips														(::game::SGame& gameInstance)							{
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_FASTER		]					= {100, 100, 232	, ::ftwlib::ASCII_COLOR_WHITE		};

@@ -7,7 +7,7 @@
 #include <windows.h>	// for interacting with Windows
 
 static constexpr const uint32_t												SCREEN_WIDTH													= 128;
-static constexpr const uint32_t												SCREEN_HEIGHT													= 48;
+static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
@@ -40,7 +40,9 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 48;
 	//::ftwlib::clearConsole(applicationInstance.ScreenASCII);
 	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
-	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
+	//::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
+	for(uint32_t i=0; i<screenAscii.Colors.size(); ++i)
+		screenAscii.Colors[i]														= ::ftwlib::ASCII_COLOR_WHITE;
 	::game::render(applicationInstance.Game, screenAscii);
 	return 0;
 }
