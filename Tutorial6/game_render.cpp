@@ -18,11 +18,17 @@ template <typename _tElem>
 			::ftwlib::error_t																game::render													(SGame& gameInstance, ::ftwlib::SScreenASCII& screenAscii)									{ 
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
 	::std::vector<::game::SShot>																	& shotInstances													= gameInstance.Shots;
-	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngine;
+	::std::vector<::game::SEffect>																	& effectInstances												= gameInstance.Effects;
+	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
 	for(uint32_t iCell = 0, cellCount = screenAscii.Colors.size(); iCell < cellCount; ++iCell) {
 		screenAscii.Colors[iCell]																	= ::ftwlib::ASCII_COLOR_DARKBLUE << 4;
 	}
 
+	for(uint32_t iEffect = 0; iEffect < effectInstances.size(); ++iEffect) {
+		const SEffect																						& effectInstance												= effectInstances[iEffect];
+		const SEffectDescription																			& effectDescription												= gameInstance.DefinitionsEffect[effectInstance.Type];
+		::renderParticle(screenAscii, gameInstance.ParticleEngineEffects, effectInstance.ParticleIndex, effectDescription.Image, effectDescription.Color);
+	}
 	for(uint32_t iShot = 0; iShot < shotInstances.size(); ++iShot) {
 		const SShot																						& shotInstance													= shotInstances[iShot];
 		const SShotDescription																			& shotDescription												= gameInstance.DefinitionsShot[shotInstance.ShotDescription];

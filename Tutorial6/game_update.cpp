@@ -2,10 +2,17 @@
 
 #include <Windows.h>	// for GetAsyncKeyState()
 
+			::ftwlib::error_t																game::addEffect													(::game::SGame& gameInstance, EFFECT_TYPE type)												{
+	::game::SEffect																					newInstance													= {type,};
+	newInstance.ParticleIndex																	= gameInstance.ParticleEngineEffects.AddParticle(gameInstance.DefinitionsParticleEffect[type]);	
+	uint32_t																						newEffectIndex												= (uint32_t)gameInstance.Effects.size();
+	gameInstance.Effects.push_back(newInstance); 
+	return newEffectIndex;
+}
 			::ftwlib::error_t																game::addShip													(::game::SGame& gameInstance, ::game::SHIP_TYPE type)										{
 	::game::SShip																					newInstance; 
-	newInstance.ParticleIndex																	= gameInstance.ParticleEngine.AddParticle(gameInstance.DefinitionsParticleShip[type]);	
-	gameInstance.ParticleEngine.Particle[newInstance.ParticleIndex].Position					= {10, 10};
+	newInstance.ParticleIndex																	= gameInstance.ParticleEngineGame.AddParticle(gameInstance.DefinitionsParticleShip[type]);	
+	gameInstance.ParticleEngineGame.Particle[newInstance.ParticleIndex].Position				= {10, 10};
 	newInstance.ShipDescription																	= type; 
 	newInstance.PointsCurrent																	= gameInstance.DefinitionsShip[type].PointsMax;
 	uint32_t																						newShipIndex													= (uint32_t)gameInstance.Ships.size();
@@ -14,7 +21,7 @@
 }
 			::ftwlib::error_t																game::addShot													(::game::SGame& gameInstance, ::game::SHOT_TYPE type, int32_t shipIndex)					{ 
 	::game::SShot																					newInstance; 
-	newInstance.ParticleIndex																	= gameInstance.ParticleEngine.AddParticle(gameInstance.DefinitionsParticleShot[type]);	
+	newInstance.ParticleIndex																	= gameInstance.ParticleEngineGame.AddParticle(gameInstance.DefinitionsParticleShot[type]);	
 	newInstance.ShotDescription																	= type; 
 	newInstance.ShipIndex																		= shipIndex;
 	newInstance.RoundsCurrent																	= gameInstance.DefinitionsShot[type].RoundsMax;
@@ -24,7 +31,7 @@
 }
 			::ftwlib::error_t																updateShips														(::game::SGame& gameInstance)																{
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
-	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngine;
+	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
 	const ::ftwlib::SCoord2<int32_t>																sizeEffective													= gameInstance.CombatAreaSizeEffective.Cast<int32_t>();
 	{
 		int32_t																							particleIndex													= shipInstances[0].ParticleIndex;
@@ -84,7 +91,7 @@
 			::ftwlib::error_t																updateShots														(::game::SGame& gameInstance)																{ 
 	//::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
 	::std::vector<::game::SShot>																	& shotInstances													= gameInstance.Shots;
-	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngine;
+	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
 	const ::ftwlib::SCoord2<int32_t>																sizeEffective													= gameInstance.CombatAreaSizeEffective.Cast<int32_t>();
 
 	for(uint32_t iShot = 0; iShot < (uint32_t)shotInstances.size(); ++iShot) {	// 
@@ -101,10 +108,30 @@
 			particleEngine.Particle[particleIndex]														= particleEngine.ParticleNext[particleIndex];
 	}
 	return 0;
+}			::ftwlib::error_t																updateEffects														(::game::SGame& gameInstance)																{ 
+	//::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
+	::std::vector<::game::SEffect>																	& effectInstances													= gameInstance.Effects;
+	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineEffects;
+	const ::ftwlib::SCoord2<int32_t>																sizeEffective													= gameInstance.CombatAreaSizeEffective.Cast<int32_t>();
+
+	for(uint32_t iShot = 0; iShot < (uint32_t)effectInstances.size(); ++iShot) {	// 
+		int32_t																							particleIndex													= effectInstances[iShot].ParticleIndex;
+		::game::SParticle2<float>																		& particleNext													= particleEngine.ParticleNext[particleIndex];
+		if( particleNext.Position.x < 0 || particleNext.Position.x >= sizeEffective.x
+		 || particleNext.Position.y < 0 || particleNext.Position.y >= sizeEffective.y
+		 ) { // Remove the particle instance and related information.
+			particleEngine.ParticleState[particleIndex].Unused												= true;
+			effectInstances.erase(effectInstances.begin() + iShot);
+			--iShot;
+		}
+		else 
+			particleEngine.Particle[particleIndex]														= particleEngine.ParticleNext[particleIndex];
+	}
+	return 0;
 }
 			::ftwlib::error_t																updateSpawners														(::game::SGame& gameInstance)															{ 
 	::ftwlib::SFrameInfo																			& frameInfo														= gameInstance.FrameInfo;																	
-	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngine;
+	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
 	for(uint32_t iSpawner = 0, spawnerCount = (uint32_t)gameInstance.Spawners.size(); iSpawner < spawnerCount; ++ iSpawner) {
 		::game::SSpawner																				& spawner														= gameInstance.Spawners[iSpawner];
@@ -128,7 +155,7 @@
 
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
 	::std::vector<::game::SShot>																	& shotInstances													= gameInstance.Shots;
-	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngine;
+	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
 
 	// SWitch weapon
 		 if(::GetAsyncKeyState('1') || ::GetAsyncKeyState(VK_NUMPAD1)) shipInstances[0].SelectedShot = ::game::SHOT_TYPE_ROCK		;
@@ -159,14 +186,19 @@
 	if(!bUp && !bRight && !bDown && !bLeft) {
 
 	}
-
+	int32_t																							newEffectIndex													= ::game::addEffect(gameInstance, ::game::EFFECT_TYPE_STARS);
+	gameInstance.ParticleEngineEffects.Particle[gameInstance.Effects[newEffectIndex].ParticleIndex].Position			= {gameInstance.CombatAreaSizeVisible.x - 1.0f, float(rand() % gameInstance.CombatAreaSizeVisible.y)};
+	gameInstance.ParticleEngineEffects.Particle[gameInstance.Effects[newEffectIndex].ParticleIndex].Forces.Velocity.x	*= 1 + rand() % 2;
 	// -- Apply background force.
 	for(uint32_t iParticle = 0, particleCount = (uint32_t)particleEngine.Particle.size(); iParticle < particleCount; ++iParticle)
 		particleEngine.Particle[iParticle].Forces.AccumulatedForce.x								-= lastFrameSeconds;
+
 	particleEngine.Integrate(lastFrameSeconds, frameInfo.Seconds.LastFrameHalfSquared);
+	gameInstance.ParticleEngineEffects.Integrate(lastFrameSeconds, frameInfo.Seconds.LastFrameHalfSquared);
 
 	::updateShips	(gameInstance);
 	::updateShots	(gameInstance);
+	::updateEffects	(gameInstance);
 	::updateSpawners(gameInstance);
 	return 0; 
 }

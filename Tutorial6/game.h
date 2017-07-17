@@ -31,77 +31,98 @@ namespace game
 		,	SHIP_TYPE_GOOD_LOOKING
 		,	SHIP_TYPE_COUNT
 		};
-
+	enum EFFECT_TYPE 
+		{	EFFECT_TYPE_DEFAULT  
+		,	EFFECT_TYPE_ROCKET
+		,	EFFECT_TYPE_STARS
+		,	EFFECT_TYPE_COUNT
+		};
 	struct SSpawnerRecord {
-				SHIP_TYPE														ShipTypeToSpawn										;
-				double															TimeSinceGameStarted								;
+				SHIP_TYPE														ShipTypeToSpawn												;
+				double															TimeSinceGameStarted										;
 	};
 
 	struct SSpawner	{
-				::ftwlib::SCoord2<int32_t>										Position											;
-				::std::vector<SSpawnerRecord>									Records												;
+				::ftwlib::SCoord2<int32_t>										Position													;
+				::std::vector<SSpawnerRecord>									Records														;
 	};
 
 	struct SShotDescription {
-				int32_t															Damage												;
-				int32_t															RoundsMax											;
-				double															Speed												;
-				uint8_t															Image												;
-				uint16_t														Color												;
+				int32_t															Damage														;
+				int32_t															RoundsMax													;
+				double															Speed														;
+				uint8_t															Image														;
+				uint16_t														Color														;
 	};
 
 	struct SShot {
-				int32_t															ShotDescription										;
-				int32_t															ParticleIndex										;
-				int32_t															ShipIndex											;
-				int32_t															RoundsCurrent										;
+				int32_t															ShotDescription												;
+				int32_t															ParticleIndex												;
+				int32_t															ShipIndex													;
+				int32_t															RoundsCurrent												;
 	};
 
 	struct SShipPoints {
-				int32_t															Health												;
-				int32_t															Shield												;
+				int32_t															Health														;
+				int32_t															Shield														;
 	};
 
 	struct SShipDescription {
-				SShipPoints														PointsMax											;
-				uint8_t															Image												;
-				uint16_t														Color												;
+				SShipPoints														PointsMax													;
+				uint8_t															Image														;
+				uint16_t														Color														;
 	};
 
 	struct SShip {
-				int32_t															ShipDescription										;
-				SHOT_TYPE														SelectedShot										;
-				int32_t															ParticleIndex										;
-				SShipPoints														PointsCurrent										;
+				int32_t															ShipDescription												;
+				SHOT_TYPE														SelectedShot												;
+				int32_t															ParticleIndex												;
+				SShipPoints														PointsCurrent												;
+	};
+
+	struct SEffectDescription {
+				uint8_t															Image														;
+				uint16_t														Color														;
+	};
+
+	struct SEffect {
+				EFFECT_TYPE														Type														;
+				int32_t															ParticleIndex												;
 	};
 
 	struct SGame {
-				::ftwlib::SFrameInfo											FrameInfo											= {};	// -- Stores data such as the frame number and the elapsed frame time since the previous update
-				::game::SParticle2Engine<float>									ParticleEngine										= {};	// -- Physics stuff
+				::ftwlib::SFrameInfo											FrameInfo													= {};	// -- Stores data such as the frame number and the elapsed frame time since the previous update
+				::game::SParticle2Engine<float>									ParticleEngineGame											= {};	// -- Physics stuff
+				::game::SParticle2Engine<float>									ParticleEngineEffects										= {};	// -- Physics stuff
 
 				// -- Game object instances
-				::std::vector<SShip>											Ships												= {};
-				::std::vector<SShot>											Shots												= {};
-				::std::vector<SSpawner>											Spawners											= {};
+				::std::vector<SShip>											Ships														= {};
+				::std::vector<SShot>											Shots														= {};
+				::std::vector<SSpawner>											Spawners													= {};
+				::std::vector<SEffect>											Effects														= {};
 
 				// -- Screen information
-				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeVisible								= {96, 50};
-				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeEffective								= {10, 5};
+				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeVisible										= {96	, 50};
+				::ftwlib::SCoord2<uint32_t>										CombatAreaSizeEffective										= {100	, 60};
+
 				// -- Description tables - Game objects
-				::game::SShipDescription										DefinitionsShip			[::game::SHIP_TYPE_COUNT]	= {};
-				::game::SShotDescription										DefinitionsShot			[::game::SHOT_TYPE_COUNT]	= {};
+				::game::SShipDescription										DefinitionsShip				[::game::SHIP_TYPE_COUNT	]	= {};
+				::game::SShotDescription										DefinitionsShot				[::game::SHOT_TYPE_COUNT	]	= {};
+				::game::SEffectDescription										DefinitionsEffect			[::game::EFFECT_TYPE_COUNT	]	= {};
 
 				// -- Description tables - Physics
-				::game::SParticle2<float>										DefinitionsParticleShip	[::game::SHIP_TYPE_COUNT]	= {};
-				::game::SParticle2<float>										DefinitionsParticleShot	[::game::SHOT_TYPE_COUNT]	= {};
+				::game::SParticle2<float>										DefinitionsParticleShip		[::game::SHIP_TYPE_COUNT	]	= {};
+				::game::SParticle2<float>										DefinitionsParticleShot		[::game::SHOT_TYPE_COUNT	]	= {};
+				::game::SParticle2<float>										DefinitionsParticleEffect	[::game::EFFECT_TYPE_COUNT	]	= {};
 	};
 	// ------
-			::ftwlib::error_t												addShip												(SGame& gameInstance, SHIP_TYPE type);
-			::ftwlib::error_t												addShot												(SGame& gameInstance, SHOT_TYPE type, int32_t shipIndex);
+			::ftwlib::error_t												addShip														(SGame& gameInstance, SHIP_TYPE type);
+			::ftwlib::error_t												addShot														(SGame& gameInstance, SHOT_TYPE type, int32_t shipIndex);
+			::ftwlib::error_t												addEffect													(SGame& gameInstance, EFFECT_TYPE type);
 	// ------
-			::ftwlib::error_t												setup												(SGame& gameInstance);
-			::ftwlib::error_t												update												(SGame& gameInstance, uint64_t lastTimeMicroseconds);
-			::ftwlib::error_t												render												(SGame& gameInstance, ::ftwlib::SScreenASCII& screenASCII);
+			::ftwlib::error_t												setup														(SGame& gameInstance);
+			::ftwlib::error_t												update														(SGame& gameInstance, uint64_t lastTimeMicroseconds);
+			::ftwlib::error_t												render														(SGame& gameInstance, ::ftwlib::SScreenASCII& screenASCII);
 }
 
 #endif // GAME_H

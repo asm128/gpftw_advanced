@@ -2,6 +2,10 @@
 
 #include "ftw_ascii_color.h"
 
+				void																		setupEffects													(::game::SGame& gameInstance)							{
+	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_ROCKET			]				= {'.', ::ftwlib::ASCII_COLOR_RED		};
+	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_STARS			]				= {'.', ::ftwlib::ASCII_COLOR_LIGHTGREY	};
+}	
 				void																		setupShips														(::game::SGame& gameInstance)							{
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_FASTER		]					= {100, 100, 232	, ::ftwlib::ASCII_COLOR_WHITE		};
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_STRONGER		]					= {100, 100, 21		, ::ftwlib::ASCII_COLOR_MAGENTA		};
@@ -50,14 +54,28 @@ static			void																		setupParticleShips												(::game::SGame& gam
 	gameInstance.DefinitionsParticleShip	[::game::SHIP_TYPE_NICER		].Damping			= 0.6f;
 }
 
+static			void																		setupParticleEffects											(::game::SGame& gameInstance)							{
+	gameInstance.DefinitionsParticleEffect	[::game::EFFECT_TYPE_ROCKET		].SetMass			( 1);
+	gameInstance.DefinitionsParticleEffect	[::game::EFFECT_TYPE_STARS		].SetMass			( 1);
+
+	gameInstance.DefinitionsParticleEffect	[::game::EFFECT_TYPE_ROCKET		].Damping			= 1.0f;
+	gameInstance.DefinitionsParticleEffect	[::game::EFFECT_TYPE_STARS		].Damping			= 1.0f;
+
+	gameInstance.DefinitionsParticleEffect	[::game::EFFECT_TYPE_ROCKET		].Forces.Velocity	= {-20.0f, 0};
+	gameInstance.DefinitionsParticleEffect	[::game::EFFECT_TYPE_STARS		].Forces.Velocity	= {-20.0f, 0};
+}
+
+
 static inline	void																		setupParticles													(::game::SGame& gameInstance)							{
-	::setupParticleShips(gameInstance);
-	::setupParticleShots(gameInstance);
+	::setupParticleShips	(gameInstance);
+	::setupParticleShots	(gameInstance);
+	::setupParticleEffects	(gameInstance);
 }
 				::ftwlib::error_t															game::setup														(::game::SGame& gameInstance)							{
 	::setupParticles	(gameInstance);
 	::setupShips		(gameInstance);
 	::setupShots		(gameInstance);
+	::setupEffects		(gameInstance);
 
 	gameInstance.Spawners.resize(100);
 	for(uint32_t iSpawner = 0, spawnerCount = (uint32_t)gameInstance.Spawners.size(); iSpawner < spawnerCount; ++ iSpawner) {
@@ -71,6 +89,6 @@ static inline	void																		setupParticles													(::game::SGame& g
 	}
 	::game::addShip(gameInstance, ::game::SHIP_TYPE_STRONGER);
 	gameInstance.Ships[0].SelectedShot															= ::game::SHOT_TYPE_ROCK; 
-	gameInstance.ParticleEngine.Particle[gameInstance.Ships[0].ParticleIndex].Position			= {gameInstance.CombatAreaSizeVisible.x * .25f, gameInstance.CombatAreaSizeVisible.y * .5f}; 
+	gameInstance.ParticleEngineGame.Particle[gameInstance.Ships[0].ParticleIndex].Position			= {gameInstance.CombatAreaSizeVisible.x * .25f, gameInstance.CombatAreaSizeVisible.y * .5f}; 
 	return 0;
 }
