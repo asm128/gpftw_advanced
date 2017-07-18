@@ -25,6 +25,9 @@
     <Filter Include="math">
       <UniqueIdentifier>{898b42ed-f4dd-49ad-99dd-bbd226228c17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{53e5a8f1-6be3-4db3-86a5-0e75f55a434f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -65,6 +68,9 @@
     </ClInclude>
     <ClInclude Include="ftw_frameinfo.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ftw_particle.h">
+      <Filter>physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

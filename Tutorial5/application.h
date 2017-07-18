@@ -1,7 +1,7 @@
-#include "physics_particle.h"				// for ::game::SGame
+#include "ftw_particle.h"		// for ::game::SGame
 #include "ftw_ascii_screen.h"	// for ::ftwlib::SScreenASCII
 #include "ftw_timer.h"			// for ::ftwlib::STimer
-#include "frameinfo.h"
+#include "ftw_frameinfo.h"
 
 #ifndef APPLICATION_H
 #define APPLICATION_H
@@ -26,8 +26,8 @@ namespace ftwapp {
 		int64_t																	FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 
 		::ftwlib::STimer														Timer								= {};
-		::game::SParticle2Engine<float>											ParticleEngine						= {};
-		::game::SFrameInfo														FrameInfo							= {};
+		::ftwlib::SParticle2Engine<float>										ParticleEngine						= {};
+		::ftwlib::SFrameInfo													FrameInfo							= {};
 		::std::vector<SParticleInstance>										ParticleInstances					= {};
 	};
 

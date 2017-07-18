@@ -23,11 +23,5 @@
     <ClInclude Include="application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="physics_particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="frameinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

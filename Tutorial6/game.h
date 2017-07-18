@@ -1,4 +1,4 @@
-#include "physics_particle.h"
+#include "ftw_particle.h"
 
 #include "ftw_frameinfo.h"
 #include "ftw_ascii_screen.h"	// For ::ftwlib::SScreenASCII
@@ -17,6 +17,7 @@ namespace game
 		,	SHOT_TYPE_FIREBALL
 		,	SHOT_TYPE_LASER
 		,	SHOT_TYPE_POISON
+		,	SHOT_TYPE_BULLET
 		,	SHOT_TYPE_PLASMA
 		,	SHOT_TYPE_BOMB
 		,	SHOT_TYPE_COUNT
@@ -31,6 +32,7 @@ namespace game
 		,	SHIP_TYPE_GOOD_LOOKING
 		,	SHIP_TYPE_COUNT
 		};
+
 	enum EFFECT_TYPE 
 		{	EFFECT_TYPE_DEFAULT  
 		,	EFFECT_TYPE_ROCKET
@@ -56,7 +58,7 @@ namespace game
 	};
 
 	struct SShot {
-				int32_t															ShotDescription												;
+				SHOT_TYPE														ShotDescription												;
 				int32_t															ParticleIndex												;
 				int32_t															ShipIndex													;
 				int32_t															RoundsCurrent												;
@@ -74,7 +76,7 @@ namespace game
 	};
 
 	struct SShip {
-				int32_t															ShipDescription												;
+				SHIP_TYPE														ShipDescription												;
 				SHOT_TYPE														SelectedShot												;
 				int32_t															ParticleIndex												;
 				SShipPoints														PointsCurrent												;
@@ -92,8 +94,8 @@ namespace game
 
 	struct SGame {
 				::ftwlib::SFrameInfo											FrameInfo													= {};	// -- Stores data such as the frame number and the elapsed frame time since the previous update
-				::game::SParticle2Engine<float>									ParticleEngineGame											= {};	// -- Physics stuff
-				::game::SParticle2Engine<float>									ParticleEngineEffects										= {};	// -- Physics stuff
+				::ftwlib::SParticle2Engine<float>									ParticleEngineGame											= {};	// -- Physics stuff
+				::ftwlib::SParticle2Engine<float>									ParticleEngineEffects										= {};	// -- Physics stuff
 
 				// -- Game object instances
 				::std::vector<SShip>											Ships														= {};
@@ -111,9 +113,9 @@ namespace game
 				::game::SEffectDescription										DefinitionsEffect			[::game::EFFECT_TYPE_COUNT	]	= {};
 
 				// -- Description tables - Physics
-				::game::SParticle2<float>										DefinitionsParticleShip		[::game::SHIP_TYPE_COUNT	]	= {};
-				::game::SParticle2<float>										DefinitionsParticleShot		[::game::SHOT_TYPE_COUNT	]	= {};
-				::game::SParticle2<float>										DefinitionsParticleEffect	[::game::EFFECT_TYPE_COUNT	]	= {};
+				::ftwlib::SParticle2<float>										DefinitionsParticleShip		[::game::SHIP_TYPE_COUNT	]	= {};
+				::ftwlib::SParticle2<float>										DefinitionsParticleShot		[::game::SHOT_TYPE_COUNT	]	= {};
+				::ftwlib::SParticle2<float>										DefinitionsParticleEffect	[::game::EFFECT_TYPE_COUNT	]	= {};
 	};
 	// ------
 			::ftwlib::error_t												addShip														(SGame& gameInstance, SHIP_TYPE type);

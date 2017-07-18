@@ -7,7 +7,7 @@
 #include <windows.h>	// for interacting with Windows
 
 static constexpr const uint32_t												SCREEN_WIDTH													= 128;
-static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
+static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
@@ -30,6 +30,12 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
 	::ftwlib::presentConsole(applicationInstance.ScreenASCII);
+	::ftwlib::ASCII_COLOR_INDEX														oldColor0							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
+	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) + 0x10000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) - 0x10000);
+	//::ftwlib::ASCII_COLOR_INDEX														oldColor1							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) + 0x00100) : (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) - 0x00100);
+	//::ftwlib::ASCII_COLOR_INDEX														oldColor2							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) + 0x00001) : (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) - 0x00001);
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;
 	::game::update(applicationInstance.Game, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
@@ -40,9 +46,9 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 	//::ftwlib::clearConsole(applicationInstance.ScreenASCII);
 	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
-	//::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
-	for(uint32_t i=0; i<screenAscii.Colors.size(); ++i)
-		screenAscii.Colors[i]														= ::ftwlib::ASCII_COLOR_WHITE;
+	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
+	//for(uint32_t i=0; i<screenAscii.Colors.size(); ++i)
+	//	screenAscii.Colors[i]														= ::ftwlib::ASCII_COLOR_WHITE;
 	::game::render(applicationInstance.Game, screenAscii);
 	return 0;
 }

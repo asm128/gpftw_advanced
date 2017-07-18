@@ -2,9 +2,9 @@
 #include "ftw_ascii_color.h"
 
 template <typename _tElem>
-			int32_t																			renderParticle													(::ftwlib::SScreenASCII& screenAscii, const ::game::SParticle2Engine<_tElem>& particleEngine, int32_t particleIndex, uint8_t image, uint16_t color)				{
+			int32_t																			renderParticle													(::ftwlib::SScreenASCII& screenAscii, const ::ftwlib::SParticle2Engine<_tElem>& particleEngine, int32_t particleIndex, uint8_t image, uint16_t color)				{
 	const ::ftwlib::SCoord2<_tElem>																	particlePosition												= particleEngine.Particle[particleIndex].Position;
-	const ::game::SParticle2<_tElem>																& particle														= particleEngine.Particle[particleIndex];
+	const ::ftwlib::SParticle2<_tElem>																& particle														= particleEngine.Particle[particleIndex];
 	::ftwlib::SCoord2<int32_t>																		screenPosition													= (particleEngine.Particle[particleIndex].Position + ::ftwlib::SCoord2<_tElem>{.5f, .5f}).Cast<int32_t>();
 	screenPosition.y																			/= 2;
 	if( particle.Position.x < 0 || screenPosition.x >= (int32_t)screenAscii.Width
@@ -19,7 +19,7 @@ template <typename _tElem>
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
 	::std::vector<::game::SShot>																	& shotInstances													= gameInstance.Shots;
 	::std::vector<::game::SEffect>																	& effectInstances												= gameInstance.Effects;
-	::game::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
+	::ftwlib::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
 	for(uint32_t iCell = 0, cellCount = screenAscii.Colors.size(); iCell < cellCount; ++iCell) {
 		screenAscii.Colors[iCell]																	= ::ftwlib::ASCII_COLOR_DARKBLUE << 4;
 	}

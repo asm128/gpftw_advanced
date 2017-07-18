@@ -8,10 +8,10 @@
 
 #include <vector>		// for ::std::vector
 
-#ifndef PHYSICS_PARTICLE_H
-#define PHYSICS_PARTICLE_H
+#ifndef FTW_PARTICLE_H_29384923874
+#define FTW_PARTICLE_H_29384923874
 
-namespace game 
+namespace ftwlib 
 {
 #pragma pack(push, 1)
 	template<typename _tElement>
@@ -58,10 +58,10 @@ namespace game
 	// This basically does Position = Velocity * Time.
 	template<typename _tElement>
 	static inline		void												particleIntegratePosition
-		(	const ::ftwlib::SCoord2<_tElement>		& velocity
-		,	const double							timeElapsed
-		,	const double							timeElapsedHalfSquared
-		,	::ftwlib::SCoord2<_tElement>			& position
+		(	const ::ftwlib::SCoord2<_tElement>	& velocity
+		,	const double						timeElapsed
+		,	const double						timeElapsedHalfSquared
+		,	::ftwlib::SCoord2<_tElement>		& position
 		)
 	{
 		position																+= velocity * timeElapsed;
@@ -70,33 +70,34 @@ namespace game
 
 	template<typename _tElement>
 	struct SParticle2Engine {
-		typedef				::game::SParticle2	<_tElement>						TParticle;
-		typedef				::ftwlib::SCoord2	<_tElement>						TCoord;
+		typedef				::ftwlib::SParticle2	<_tElement>					TParticle;
+		typedef				::ftwlib::SCoord2		<_tElement>					TCoord;
 
 							::std::vector<TParticle>							Particle									= {};
 							::std::vector<TParticle>							ParticleNext								= {};
-							::std::vector<::game::SParticle2State>				ParticleState								= {};
+							::std::vector<::ftwlib::SParticle2State>			ParticleState								= {};
 		// --------------------------------------------------------------------
 		inline				::ftwlib::error_t									Integrate									(double timeElapsed, double timeElapsedHalfSquared)											{
 			for(uint32_t iParticle = 0, particleCount = (uint32_t)ParticleState.size(); iParticle < particleCount; ++iParticle)	
 				if(ParticleState[iParticle].RequiresProcessing()) {
 					TParticle																	& particle = ParticleNext[iParticle]		= Particle[iParticle];	// Copy the current particle state to the next
-					::game::particleIntegratePosition			(particle.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particle.Position);
+					::ftwlib::particleIntegratePosition			(particle.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particle.Position);
 					particle.Forces.IntegrateAccumulatedForce	(particle.InverseMass, particle.Damping, timeElapsed);
 				}
 			return 0;
 		}
+		// --------------------------------------------------------------------
 							::ftwlib::error_t									AddParticle									(const TParticle& particleData)																{
 								const uint32_t											particleCount								= (uint32_t)ParticleState.size();
-			static constexpr	const ::game::SParticle2State							initialBodyState							= {false, true};
+			static constexpr	const ::ftwlib::SParticle2State							initialBodyState							= {false, true};
 
-			for(uint32_t iBody = 0; iBody < particleCount; ++iBody) {
-				if(false == ParticleState[iBody].Unused)
-					continue;
-				ParticleState		[iBody]												= initialBodyState;
-				Particle			[iBody]												= 
-				ParticleNext		[iBody]												= particleData;
-				return iBody;
+			for(uint32_t iBody = 0; iBody < particleCount; ++iBody) {	// Check if there is any unused particle that we can recycle.
+				if( ParticleState	[iBody].Unused ) {
+					ParticleState	[iBody]													= initialBodyState;
+					Particle		[iBody]													= 
+					ParticleNext	[iBody]													= particleData;
+					return iBody;
+				}
 			}
 			try {	// Later on we're going to add a way to avoid using ::std::vector which require these ugly try/catch blocks.
 				ParticleState		.push_back(initialBodyState);
@@ -114,4 +115,4 @@ namespace game
 	};
 }
 
-#endif // PHYSICS_PARTICLE_H
+#endif // FTW_PARTICLE_H_29384923874

@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include "physics_particle.h"	// for ::game::SGame
+#include "ftw_particle.h"		// for ::game::SGame
 #include "ftw_ascii_screen.h"	// for ::ftwlib::SScreenASCII
 #include "ftw_timer.h"			// for ::ftwlib::STimer
 

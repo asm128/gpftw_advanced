@@ -51,7 +51,7 @@ namespace game
 		// Reports how much this bouNding sphere would have to grow by to incorporate the given bounding sphere. Note that this calculation returns a value not in any particular units (i.e. its not a volume growth). 
 		// In fact the best implemenTation takes into account the growth in surface area (after the * Goldsmith-Salmon algorithm for tree construction).
 				double							GetGrowth					(const SBoundingSphere &other)									const			{
-			SBoundingSphere								newSphere					= {*this, other};
+			const SBoundingSphere						newSphere					= {*this, other};
 			return newSphere.Radius * newSphere.Radius - Radius * Radius;	// We return a value proportional to the change in surface area of the sphere.
 		}
 	};

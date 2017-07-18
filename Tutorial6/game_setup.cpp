@@ -18,6 +18,7 @@
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_ARROW		]					= {20, 100,  50 * .5f,  26	, ::ftwlib::ASCII_COLOR_LIGHTGREY	};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_FIREBALL		]					= {30, 100,  40 * .5f,  15	, ::ftwlib::ASCII_COLOR_RED			};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_LASER		]					= {40, 100, 100 * .5f, 196	, ::ftwlib::ASCII_COLOR_RED			};
+	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_BULLET		]					= {40, 100, 100 * .5f, 196	, ::ftwlib::ASCII_COLOR_LIGHTGREY	};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_POISON		]					= {50, 100,  30 * .5f, 237	, ::ftwlib::ASCII_COLOR_GREEN		};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_PLASMA		]					= {60, 100,  90 * .5f, 247	, ::ftwlib::ASCII_COLOR_CYAN		};
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_BOMB			]					= {70, 100,  10 * .5f, 162	, ::ftwlib::ASCII_COLOR_DARKRED		};
@@ -27,6 +28,7 @@
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ARROW		].SetMass			(1);
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL		].SetMass			(1);
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_LASER		].SetMass			(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BULLET		].SetMass			(1);
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_POISON		].SetMass			(1);
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_PLASMA		].SetMass			(1);
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BOMB			].SetMass			(1);
@@ -35,6 +37,7 @@
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ARROW		].Damping			= 0.9f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL		].Damping			= 0.98f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_LASER		].Damping			= 1.0f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BULLET		].Damping			= 0.995f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_POISON		].Damping			= 0.7f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_PLASMA		].Damping			= 1.0f;
 	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BOMB			].Damping			= 0.6f;

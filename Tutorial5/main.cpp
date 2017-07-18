@@ -10,7 +10,7 @@
 static constexpr const uint32_t												SCREEN_WIDTH													= 128;
 static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 
-static ::game::SParticle2<float>											particleDefinitions	[::ftwapp::PARTICLE_TYPE_COUNT]				= {};
+static ::ftwlib::SParticle2<float>											particleDefinitions	[::ftwapp::PARTICLE_TYPE_COUNT]				= {};
 
 void																		setupParticles													()														{
 	particleDefinitions	[::ftwapp::PARTICLE_TYPE_SNOW].Position					= 
@@ -51,7 +51,7 @@ void																		setupParticles													()														{
 void																		addParticle														
 	(	::ftwapp::PARTICLE_TYPE						particleType
 	,	::std::vector<::ftwapp::SParticleInstance>	& particleInstances
-	,	::game::SParticle2Engine<float>				& particleEngine
+	,	::ftwlib::SParticle2Engine<float>				& particleEngine
 	)														
 {
 	::ftwapp::SParticleInstance														newInstance														= {}; 
@@ -72,12 +72,12 @@ void																		addParticle
 	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
 
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
-	::game::SFrameInfo																& frameInfo														= applicationInstance.FrameInfo;																	
+	::ftwlib::SFrameInfo															& frameInfo														= applicationInstance.FrameInfo;																	
 	frameInfo.Frame(timerInstance.LastTimeMicroseconds);
 	const float																		lastFrameSeconds												= (float)frameInfo.Seconds.LastFrame;
 
 	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
-	::game::SParticle2Engine<float>													& particleEngine												= applicationInstance.ParticleEngine;
+	::ftwlib::SParticle2Engine<float>													& particleEngine												= applicationInstance.ParticleEngine;
 	static float																	windDirection													= 0.1f;
 	if(GetAsyncKeyState('1')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_SNOW, particleInstances, particleEngine);
 	if(GetAsyncKeyState('2')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_FIRE, particleInstances, particleEngine);
@@ -91,7 +91,7 @@ void																		addParticle
 	for(uint32_t iParticle = 0; iParticle < particleInstances.size(); ++iParticle) {
 		SParticleInstance																& particleInstance												= particleInstances[iParticle];
 		int32_t																			physicsId														= particleInstance.PhysicsId;
-		::game::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
+		::ftwlib::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
 		if( particleNext.Position.x < 0 || particleNext.Position.x >= applicationInstance.ScreenASCII.Width
 		 || particleNext.Position.y < 0 || particleNext.Position.y >= applicationInstance.ScreenASCII.Height
 		 ) { // Remove the particle instance and related information.
@@ -101,7 +101,7 @@ void																		addParticle
 		}
 		else { // Apply forces from wind and gravity.
 			static constexpr	const double												gravity															= 9.8;
-			::game::SParticle2<float>														& particleCurrent												= particleEngine.Particle[physicsId];
+			::ftwlib::SParticle2<float>														& particleCurrent												= particleEngine.Particle[physicsId];
 			particleCurrent																= particleEngine.ParticleNext[physicsId];
 			particleCurrent.Forces.AccumulatedForce										= {0, float(gravity * lastFrameSeconds)};
 			particleCurrent.Forces.AccumulatedForce.x									+= float(windDirection * abs(particleCurrent.Forces.Velocity.y) * .5) + float((rand() % 100) / 100.0 - .5);
