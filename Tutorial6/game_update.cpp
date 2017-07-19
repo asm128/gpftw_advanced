@@ -15,7 +15,7 @@
 	gameInstance.ParticleEngineGame.Particle[newInstance.ParticleIndex].Position				= {10, 10};
 	newInstance.PointsCurrent																	= gameInstance.DefinitionsShip[type].PointsMax;
 	newInstance.Unused																			= false;
-	for(uint32_t iShip = 0, shipCount = gameInstance.Ships.size(); iShip < shipCount; ++iShip) {
+	for(uint32_t iShip = 0, shipCount = (uint32_t)gameInstance.Ships.size(); iShip < shipCount; ++iShip) {
 		::game::SShip																					& instanceToRecycle												= gameInstance.Ships[iShip];
 		if(instanceToRecycle.Unused) {
 			instanceToRecycle																			= newInstance;
