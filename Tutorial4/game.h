@@ -2,6 +2,7 @@
 #include "character.h"		// for SMovingObject, SCharacter, SShot
 
 #include "ftw_error.h"	// for ::ftwlib::error_t
+#include "ftw_frameinfo.h"
 
 #include <vector>		// for ::std::vector
 
@@ -51,13 +52,6 @@ namespace game
 		uint64_t														Damage									: 8;
 		::std::string													Name									= "Unnamed tile";
 	};
-
-	struct SFrameInfo {
-		uint64_t														FrameNumber								= 0;
-		uint64_t														TotalTime								= 0;
-		uint64_t														LastFrameMicroseconds					= 0;
-		double															LastFrameSeconds						= 0;
-	};
 #pragma pack (pop)
 
 	struct SMap { // The struct is a block of variables to be used to store our map information
@@ -76,7 +70,7 @@ namespace game
 	struct SGame { // holds the game data
 		::game::SMap													Map;		// declare a variable of type SMap
 		::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
-		::game::SFrameInfo												FrameInfo;
+		::ftwlib::SFrameInfo											FrameInfo;
 		::std::vector<SCharacter>										Enemy;				// Enemy list
 		::std::vector<SCharacter>										Shots;				// Shot list
 

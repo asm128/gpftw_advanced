@@ -101,7 +101,7 @@ void																drawASCIIGameInfo					(const ::game::SGame& gameObject, uint
 	textLength	= ::sprintf_s(compositeText, "- Player velocity        : (%f, %f)."						, playerVelocity.x, playerVelocity.y									);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Enemy count            : %u."							, (uint32_t)gameObject.Enemy.size()										);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Shot count             : %u."							, (uint32_t)gameObject.Shots.size()										);	COPY_TO_TARGET();
-	textLength	= ::sprintf_s(compositeText, "- Last frame seconds     : %f."							, (float)gameObject.FrameInfo.LastFrameSeconds							);	COPY_TO_TARGET();
+	textLength	= ::sprintf_s(compositeText, "- Last frame seconds     : %f."							, (float)gameObject.FrameInfo.Seconds.LastFrame							);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Shoot with Space key. Run by holding LEFT SHIFT while moving."																	);	COPY_TO_TARGET();
 	textLength	= ::sprintf_s(compositeText, "- Move (P)layer by pressing the arrow keys to prevent being touched by enemies E, F, G and H."									);	COPY_TO_TARGET();
 }

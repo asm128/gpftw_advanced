@@ -80,6 +80,7 @@ namespace game
 				SHOT_TYPE														SelectedShot												;
 				int32_t															ParticleIndex												;
 				SShipPoints														PointsCurrent												;
+				bool															Unused														;
 	};
 
 	struct SEffectDescription {

@@ -27,7 +27,7 @@ struct SApplication {
 // Cleanup application resources.
 void																	cleanup								(::SApplication& applicationInstance)				{ 
 	::destroyTileMap			(applicationInstance.TileMap);									
-	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);									
+	::ftwlib::consoleDestroy	(applicationInstance.ScreenASCII);									
 }
 
 void																	setupRoom							
@@ -96,13 +96,13 @@ template<typename _tElement, size_t _arraySize>
 static constexpr	const uint32_t										size								(const _tElement (&)[_arraySize])					{ return (uint32_t)_arraySize; }
 
 void																	setup								(::SApplication& applicationInstance)				{ 
-	::ftwlib::createConsole	(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	
+	::ftwlib::consoleCreate	(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	
 	::initializeTileMap		(applicationInstance.TileMap	, ::SCREEN_WIDTH, ::SCREEN_HEIGHT, tileDescriptions, size(tileDescriptions));	
 	::setupMap				(applicationInstance.TileMap	);
 }	
 
 void																	update								(::SApplication& applicationInstance)				{ 
-	::ftwlib::presentConsole(applicationInstance.ScreenASCII);	// Present the current image if any.
+	::ftwlib::consolePresent(applicationInstance.ScreenASCII);	// Present the current image if any.
 
 	::ftwlib::ASCII_COLOR_INDEX													oldColor0							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
 	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)+0x40000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)-0x40000);

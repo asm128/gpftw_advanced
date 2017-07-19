@@ -14,6 +14,14 @@
 	newInstance.ParticleIndex																	= gameInstance.ParticleEngineGame.AddParticle(gameInstance.DefinitionsParticleShip[type]);	
 	gameInstance.ParticleEngineGame.Particle[newInstance.ParticleIndex].Position				= {10, 10};
 	newInstance.PointsCurrent																	= gameInstance.DefinitionsShip[type].PointsMax;
+	newInstance.Unused																			= false;
+	for(uint32_t iShip = 0, shipCount = gameInstance.Ships.size(); iShip < shipCount; ++iShip) {
+		::game::SShip																					& instanceToRecycle												= gameInstance.Ships[iShip];
+		if(instanceToRecycle.Unused) {
+			instanceToRecycle																			= newInstance;
+			return iShip;
+		}
+	}
 	uint32_t																						newShipIndex													= (uint32_t)gameInstance.Ships.size();
 	gameInstance.Ships.push_back(newInstance); 
 	return newShipIndex;
@@ -29,7 +37,7 @@
 }
 static		::ftwlib::error_t																updateShips														(::game::SGame& gameInstance)																{
 	::std::vector<::game::SShip>																	& shipInstances													= gameInstance.Ships;
-	::ftwlib::SParticle2Engine<float>																	& particleEngine												= gameInstance.ParticleEngineGame;
+	::ftwlib::SParticle2Engine<float>																& particleEngine												= gameInstance.ParticleEngineGame;
 	const ::ftwlib::SCoord2<int32_t>																sizeEffective													= gameInstance.CombatAreaSizeEffective.Cast<int32_t>();
 	{
 		int32_t																							particleIndex													= shipInstances[0].ParticleIndex;
@@ -42,19 +50,25 @@ static		::ftwlib::error_t																updateShips														(::game::SGame
 		particleEngine.Particle[particleIndex]														= particleNext;
 	}
 
-	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// 
-		int32_t																							particleIndexShip													= shipInstances[iShip].ParticleIndex;
+	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// Remove ships that are outside the display area.
+		::game::SShip																					& shipToTest														= shipInstances[iShip];
+		if(shipToTest.Unused)
+			continue;
+		int32_t																							particleIndexShip													= shipToTest.ParticleIndex;
 		::ftwlib::SParticle2<float>																		& particleNextShip													= particleEngine.ParticleNext[particleIndexShip];
 		if( particleNextShip.Position.x < 0 || particleNextShip.Position.x >= sizeEffective.x
 		 || particleNextShip.Position.y < 0 || particleNextShip.Position.y >= sizeEffective.y
 		 ) { // Remove the particle instance and related information.
 			particleEngine.ParticleState[particleIndexShip].Unused											= true;
-			shipInstances.erase(shipInstances.begin() + iShip);
-			--iShip;
+			shipToTest.Unused																				= true;
 		}
 	}
-	for(uint32_t iShip = 0; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// 
-		int32_t																							particleIndexShip													= shipInstances[iShip].ParticleIndex;
+
+	for(uint32_t iShip = 0; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// Update shots and damage ships.
+		::game::SShip																					& shipToTest														= shipInstances[iShip];
+		if(shipToTest.Unused)
+			continue;
+		int32_t																							particleIndexShip													= shipToTest.ParticleIndex;
 		::std::vector<::game::SShot>																	& shotInstances														= gameInstance.Shots;
 		for(uint32_t iShot = 0; iShot < (uint32_t)shotInstances.size(); ++iShot) {	// 
 			int32_t																							particleIndexShot												= shotInstances[iShot].ParticleIndex;
@@ -65,7 +79,7 @@ static		::ftwlib::error_t																updateShips														(::game::SGame
 			if(iShip == (uint32_t)shotInstances[iShot].ShipIndex) 
 				continue;
 			if( (particleCurrent.Position - particleShot.Position).Length() < (areaShip.Radius + areaShot.Radius)) { // Handle collision - Remove the particle instance and related information.
-				shipInstances[iShip].PointsCurrent.Health															-=	gameInstance.DefinitionsShot[shotInstances[iShot].ShotDescription].Damage;
+				shipToTest.PointsCurrent.Health																	-=	gameInstance.DefinitionsShot[shotInstances[iShot].ShotDescription].Damage;
 				particleEngine.ParticleState[particleIndexShot].Unused												= true;
 				shotInstances.erase(shotInstances.begin() + iShot);
 				--iShot;
@@ -74,18 +88,25 @@ static		::ftwlib::error_t																updateShips														(::game::SGame
 		particleEngine.Particle[particleIndexShip]													= particleEngine.ParticleNext[particleIndexShip];
 	}
 
-	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// 
-		int32_t																							shotIndex															= ::game::addShot(gameInstance, shipInstances[iShip].SelectedShot, iShip); 
+	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// Make ships shoot.
+		::game::SShip																					& shootingShip														= shipInstances[iShip];
+		if(shootingShip.Unused)
+			continue;
+		int32_t																							shotIndex															= ::game::addShot(gameInstance, shootingShip.SelectedShot, iShip); 
 		::std::vector<::game::SShot>																	& shotInstances														= gameInstance.Shots;
-		particleEngine.ParticleNext[shotInstances[shotIndex].ParticleIndex].Position				= particleEngine.Particle[shipInstances[iShip].ParticleIndex].Position; 
-		particleEngine.ParticleNext[shotInstances[shotIndex].ParticleIndex].Forces.Velocity.x		= -(float)gameInstance.DefinitionsShot[shotInstances[shotIndex].ShotDescription].Speed + particleEngine.Particle[shipInstances[iShip].ParticleIndex].Forces.Velocity.x; 
+		::game::SShot																					& newShot															= shotInstances[shotIndex];
+		particleEngine.ParticleNext[newShot.ParticleIndex].Position									= particleEngine.Particle[shootingShip.ParticleIndex].Position; 
+		particleEngine.ParticleNext[newShot.ParticleIndex].Forces.Velocity.x						= -(float)gameInstance.DefinitionsShot[newShot.ShotDescription].Speed + particleEngine.Particle[shootingShip.ParticleIndex].Forces.Velocity.x; 
 	}
-	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// Remove dead ships
-		int32_t																							particleIndexShip													= shipInstances[iShip].ParticleIndex;
-		if(shipInstances[iShip].PointsCurrent.Health <= 0) {
-			particleEngine.ParticleState[particleIndexShip].Unused												= true;
-			shipInstances.erase(shipInstances.begin() + iShip);
-			--iShip;
+
+	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// Remove dead ships.
+		::game::SShip																					& shipToTest														= shipInstances[iShip];
+		if(shipToTest.Unused)
+			continue;
+		int32_t																							particleIndexShip													= shipToTest.ParticleIndex;
+		if(shipToTest.PointsCurrent.Health <= 0) {
+			particleEngine.ParticleState[particleIndexShip].Unused										= true;
+			shipToTest.Unused																			= true;
 		}
 	}
 
@@ -163,14 +184,15 @@ static 			::ftwlib::error_t																updateSpawners														(::game::
 	bool																							bLeft															= ::GetAsyncKeyState('A');
 
 	::ftwlib::SParticle2<float>																		& playerParticle												= particleEngine.Particle[shipInstances[0].ParticleIndex];
-	if( bUp		) playerParticle.Forces.AccumulatedForce.y										-= lastFrameSeconds * 700;
-	if( bRight	) playerParticle.Forces.AccumulatedForce.x										+= lastFrameSeconds * 700;
-	if( bDown	) playerParticle.Forces.AccumulatedForce.y										+= lastFrameSeconds * 700;
-	if( bLeft	) playerParticle.Forces.AccumulatedForce.x										-= lastFrameSeconds * 700;
+	if( bUp		) playerParticle.Forces.AccumulatedForce.y										-= lastFrameSeconds * 700 * (GetAsyncKeyState(VK_SHIFT) ? 2.0f : 1);
+	if( bRight	) playerParticle.Forces.AccumulatedForce.x										+= lastFrameSeconds * 700 * (GetAsyncKeyState(VK_SHIFT) ? 2.0f : 1);
+	if( bDown	) playerParticle.Forces.AccumulatedForce.y										+= lastFrameSeconds * 700 * (GetAsyncKeyState(VK_SHIFT) ? 2.0f : 1);
+	if( bLeft	) playerParticle.Forces.AccumulatedForce.x										-= lastFrameSeconds * 700 * (GetAsyncKeyState(VK_SHIFT) ? 2.0f : 1);
 	if(!bUp && !bRight && !bDown && !bLeft) {
 	}
 	else {
 		playerParticle.Forces.Acceleration														= {}; 
+		particleEngine.ParticleState[shipInstances[0].ParticleIndex].Active						= true;
 	}
 	int32_t																							newEffectIndex													= ::game::addEffect(gameInstance, ::game::EFFECT_TYPE_STARS);
 	gameInstance.ParticleEngineEffects.Particle[gameInstance.Effects[newEffectIndex].ParticleIndex].Position			= {gameInstance.CombatAreaSizeVisible.x - 1.0f, float(rand() % gameInstance.CombatAreaSizeVisible.y)};

@@ -23,9 +23,9 @@ namespace ftwlib
 							TCoord												Acceleration								= {};	// A vector representing the speed in a given direction 
 							TCoord												Velocity									= {};	// A vector representing the speed in a given direction 
 
-		inline constexpr	bool												VelocityDepleted							()																					const	{ return (Velocity + Acceleration) < VelocityEpsilon; }
+		inline constexpr	bool												VelocityDepleted							()																					const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
 		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
-							void												IntegrateAccumulatedForce					(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			{
+							void												IntegrateAccumulatedForce					(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			noexcept	{
 			Acceleration															+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
 			AccumulatedForce														= {};											// Clear this out now that we've used it already.
 
@@ -42,9 +42,9 @@ namespace ftwlib
 							_tElement											InverseMass									= 0;
 							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction 
 
-		inline				void												SetMass										(const double mass)																			{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;					}
-		inline constexpr	double												GetMass										()																					const	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
-		inline constexpr	bool												HasFiniteMass								()																					const	{ return InverseMass >= 0.0f;								}
+		inline				void												SetMass										(const double mass)																			noexcept	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
+		inline constexpr	double												GetMass										()																					const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
+		inline constexpr	bool												HasFiniteMass								()																					const	noexcept	{ return InverseMass >= 0.0f;								}
 	};
 
 	// This compact structure allows to define all the boolean states of the particle packed in a single byte.
@@ -52,10 +52,10 @@ namespace ftwlib
 							bool												Unused										: 1;
 							bool												Active										: 1;
 
-		inline constexpr	bool												RequiresProcessing							()																					const	{ return (false == Unused) && Active; }
+		inline constexpr	bool												RequiresProcessing							()																					const	noexcept	{ return (false == Unused) && Active; }
 	};
 #pragma pack(pop)
-	// This basically does Position = Velocity * Time.
+	// This basically does Position += Velocity * Time.
 	template<typename _tElement>
 	static inline		void												particleIntegratePosition
 		(	const ::ftwlib::SCoord2<_tElement>	& velocity
@@ -73,34 +73,35 @@ namespace ftwlib
 		typedef				::ftwlib::SParticle2	<_tElement>					TParticle;
 		typedef				::ftwlib::SCoord2		<_tElement>					TCoord;
 
+							::std::vector<::ftwlib::SParticle2State>			ParticleState								= {};
 							::std::vector<TParticle>							Particle									= {};
 							::std::vector<TParticle>							ParticleNext								= {};
-							::std::vector<::ftwlib::SParticle2State>			ParticleState								= {};
 		// --------------------------------------------------------------------
-		inline				::ftwlib::error_t									Integrate									(double timeElapsed, double timeElapsedHalfSquared)											{
+		inline				::ftwlib::error_t									Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{
 			for(uint32_t iParticle = 0, particleCount = (uint32_t)ParticleState.size(); iParticle < particleCount; ++iParticle)	
 				if(ParticleState[iParticle].RequiresProcessing()) {
 					TParticle																	& particle = ParticleNext[iParticle]		= Particle[iParticle];	// Copy the current particle state to the next
 					::ftwlib::particleIntegratePosition			(particle.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particle.Position);
 					particle.Forces.IntegrateAccumulatedForce	(particle.InverseMass, particle.Damping, timeElapsed);
+					if(particle.Forces.VelocityDepleted())
+						ParticleState[iParticle].Active										= false;
 				}
 			return 0;
 		}
 		// --------------------------------------------------------------------
-							::ftwlib::error_t									AddParticle									(const TParticle& particleData)																{
+							::ftwlib::error_t									AddParticle									(const TParticle& particleData)																			{
 								const uint32_t											particleCount								= (uint32_t)ParticleState.size();
-			static constexpr	const ::ftwlib::SParticle2State							initialBodyState							= {false, true};
+			static constexpr	const ::ftwlib::SParticle2State							initialParticleState						= {false, true};
 
-			for(uint32_t iBody = 0; iBody < particleCount; ++iBody) {	// Check if there is any unused particle that we can recycle.
+			for(uint32_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {
-					ParticleState	[iBody]													= initialBodyState;
+					ParticleState	[iBody]													= initialParticleState;
 					Particle		[iBody]													= 
 					ParticleNext	[iBody]													= particleData;
 					return iBody;
 				}
-			}
 			try {	// Later on we're going to add a way to avoid using ::std::vector which require these ugly try/catch blocks.
-				ParticleState		.push_back(initialBodyState);
+				ParticleState		.push_back(initialParticleState);
 				Particle			.push_back(particleData);
 				ParticleNext		.push_back(particleData);
 			}
@@ -113,6 +114,6 @@ namespace ftwlib
 			return particleCount;
 		}
 	};
-}
+} // namespace
 
 #endif // FTW_PARTICLE_H_29384923874

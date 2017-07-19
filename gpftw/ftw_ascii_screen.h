@@ -14,10 +14,10 @@ namespace ftwlib
 		::ftwlib::array_view<uint32_t>				Palette					= {};
 	};
 
-	::ftwlib::error_t							createConsole			(SScreenASCII& console, int width, int height);
-	::ftwlib::error_t							destroyConsole			(SScreenASCII& console);
-	::ftwlib::error_t							presentConsole			(SScreenASCII& console);
-	::ftwlib::error_t							clearConsole			(SScreenASCII& console);
+	::ftwlib::error_t							consoleCreate			(SScreenASCII& console, int width, int height);
+	::ftwlib::error_t							consoleDestroy			(SScreenASCII& console);
+	::ftwlib::error_t							consolePresent			(SScreenASCII& console);
+	::ftwlib::error_t							consoleClear			(SScreenASCII& console);
 }
 
 #endif GPFTW_ASCII_SCREEN_H

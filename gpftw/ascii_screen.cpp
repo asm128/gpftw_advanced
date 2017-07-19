@@ -97,7 +97,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 
 
 // ------------------------------------------------- 
-::ftwlib::error_t								ftwlib::destroyConsole			(::ftwlib::SScreenASCII& console)											{
+::ftwlib::error_t								ftwlib::consoleDestroy			(::ftwlib::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -114,7 +114,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;	// these functions hardly fail.
 }	
 
-::ftwlib::error_t								ftwlib::createConsole			(::ftwlib::SScreenASCII& console, int width, int height)						{
+::ftwlib::error_t								ftwlib::consoleCreate			(::ftwlib::SScreenASCII& console, int width, int height)						{
 	if(::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -149,7 +149,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;
 }
 
-::ftwlib::error_t								ftwlib::presentConsole			(::ftwlib::SScreenASCII& console)											{
+::ftwlib::error_t								ftwlib::consolePresent			(::ftwlib::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -172,7 +172,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;
 }
 
-::ftwlib::error_t								ftwlib::clearConsole			(::ftwlib::SScreenASCII& console)												{
+::ftwlib::error_t								ftwlib::consoleClear			(::ftwlib::SScreenASCII& console)												{
 	int													screenSize				= console.Width * console.Height;
 	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);
 	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);

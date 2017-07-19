@@ -202,18 +202,14 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 		return 0; // return if no enemies or if player HP is 0
 
 	// Set last frame time and number.
-	++gameInstance.FrameInfo.FrameNumber;
-	gameInstance.FrameInfo.LastFrameSeconds								= timeElapsedMicroseconds / 1000000.0;
-	gameInstance.FrameInfo.LastFrameMicroseconds						= timeElapsedMicroseconds;
-	gameInstance.FrameInfo.TotalTime									+= timeElapsedMicroseconds;
-
-	gameInstance.ParticleEngine.CalcNextPositions(gameInstance.FrameInfo.LastFrameSeconds);
+	gameInstance.FrameInfo.Frame(timeElapsedMicroseconds);
+	gameInstance.ParticleEngine.CalcNextPositions(gameInstance.FrameInfo.Seconds.LastFrame);
 
 	// call update game functions
-	::updateMap		( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
-	::updatePlayer	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
-	::updateShots	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds );
-	::updateEnemies	( gameInstance, gameInstance.FrameInfo.LastFrameSeconds ); // update enemies
+	::updateMap		( gameInstance, gameInstance.FrameInfo.Seconds.LastFrame );
+	::updatePlayer	( gameInstance, gameInstance.FrameInfo.Seconds.LastFrame );
+	::updateShots	( gameInstance, gameInstance.FrameInfo.Seconds.LastFrame );
+	::updateEnemies	( gameInstance, gameInstance.FrameInfo.Seconds.LastFrame ); // update enemies
 
 	::updatePlayerInput(gameInstance);
 	return 0;

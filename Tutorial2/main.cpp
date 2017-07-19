@@ -15,13 +15,13 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
 	::game::cleanup(applicationInstance.Game);
-	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);								
+	::ftwlib::consoleDestroy(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::srand(0);
 	// call setup game functions
 	::game::setup(applicationInstance.Game);
@@ -30,7 +30,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::presentConsole(applicationInstance.ScreenASCII);
+	::ftwlib::consolePresent(applicationInstance.ScreenASCII);
 
 	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
@@ -40,7 +40,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 }
 
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::clearConsole															(applicationInstance.ScreenASCII);
+	//::ftwlib::consoleClear(applicationInstance.ScreenASCII);
 	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());
 	return 0;
 }

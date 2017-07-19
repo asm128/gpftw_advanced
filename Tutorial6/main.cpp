@@ -11,13 +11,13 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::ftwlib::destroyConsole(applicationInstance.ScreenASCII);								
+	::ftwlib::consoleDestroy(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	applicationInstance.Game.CombatAreaSizeEffective							= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
 	applicationInstance.Game.CombatAreaSizeVisible								= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
 	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= 0x100000;
@@ -29,7 +29,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::presentConsole(applicationInstance.ScreenASCII);
+	::ftwlib::consolePresent(applicationInstance.ScreenASCII);
 	::ftwlib::ASCII_COLOR_INDEX														oldColor0							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
 	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) + 0x10000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) - 0x10000);
 	//::ftwlib::ASCII_COLOR_INDEX														oldColor1							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
@@ -43,7 +43,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 }
 
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::clearConsole(applicationInstance.ScreenASCII);
+	//::ftwlib::consoleClear(applicationInstance.ScreenASCII);
 	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));

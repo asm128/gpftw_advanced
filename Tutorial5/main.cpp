@@ -36,13 +36,13 @@ void																		setupParticles													()														{
 
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);								
+	::ftwlib::consoleDestroy(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::setupParticles();
 	srand(0);
 	return 0;
@@ -51,7 +51,7 @@ void																		setupParticles													()														{
 void																		addParticle														
 	(	::ftwapp::PARTICLE_TYPE						particleType
 	,	::std::vector<::ftwapp::SParticleInstance>	& particleInstances
-	,	::ftwlib::SParticle2Engine<float>				& particleEngine
+	,	::ftwlib::SParticle2Engine<float>			& particleEngine
 	)														
 {
 	::ftwapp::SParticleInstance														newInstance														= {}; 
@@ -69,7 +69,7 @@ void																		addParticle
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
+	::ftwlib::consolePresent(applicationInstance.ScreenASCII);
 
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
 	::ftwlib::SFrameInfo															& frameInfo														= applicationInstance.FrameInfo;																	
@@ -113,7 +113,7 @@ void																		addParticle
 }
 
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::clearConsole															(applicationInstance.ScreenASCII);
+	//::ftwlib::consoleClear(applicationInstance.ScreenASCII);
 	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
@@ -149,7 +149,7 @@ int																			main															()														{
 			break;	/// Exit while() loop.
 	}
 
-	::ftwapp::cleanup(*applicationInstance);
+	::ftwapp::cleanup	(*applicationInstance);
 
 	delete( applicationInstance );	// Destroy the applcation instance and release its memory.
 	return 0; /// Exit from the function returning an (int)eger.

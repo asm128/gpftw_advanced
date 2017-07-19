@@ -35,6 +35,8 @@ template <typename _tElem>
 		::renderParticle(screenAscii, particleEngine, shotInstance.ParticleIndex, shotDescription.Image, shotDescription.Color);
 	}
 	for(uint32_t iShip = 0; iShip < shipInstances.size(); ++iShip) {
+		if(shipInstances[iShip].Unused)
+			continue;
 		const SShip																						& shipInstance													= shipInstances[iShip];
 		const SShipDescription																			& shipDescription												= gameInstance.DefinitionsShip[shipInstance.ShipDescription];
 		::renderParticle(screenAscii, particleEngine, shipInstance.ParticleIndex, shipDescription.Image, shipDescription.Color);

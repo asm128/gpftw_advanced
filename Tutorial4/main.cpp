@@ -15,13 +15,13 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 // Cleanup application resources.
 ::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
 	::game::cleanup				(applicationInstance.Game);
-	::ftwlib::destroyConsole	(applicationInstance.ScreenASCII);								
+	::ftwlib::consoleDestroy	(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
 // Use this function to setup our game data
 ::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwlib::createConsole(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::srand(0);
 	::game::setup(applicationInstance.Game);	// call setup game functions
 	return 0;
@@ -29,7 +29,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 // Use this function to update our game data
 ::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::presentConsole														(applicationInstance.ScreenASCII);
+	::ftwlib::consolePresent(applicationInstance.ScreenASCII);
 
 	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
 	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
@@ -39,7 +39,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 }
 
 ::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::clearConsole															(applicationInstance.ScreenASCII);
+	//::ftwlib::consoleClear(applicationInstance.ScreenASCII);
 	::memset(applicationInstance.ScreenASCII.Characters	.begin(), 0, applicationInstance.ScreenASCII.Characters	.size());
 	::memset(applicationInstance.ScreenASCII.Colors		.begin(), 0, applicationInstance.ScreenASCII.Colors		.size() * sizeof(uint16_t));
 	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());
@@ -60,7 +60,7 @@ int																			main															()														{
 			break;	/// Exit while() loop.
 	}
 
-	::ftwapp::cleanup(*applicationInstance);
+	::ftwapp::cleanup	(*applicationInstance);
 
 	delete( applicationInstance );	// Destroy the applcation instance and release its memory.
 	return 0; /// Exit from the function returning an (int)eger.
