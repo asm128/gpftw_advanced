@@ -62,7 +62,7 @@ void																		addParticle
 	case ::ftwapp::PARTICLE_TYPE_FIRE:	particleEngine.Particle[newInstance.PhysicsId].Position		= {SCREEN_WIDTH / 2 + (rand() % 3 - 1.0f) * (SCREEN_WIDTH / 5), SCREEN_HEIGHT / 2 + SCREEN_HEIGHT / 4}; break;
 	case ::ftwapp::PARTICLE_TYPE_LAVA:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= SCREEN_HEIGHT - 1; break;
 	case ::ftwapp::PARTICLE_TYPE_RAIN:	
-	case ::ftwapp::PARTICLE_TYPE_SNOW:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= 0; break;
+	case ::ftwapp::PARTICLE_TYPE_SNOW:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= 0; particleEngine.Particle[newInstance.PhysicsId].Forces.Velocity.y	= .001f; break;
 	}
 	particleInstances.push_back(newInstance);
 }

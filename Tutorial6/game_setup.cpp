@@ -68,7 +68,6 @@ static			void																		setupParticleEffects											(::game::SGame& ga
 	gameInstance.DefinitionsParticleEffect	[::game::EFFECT_TYPE_STARS		].Forces.Velocity	= {-20.0f, 0};
 }
 
-
 static inline	void																		setupParticles													(::game::SGame& gameInstance)							{
 	::setupParticleShips	(gameInstance);
 	::setupParticleShots	(gameInstance);
