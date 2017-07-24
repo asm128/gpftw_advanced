@@ -15,28 +15,28 @@ namespace ftwlib
 							uint32_t				Count						= 0;
 	public:
 		// Constructors
-		inline constexpr							array_view					()																	= default;
-		inline										array_view					(_tElement* dataElements, uint32_t elementCount)					: Data(dataElements), Count(elementCount)									{
+		inline constexpr							array_view					()																			= default;
+		inline										array_view					(_tElement* dataElements, uint32_t elementCount)							: Data(dataElements), Count(elementCount)											{
 			if(0 == dataElements && 0 != elementCount)	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 				throw(::std::exception("Invalid parameters."));
 		}
 		template <size_t _elementCount>
-		inline constexpr							array_view					(_tElement (&_dataElements)[_elementCount])							: Data(_dataElements), Count(_elementCount)									{}
+		inline constexpr							array_view					(_tElement (&_dataElements)[_elementCount])									: Data(_dataElements), Count(_elementCount)											{}
 
 		template <size_t _elementCount>
-		inline constexpr							array_view					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)	: Data(_dataElements), Count(::ftwlib::min(_elementCount, elementCount))	{}
+		inline constexpr							array_view					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)			: Data(_dataElements), Count(::ftwlib::min(_elementCount, elementCount))			{}
 
 		// Operators
-							_tElement&				operator[]					(uint32_t index)											{ if(index >= Count) throw(::std::exception("Invalid index.")); return Data[index]; }
-							const _tElement&		operator[]					(uint32_t index)									const	{ if(index >= Count) throw(::std::exception("Invalid index.")); return Data[index]; }
+							_tElement&				operator[]					(uint32_t index)															{ if(index >= Count) throw(::std::exception("Invalid index.")); return Data[index];	}
+							const _tElement&		operator[]					(uint32_t index)													const	{ if(index >= Count) throw(::std::exception("Invalid index.")); return Data[index];	}
 		// Methods
-		inline				_tElement*				begin						()															{ return Data;			}
-		inline constexpr	const _tElement*		begin						()													const	{ return Data;			}
+		inline				_tElement*				begin						()																			{ return Data;			}
+		inline constexpr	const _tElement*		begin						()																	const	{ return Data;			}
 
-		inline				_tElement*				end							()															{ return Data + Count;	}
-		inline constexpr	const _tElement*		end							()													const	{ return Data + Count;	}
+		inline				_tElement*				end							()																			{ return Data + Count;	}
+		inline constexpr	const _tElement*		end							()																	const	{ return Data + Count;	}
 
-		inline constexpr	uint32_t				size						()													const	{ return Count;			}
+		inline constexpr	uint32_t				size						()																	const	{ return Count;			}
 	};
 }
 

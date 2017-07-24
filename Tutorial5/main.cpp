@@ -61,7 +61,7 @@ void																		addParticle
 	switch(particleType) {
 	case ::ftwapp::PARTICLE_TYPE_FIRE:	particleEngine.Particle[newInstance.PhysicsId].Position		= {SCREEN_WIDTH / 2 + (rand() % 3 - 1.0f) * (SCREEN_WIDTH / 5), SCREEN_HEIGHT / 2 + SCREEN_HEIGHT / 4}; break;
 	case ::ftwapp::PARTICLE_TYPE_LAVA:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= SCREEN_HEIGHT - 1; break;
-	case ::ftwapp::PARTICLE_TYPE_RAIN:	
+	case ::ftwapp::PARTICLE_TYPE_RAIN:
 	case ::ftwapp::PARTICLE_TYPE_SNOW:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= 0; particleEngine.Particle[newInstance.PhysicsId].Forces.Velocity.y	= .001f; break;
 	}
 	particleInstances.push_back(newInstance);
@@ -77,7 +77,7 @@ void																		addParticle
 	const float																		lastFrameSeconds												= (float)frameInfo.Seconds.LastFrame;
 
 	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
-	::ftwlib::SParticle2Engine<float>													& particleEngine												= applicationInstance.ParticleEngine;
+	::ftwlib::SParticle2Engine<float>												& particleEngine												= applicationInstance.ParticleEngine;
 	static float																	windDirection													= 0.1f;
 	if(GetAsyncKeyState('1')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_SNOW, particleInstances, particleEngine);
 	if(GetAsyncKeyState('2')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_FIRE, particleInstances, particleEngine);
