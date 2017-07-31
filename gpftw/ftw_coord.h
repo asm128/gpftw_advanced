@@ -81,7 +81,7 @@ namespace ftwlib {
 	}
 
 	template<typename _tElement>	static					bool					sphereOverlaps			(const SSphere2D<_tElement> &sphereA, const SSphere2D<_tElement> &sphereB)	noexcept	{
-		const double																		distanceSquared			= (sphereA.Center - sphereB.Center).squareMagnitude();
+		const double																		distanceSquared			= (sphereA.Center - sphereB.Center).LengthSquared();
 		const double																		radiiSum				= (sphereA.Radius + sphereB.Radius);
 		return distanceSquared < (radiiSum * radiiSum);	// check squared distance against squared radius
 	}
