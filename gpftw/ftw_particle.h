@@ -55,7 +55,7 @@ namespace ftwlib
 		inline constexpr	bool												RequiresProcessing							()																					const	noexcept	{ return (false == Unused) && Active; }
 	};
 #pragma pack(pop)
-	// This basically does Position += Velocity * Time.
+	// This basically does FinalPosition = InitialPosition + Velocity * Time.
 	template<typename _tElement>
 	static inline		void												particleIntegratePosition
 		(	const ::ftwlib::SCoord2<_tElement>	& velocity
