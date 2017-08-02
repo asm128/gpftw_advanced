@@ -1,6 +1,6 @@
 #include "physics.h"
 
-		::ftwlib::error_t											game::SParticleEngine::CalcNextPositions			(double fElapsedTime)																{
+		::ftwl::error_t											game::SParticleEngine::CalcNextPositions			(double fElapsedTime)																{
 	double																	fElapsedTimeHalfSquared								= fElapsedTime * fElapsedTime * 0.5;
 	for(uint32_t iBody = 0, bodyCount = (uint32_t)ParticleState.size(); iBody < bodyCount; ++iBody) {
 		if(ParticleState[iBody].Unused || false == ParticleState[iBody].Active)
@@ -16,7 +16,7 @@
 	return 0;
 }
 
-		::ftwlib::error_t											game::SParticleEngine::AddParticle					(const SParticle& rigidBodyData)								{
+		::ftwl::error_t											game::SParticleEngine::AddParticle					(const SParticle& rigidBodyData)								{
 	const uint32_t															bodyCount											= (uint32_t)ParticleState.size();
 	static constexpr const	::game::SParticleState							bodyState											= {false, true};
 

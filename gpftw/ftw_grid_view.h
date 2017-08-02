@@ -1,9 +1,9 @@
-#include "ftw_array_view.h"		// for ftwlib::array_view<>
+#include "ftw_array_view.h"		// for ftwl::array_view<>
 
 #ifndef GPFTW_GRID_VIEW_H
 #define GPFTW_GRID_VIEW_H
 
-namespace ftwlib 
+namespace ftwl 
 {
 	template <typename _tElement>
 	class grid_view {
@@ -19,8 +19,8 @@ namespace ftwlib
 				throw(::std::exception("Invalid parameters."));
 		}
 		// Operators
-							::ftwlib::array_view<_tElement>			operator[]					(uint32_t row)																{ if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwlib::array_view<_tElement>(&Data[row*Width], Width); }
-							const ::ftwlib::array_view<_tElement>	operator[]					(uint32_t row)														const	{ if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwlib::array_view<_tElement>(&Data[row*Width], Width); }
+							::ftwl::array_view<_tElement>			operator[]					(uint32_t row)																{ if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwl::array_view<_tElement>(&Data[row*Width], Width); }
+							const ::ftwl::array_view<_tElement>	operator[]					(uint32_t row)														const	{ if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwl::array_view<_tElement>(&Data[row*Width], Width); }
 		// Methods
 		inline				_tElement*								begin						()																			{ return Data;						}
 		inline constexpr	const _tElement*						begin						()																	const	{ return Data;						}

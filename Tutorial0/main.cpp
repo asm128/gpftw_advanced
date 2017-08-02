@@ -10,17 +10,17 @@ static constexpr	const int							SCREEN_WIDTH						= 48	;
 static constexpr	const int							SCREEN_HEIGHT						= 32	;
 
 struct SApplication {
-	::ftwlib::SScreenASCII									ScreenASCII							= {};
+	::ftwl::SScreenASCII									ScreenASCII							= {};
 	int														FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 };
 
 // Define some functions to use from main(). These functions will contain our game code.
-void													cleanup								(::SApplication& applicationInstance)				{ ::ftwlib::consoleDestroy(applicationInstance.ScreenASCII);									}	// Cleanup application resources.
-void													setup								(::SApplication& applicationInstance)				{ ::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	}	// Initialize console.
+void													cleanup								(::SApplication& applicationInstance)				{ ::ftwl::consoleDestroy(applicationInstance.ScreenASCII);									}	// Cleanup application resources.
+void													setup								(::SApplication& applicationInstance)				{ ::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	}	// Initialize console.
 void													update								(::SApplication& applicationInstance)				{ ++applicationInstance.FrameCounter;															}	// Increase our frame counter by 1.
 void													draw								(::SApplication& applicationInstance)				{	
 	// This function now will draw some coloured symbols in each cell of the ASCII screen.
-	::ftwlib::SScreenASCII										&asciiTarget						= applicationInstance.ScreenASCII;
+	::ftwl::SScreenASCII										&asciiTarget						= applicationInstance.ScreenASCII;
 	uint32_t													color0								= (0xFF & applicationInstance.FrameCounter * 1) | ((0xFF & applicationInstance.FrameCounter * 2) << 8) | ((0xFF & applicationInstance.FrameCounter * 5) << 16);
 	uint32_t													color1								= (0xFF & applicationInstance.FrameCounter * 2) | ((0xFF & applicationInstance.FrameCounter * 1) << 8) | ((0xFF & applicationInstance.FrameCounter * 3) << 16);
 	uint32_t													color2								= (0xFF & applicationInstance.FrameCounter * 3) | ((0xFF & applicationInstance.FrameCounter * 5) << 8) | ((0xFF & applicationInstance.FrameCounter * 2) << 16);
@@ -52,7 +52,7 @@ int														main								()													{
 		::update	(*applicationInstance);		// Update frame.
 		::draw		(*applicationInstance);		// Render frame.
 
-		::ftwlib::consolePresent(applicationInstance->ScreenASCII);	// Present the drawn image.
+		::ftwl::consolePresent(applicationInstance->ScreenASCII);	// Present the drawn image.
 
 		if(::GetAsyncKeyState(VK_ESCAPE))		/// Check for escape key pressed.
 			break;	/// Exit while() loop.
@@ -71,5 +71,5 @@ int	WINAPI												WinMain
 	,	_In_		INT				// nShowCmd
 	)
 {
-	return ::ftwlib::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwl::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

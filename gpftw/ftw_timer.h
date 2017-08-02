@@ -3,7 +3,7 @@
 #ifndef GPFTW_TIMER_H_2983740982374092837492384
 #define GPFTW_TIMER_H_2983740982374092837492384
 
-namespace ftwlib	// 
+namespace ftwl	// 
 {
 	struct STimer {
 		double						LastTimeSeconds;		// This variable is set by Frame() or Reset() and holds the time difference in seconds between a Frame() call and the next.

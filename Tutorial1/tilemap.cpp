@@ -2,13 +2,13 @@
 #include "ftw_ascii_color.h"
 
 
-::ftwlib::error_t								initializeTileMap					(STileMap& tileMapToInitialize, uint32_t width, uint32_t height, const STileASCII* tileDescriptions, uint32_t tileDescriptionCount)		{ 
+::ftwl::error_t								initializeTileMap					(STileMap& tileMapToInitialize, uint32_t width, uint32_t height, const STileASCII* tileDescriptions, uint32_t tileDescriptionCount)		{ 
 	tileMapToInitialize.ASCIIMap					= {(uint32_t*)::malloc(sizeof(uint32_t)*width*height), width, height}; 
 	tileMapToInitialize.TileDescriptionTable		= {&tileDescriptions[0], tileDescriptionCount}; 
 	return 0;
 }
 
-::ftwlib::error_t								destroyTileMap						(STileMap& tileMapToInitialize)											{
+::ftwl::error_t								destroyTileMap						(STileMap& tileMapToInitialize)											{
 	if(tileMapToInitialize.ASCIIMap.size())	
 		::free(tileMapToInitialize.ASCIIMap.begin()); 
 	

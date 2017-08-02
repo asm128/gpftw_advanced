@@ -23,7 +23,7 @@ void																shoot								( ::game::SGame& gameObject, const ::game::SVec
 // Use this function to update the map tiles
 void																updateMap							( ::game::SGame& /*gameObject*/, double /*fLastFrameTime*/ )										{}
 
-static constexpr const	::ftwlib::SCoord2<double>					directionFront						= {1, 0};
+static constexpr const	::ftwl::SCoord2<double>					directionFront						= {1, 0};
 
 void																updatePlayerInput					( ::game::SGame& gameObject)																		{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
@@ -73,7 +73,7 @@ void																evaluateAction						( ::game::SCharacter& playerInstance, do
 			playerInstance.Speed												+= fLastFrameTime * timeScale;
 	}
 
-	playerInstance.Speed												= ::ftwlib::max(0.0, ::ftwlib::min(playerInstance.Speed, playerInstance.SpeedMax));
+	playerInstance.Speed												= ::ftwl::max(0.0, ::ftwl::min(playerInstance.Speed, playerInstance.SpeedMax));
 }
 
 void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime )													{
@@ -88,8 +88,8 @@ void																updatePlayer						( ::game::SGame& gameObject, double fLastF
 
 	::game::STileCoord2														& nextTile							= playerBodyNext.Position.Tile;
 	const ::game::SMap														& gameMap							= gameObject.Map;
-	nextTile.x															= ::ftwlib::min((uint32_t)::ftwlib::max(playerBodyNext.Position.Tile.x, 1), gameMap.Size.x - 2);
-	nextTile.y															= ::ftwlib::min((uint32_t)::ftwlib::max(playerBodyNext.Position.Tile.y, 1), gameMap.Size.y - 2);
+	nextTile.x															= ::ftwl::min((uint32_t)::ftwl::max(playerBodyNext.Position.Tile.x, 1), gameMap.Size.x - 2);
+	nextTile.y															= ::ftwl::min((uint32_t)::ftwl::max(playerBodyNext.Position.Tile.y, 1), gameMap.Size.y - 2);
 
 	if( gameMap.Enemy.Cells[nextTile.y][nextTile.x] == INVALID_CHARACTER
 	 && gameObject.Descriptions.Floor[gameMap.Floor.Cells[nextTile.y][nextTile.x]].Transitable
@@ -146,7 +146,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 		if( playerCell.y == enemyCell.y 
 		 && playerCell.x == enemyCell.x 
 		 ) { // Decrease player life if enemy position matches player position
-			currentPlayerPoints.HP												-= ::ftwlib::max( 1, currentEnemy.PointsCurrent.HP/3 );
+			currentPlayerPoints.HP												-= ::ftwl::max( 1, currentEnemy.PointsCurrent.HP/3 );
 			enemyCell.x															= rand() % mapWidth;
 			enemyCell.y															= rand() % mapDepth;	// set a random position for the enemy so it has to walk again in order to hit the player
 		}
@@ -197,7 +197,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	}
 }
 
-::ftwlib::error_t													game::update						(::game::SGame& gameInstance, uint64_t timeElapsedMicroseconds)										{
+::ftwl::error_t													game::update						(::game::SGame& gameInstance, uint64_t timeElapsedMicroseconds)										{
 	if( gameInstance.Player.PointsCurrent.HP <= 0 || gameInstance.Enemy.size() == 0 )
 		return 0; // return if no enemies or if player HP is 0
 

@@ -3,7 +3,7 @@
 #ifndef GPFTW_GRID_H_92813740928374092387498237
 #define GPFTW_GRID_H_92813740928374092387498237
 
-namespace ftwlib
+namespace ftwl
 {
 #pragma pack(push, 1)
 	template<typename _tCell, size_t _sizeWidth, size_t _sizeDepth>

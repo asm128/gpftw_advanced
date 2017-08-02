@@ -3,7 +3,7 @@
 #ifndef GPFTW_ERROR_H
 #define GPFTW_ERROR_H
 
-namespace ftwlib 
+namespace ftwl 
 {
 	typedef					int32_t					error_t;
 

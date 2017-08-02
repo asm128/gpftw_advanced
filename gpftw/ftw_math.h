@@ -4,7 +4,7 @@
 #ifndef FTW_MATH_H_0237409283740982740928374
 #define FTW_MATH_H_0237409283740982740928374
 
-namespace ftwlib 
+namespace ftwl 
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	static					const double			math_pi				= 3.1415926535897932384626433832795;	// Pi

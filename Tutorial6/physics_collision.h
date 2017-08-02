@@ -7,8 +7,8 @@ namespace game
 {
 	// Represents a bounding sphere that can be tested for overlap.
 	template<typename _tElement>
-	struct SBoundingSphere : public ::ftwlib::SSphere2D<_tElement> {
-		typedef	::ftwlib::SCoord2<_tElement>	TCoord;
+	struct SBoundingSphere : public ::ftwl::SSphere2D<_tElement> {
+		typedef	::ftwl::SCoord2<_tElement>	TCoord;
 
 												SBoundingSphere				(const TCoord &center, _tElement radius)										: Center(center), Radius(radius)	{}
 
@@ -29,7 +29,7 @@ namespace game
 			}
 		}
 		else {	// Otherwise we need to work with partially overlapping spheres
-			const double distance						= ::ftwlib::sqrt_safe(distanceSquared);
+			const double distance						= ::ftwl::sqrt_safe(distanceSquared);
 			Radius										= (distance + one.Radius + two.Radius) * 0.5;
 
 			Center										= one.Center;	// The new centre is based on one's centre, moved towards two's centre by an ammount proportional to the spheres' radii.

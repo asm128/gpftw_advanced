@@ -122,7 +122,7 @@ void																updateEnemies						( ::game::SGame& gameObject, double fLast
 		if( playerPosition.y == enemyPosition.y 
 		 && playerPosition.x == enemyPosition.x 
 		 ) { // Decrease player life if enemy position matches player position
-			gameObject.Player.CurrentPoints.HP									-= ::ftwlib::max( 1, currentEnemy.CurrentPoints.HP/3 );
+			gameObject.Player.CurrentPoints.HP									-= ::ftwl::max( 1, currentEnemy.CurrentPoints.HP/3 );
 			enemyPosition.x														= rand() % mapWidth;
 			enemyPosition.y														= rand() % mapDepth;	// set a random position for the enemy so it has to walk again in order to hit the player
 		}
@@ -174,7 +174,7 @@ void																updateShots							( ::game::SGame& gameObject, double fLastF
 	}
 }
 
-::ftwlib::error_t													game::update						(::game::SGame& gameInstance, uint64_t timeElapsedMicroseconds) {
+::ftwl::error_t													game::update						(::game::SGame& gameInstance, uint64_t timeElapsedMicroseconds) {
 	if( gameInstance.Player.CurrentPoints.HP <= 0 || gameInstance.Enemy.size() == 0 )
 		return 0; // return if no enemies or if player HP is 0
 

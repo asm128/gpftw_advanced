@@ -10,7 +10,7 @@
 static constexpr const uint32_t												SCREEN_WIDTH													= 128;
 static constexpr const uint32_t												SCREEN_HEIGHT													= 64;
 
-static ::ftwlib::SParticle2<float>											particleDefinitions	[::ftwapp::PARTICLE_TYPE_COUNT]				= {};
+static ::ftwl::SParticle2<float>											particleDefinitions	[::ftwapp::PARTICLE_TYPE_COUNT]				= {};
 
 void																		setupParticles													()														{
 	particleDefinitions	[::ftwapp::PARTICLE_TYPE_SNOW].Position					= 
@@ -35,14 +35,14 @@ void																		setupParticles													()														{
 }
 
 // Cleanup application resources.
-::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::ftwlib::consoleDestroy(applicationInstance.ScreenASCII);								
+::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
+	::ftwl::consoleDestroy(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
 // Use this function to setup our game data
-::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
+	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::setupParticles();
 	srand(0);
 	return 0;
@@ -51,7 +51,7 @@ void																		setupParticles													()														{
 void																		addParticle														
 	(	::ftwapp::PARTICLE_TYPE						particleType
 	,	::std::vector<::ftwapp::SParticleInstance>	& particleInstances
-	,	::ftwlib::SParticle2Engine<float>			& particleEngine
+	,	::ftwl::SParticle2Engine<float>			& particleEngine
 	)														
 {
 	::ftwapp::SParticleInstance														newInstance														= {}; 
@@ -68,16 +68,16 @@ void																		addParticle
 }
 
 // Use this function to update our game data
-::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::consolePresent(applicationInstance.ScreenASCII);
+::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
+	::ftwl::consolePresent(applicationInstance.ScreenASCII);
 
-	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
-	::ftwlib::SFrameInfo															& frameInfo														= applicationInstance.FrameInfo;																	
+	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;																	
+	::ftwl::SFrameInfo															& frameInfo														= applicationInstance.FrameInfo;																	
 	frameInfo.Frame(timerInstance.LastTimeMicroseconds);
 	const float																		lastFrameSeconds												= (float)frameInfo.Seconds.LastFrame;
 
 	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
-	::ftwlib::SParticle2Engine<float>												& particleEngine												= applicationInstance.ParticleEngine;
+	::ftwl::SParticle2Engine<float>												& particleEngine												= applicationInstance.ParticleEngine;
 	static float																	windDirection													= 0.1f;
 	if(GetAsyncKeyState('1')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_SNOW, particleInstances, particleEngine);
 	if(GetAsyncKeyState('2')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_FIRE, particleInstances, particleEngine);
@@ -91,7 +91,7 @@ void																		addParticle
 	for(uint32_t iParticle = 0; iParticle < particleInstances.size(); ++iParticle) {
 		SParticleInstance																& particleInstance												= particleInstances[iParticle];
 		int32_t																			physicsId														= particleInstance.PhysicsId;
-		::ftwlib::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
+		::ftwl::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
 		if( particleNext.Position.x < 0 || particleNext.Position.x >= applicationInstance.ScreenASCII.Width
 		 || particleNext.Position.y < 0 || particleNext.Position.y >= applicationInstance.ScreenASCII.Height
 		 ) { // Remove the particle instance and related information.
@@ -101,7 +101,7 @@ void																		addParticle
 		}
 		else { // Apply forces from wind and gravity.
 			static constexpr	const double												gravity															= 9.8;
-			::ftwlib::SParticle2<float>														& particleCurrent												= particleEngine.Particle[physicsId];
+			::ftwl::SParticle2<float>														& particleCurrent												= particleEngine.Particle[physicsId];
 			particleCurrent																= particleEngine.ParticleNext[physicsId];
 			particleCurrent.Forces.AccumulatedForce										= {0, float(gravity * lastFrameSeconds)};
 			particleCurrent.Forces.AccumulatedForce.x									+= float(windDirection * abs(particleCurrent.Forces.Velocity.y) * .5) + float((rand() % 100) / 100.0 - .5);
@@ -112,9 +112,9 @@ void																		addParticle
 	return 0;
 }
 
-::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::consoleClear(applicationInstance.ScreenASCII);
-	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
+::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
+	//::ftwl::consoleClear(applicationInstance.ScreenASCII);
+	::ftwl::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
 
@@ -122,14 +122,14 @@ void																		addParticle
 	for(uint32_t iParticle = 0, particleCount = (uint32_t)particleInstances.size(); iParticle < particleCount; ++iParticle) {
 		SParticleInstance																& particleInstance												= particleInstances[iParticle];
 		const int32_t																	physicsId														= particleInstance.PhysicsId;
-		const ::ftwlib::SCoord2<float>													particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
+		const ::ftwl::SCoord2<float>													particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
 		const int32_t																	linearIndex														= (int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x;
 		screenAscii.Characters	[linearIndex]	= 1 + particleInstance.Type;
 		screenAscii.Colors		[linearIndex]	
-			= (particleInstance.Type == PARTICLE_TYPE_FIRE) ? ::ftwlib::ASCII_COLOR_RED
-			: (particleInstance.Type == PARTICLE_TYPE_SNOW) ? ::ftwlib::ASCII_COLOR_CYAN
-			: (particleInstance.Type == PARTICLE_TYPE_LAVA) ? ::ftwlib::ASCII_COLOR_RED
-			: ::ftwlib::ASCII_COLOR_BLUE
+			= (particleInstance.Type == PARTICLE_TYPE_FIRE) ? ::ftwl::ASCII_COLOR_RED
+			: (particleInstance.Type == PARTICLE_TYPE_SNOW) ? ::ftwl::ASCII_COLOR_CYAN
+			: (particleInstance.Type == PARTICLE_TYPE_LAVA) ? ::ftwl::ASCII_COLOR_RED
+			: ::ftwl::ASCII_COLOR_BLUE
 			;
 	}
 	return 0;
@@ -163,5 +163,5 @@ int	WINAPI														WinMain
 	)
 {
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	return ::ftwlib::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwl::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

@@ -27,7 +27,7 @@ namespace game
 	static constexpr		const int32_t				MAP_DEPTH								= 32;
 
 	struct SMap { // The struct is a block of variables to be used to store our map information
-		::ftwlib::SCoord2<uint32_t>							Size;		// Declare Width and Depth variables which will hold the active map size
+		::ftwl::SCoord2<uint32_t>							Size;		// Declare Width and Depth variables which will hold the active map size
 		::game::STileMapASCII<MAP_WIDTH, MAP_DEPTH>			Floor;
 		::game::STileMapASCII<MAP_WIDTH, MAP_DEPTH>			Enemy;
 		::game::STileMapASCII<MAP_WIDTH, MAP_DEPTH>			Shots;
@@ -48,10 +48,10 @@ namespace game
 	};
 
 	// -- game functions			
-	::ftwlib::error_t									setup									(::game::SGame& gameObject);
-	::ftwlib::error_t									cleanup									(::game::SGame& gameObject);
-	::ftwlib::error_t									update									(::game::SGame& gameObject, uint64_t timeElapsedMicroseconds);
-	::ftwlib::error_t									draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
+	::ftwl::error_t									setup									(::game::SGame& gameObject);
+	::ftwl::error_t									cleanup									(::game::SGame& gameObject);
+	::ftwl::error_t									update									(::game::SGame& gameObject, uint64_t timeElapsedMicroseconds);
+	::ftwl::error_t									draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
 }
 //-------------------------------------------------------------------------
 #endif // GAME_H_90237409238740923749023

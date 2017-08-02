@@ -6,7 +6,7 @@
 #ifndef GPFTW_ARRAY_VIEW_H
 #define GPFTW_ARRAY_VIEW_H
 
-namespace ftwlib 
+namespace ftwl 
 {
 	template <typename _tElement>
 	class array_view {
@@ -24,7 +24,7 @@ namespace ftwlib
 		inline constexpr							array_view					(_tElement (&_dataElements)[_elementCount])									: Data(_dataElements), Count(_elementCount)											{}
 
 		template <size_t _elementCount>
-		inline constexpr							array_view					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)			: Data(_dataElements), Count(::ftwlib::min(_elementCount, elementCount))			{}
+		inline constexpr							array_view					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)			: Data(_dataElements), Count(::ftwl::min(_elementCount, elementCount))			{}
 
 		// Operators
 							_tElement&				operator[]					(uint32_t index)															{ if(index >= Count) throw(::std::exception("Invalid index.")); return Data[index];	}

@@ -9,8 +9,8 @@
 namespace game 
 {
 #pragma pack(push, 1)
-	typedef	::ftwlib::SCoord2<float>					SVector2	;
-	typedef	::ftwlib::SCoord2<int32_t>					STileCoord2	;
+	typedef	::ftwl::SCoord2<float>					SVector2	;
+	typedef	::ftwl::SCoord2<int32_t>					STileCoord2	;
 
 	struct SCellCoord2 {
 				STileCoord2									Tile							= {};	// Coordinates in tile map
@@ -35,8 +35,8 @@ namespace game
 				::std::vector<SParticle>					ParticleNext					= {};
 				::std::vector<SParticleState>				ParticleState					= {};
 	// --- Methods
-				::ftwlib::error_t							CalcNextPositions				(double fElapsedTime);
-				::ftwlib::error_t							AddParticle						(const SParticle& rigidBodyData);
+				::ftwl::error_t							CalcNextPositions				(double fElapsedTime);
+				::ftwl::error_t							AddParticle						(const SParticle& rigidBodyData);
 	};
 }
 

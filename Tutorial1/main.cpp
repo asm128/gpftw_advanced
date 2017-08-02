@@ -18,7 +18,7 @@ template<typename _tValue>	static inline constexpr	const _tValue		max									(c
 template<typename _tValue>	static inline constexpr	const _tValue		min									(const _tValue& a, const _tValue& b)				{ return (a < b) ? a : b; }
 
 struct SApplication {
-	::ftwlib::SScreenASCII													ScreenASCII							= {};
+	::ftwl::SScreenASCII													ScreenASCII							= {};
 	int																		FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 
 	STileMap																TileMap								= {};
@@ -27,11 +27,11 @@ struct SApplication {
 // Cleanup application resources.
 void																	cleanup								(::SApplication& applicationInstance)				{ 
 	::destroyTileMap			(applicationInstance.TileMap);									
-	::ftwlib::consoleDestroy	(applicationInstance.ScreenASCII);									
+	::ftwl::consoleDestroy	(applicationInstance.ScreenASCII);									
 }
 
 void																	setupRoom							
-	(	::ftwlib::grid_view<uint32_t>	& asciiMap
+	(	::ftwl::grid_view<uint32_t>	& asciiMap
 	,	uint32_t						offsetX
 	,	uint32_t						offsetZ
 	,	uint32_t						sizeX
@@ -81,33 +81,33 @@ void																	setupMap							(::STileMap& tileMapInstance)						{
 }
 
 static constexpr	const STileASCII									tileDescriptions[]					= 
-	{	{' '	, ::ftwlib::ASCII_COLOR_BLACK		}
-	,	{'~'	, ::ftwlib::ASCII_COLOR_DARKBLUE	}
-	,	{'.'	, ::ftwlib::ASCII_COLOR_GREEN		}
-	,	{'#'	, ::ftwlib::ASCII_COLOR_DARKRED		}
-	,	{'^'	, ::ftwlib::ASCII_COLOR_DARKGREEN	}
-	,	{'-'	, ::ftwlib::ASCII_COLOR_RED			}
-	,	{'\\'	, ::ftwlib::ASCII_COLOR_RED			}
-	,	{'|'	, ::ftwlib::ASCII_COLOR_RED			}
-	,	{'/'	, ::ftwlib::ASCII_COLOR_RED			}
+	{	{' '	, ::ftwl::ASCII_COLOR_BLACK		}
+	,	{'~'	, ::ftwl::ASCII_COLOR_DARKBLUE	}
+	,	{'.'	, ::ftwl::ASCII_COLOR_GREEN		}
+	,	{'#'	, ::ftwl::ASCII_COLOR_DARKRED		}
+	,	{'^'	, ::ftwl::ASCII_COLOR_DARKGREEN	}
+	,	{'-'	, ::ftwl::ASCII_COLOR_RED			}
+	,	{'\\'	, ::ftwl::ASCII_COLOR_RED			}
+	,	{'|'	, ::ftwl::ASCII_COLOR_RED			}
+	,	{'/'	, ::ftwl::ASCII_COLOR_RED			}
 	};
 
 template<typename _tElement, size_t _arraySize>
 static constexpr	const uint32_t										size								(const _tElement (&)[_arraySize])					{ return (uint32_t)_arraySize; }
 
 void																	setup								(::SApplication& applicationInstance)				{ 
-	::ftwlib::consoleCreate	(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	
+	::ftwl::consoleCreate	(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	
 	::initializeTileMap		(applicationInstance.TileMap	, ::SCREEN_WIDTH, ::SCREEN_HEIGHT, tileDescriptions, size(tileDescriptions));	
 	::setupMap				(applicationInstance.TileMap	);
 }	
 
 void																	update								(::SApplication& applicationInstance)				{ 
-	::ftwlib::consolePresent(applicationInstance.ScreenASCII);	// Present the current image if any.
+	::ftwl::consolePresent(applicationInstance.ScreenASCII);	// Present the current image if any.
 
-	::ftwlib::ASCII_COLOR_INDEX													oldColor0							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
-	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)+0x40000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)-0x40000);
-	//::ftwlib::ASCII_COLOR_INDEX													oldColor1							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_BLUE];
-	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_BLUE]		= ((applicationInstance.FrameCounter % 48) <  24) ? (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)-0x40000) : (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)+0x40000);
+	::ftwl::ASCII_COLOR_INDEX													oldColor0							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= ((applicationInstance.FrameCounter % 32) >= 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)+0x40000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000)-0x40000);
+	//::ftwl::ASCII_COLOR_INDEX													oldColor1							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_BLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_BLUE]		= ((applicationInstance.FrameCounter % 48) <  24) ? (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)-0x40000) : (oldColor1 & 0x00FFFF) | ((oldColor1 & 0xFF0000)+0x40000);
 
 
 	++applicationInstance.FrameCounter;		// Increase our frame counter by 1.
@@ -115,7 +115,7 @@ void																	update								(::SApplication& applicationInstance)				{
 }	
 void																	draw								(::SApplication& applicationInstance)				{	
 	// This function now will draw some coloured symbols in each cell of the ASCII screen.
-	::ftwlib::SScreenASCII														& asciiTarget						= applicationInstance.ScreenASCII;
+	::ftwl::SScreenASCII														& asciiTarget						= applicationInstance.ScreenASCII;
 	::STileMap																	& tileMap							= applicationInstance.TileMap;
 
 	// 2d loop
@@ -127,7 +127,7 @@ void																	draw								(::SApplication& applicationInstance)				{
 		// Set the target cell with the character and color for to the current tile found in the map.
 		asciiTarget.Characters	[linearIndex]									= tileMap.TileDescriptionTable[tileDescriptionIndex].Character	;
 		if('~' == asciiTarget.Characters[linearIndex])
-			asciiTarget.Colors		[linearIndex]									= (((applicationInstance.FrameCounter % 2) + z + x) % 2) ? ::ftwlib::ASCII_COLOR_DARKBLUE | (::ftwlib::ASCII_COLOR_BLACK << 4) : ::ftwlib::ASCII_COLOR_BLACK | (::ftwlib::ASCII_COLOR_DARKBLUE << 4) ;
+			asciiTarget.Colors		[linearIndex]									= (((applicationInstance.FrameCounter % 2) + z + x) % 2) ? ::ftwl::ASCII_COLOR_DARKBLUE | (::ftwl::ASCII_COLOR_BLACK << 4) : ::ftwl::ASCII_COLOR_BLACK | (::ftwl::ASCII_COLOR_DARKBLUE << 4) ;
 		else
 			asciiTarget.Colors		[linearIndex]									= tileMap.TileDescriptionTable[tileDescriptionIndex].Color		;
 	}
@@ -161,5 +161,5 @@ int	WINAPI																WinMain
 	)
 {
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	return ::ftwlib::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwl::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

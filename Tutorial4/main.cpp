@@ -13,33 +13,33 @@ static constexpr const uint32_t												SCREEN_WIDTH													= game::MAP_
 static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP_DEPTH + 16;
 
 // Cleanup application resources.
-::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
+::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
 	::game::cleanup				(applicationInstance.Game);
-	::ftwlib::consoleDestroy	(applicationInstance.ScreenASCII);								
+	::ftwl::consoleDestroy	(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
 // Use this function to setup our game data
-::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
+	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::srand(0);
 	::game::setup(applicationInstance.Game);	// call setup game functions
 	return 0;
 }
 
 // Use this function to update our game data
-::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::consolePresent(applicationInstance.ScreenASCII);
+::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
+	::ftwl::consolePresent(applicationInstance.ScreenASCII);
 
 	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
-	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;																	
+	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;																	
 	::game::update(gameInstance, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
 	return 0;
 }
 
-::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::consoleClear(applicationInstance.ScreenASCII);
+::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
+	//::ftwl::consoleClear(applicationInstance.ScreenASCII);
 	::memset(applicationInstance.ScreenASCII.Characters	.begin(), 0, applicationInstance.ScreenASCII.Characters	.size());
 	::memset(applicationInstance.ScreenASCII.Colors		.begin(), 0, applicationInstance.ScreenASCII.Colors		.size() * sizeof(uint16_t));
 	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());
@@ -74,5 +74,5 @@ int	WINAPI														WinMain
 	)
 {
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	return ::ftwlib::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwl::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

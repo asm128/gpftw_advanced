@@ -10,11 +10,11 @@ struct STileASCII {
 };
 
 struct STileMap {
-						::ftwlib::grid_view<uint32_t>			ASCIIMap							= {};
-						::ftwlib::array_view<const STileASCII>	TileDescriptionTable				= {};
+						::ftwl::grid_view<uint32_t>			ASCIIMap							= {};
+						::ftwl::array_view<const STileASCII>	TileDescriptionTable				= {};
 };
 
-					::ftwlib::error_t						initializeTileMap					(STileMap& tileMapToInitialize, uint32_t width, uint32_t height, const STileASCII* tileDescriptions, uint32_t tileDescriptionCount);
-					::ftwlib::error_t						destroyTileMap						(STileMap& tileMapToInitialize);
+					::ftwl::error_t						initializeTileMap					(STileMap& tileMapToInitialize, uint32_t width, uint32_t height, const STileASCII* tileDescriptions, uint32_t tileDescriptionCount);
+					::ftwl::error_t						destroyTileMap						(STileMap& tileMapToInitialize);
 
 #endif // TILEMAP_H

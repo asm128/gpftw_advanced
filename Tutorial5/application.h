@@ -1,6 +1,6 @@
 #include "ftw_particle.h"		// for ::game::SGame
-#include "ftw_ascii_screen.h"	// for ::ftwlib::SScreenASCII
-#include "ftw_timer.h"			// for ::ftwlib::STimer
+#include "ftw_ascii_screen.h"	// for ::ftwl::SScreenASCII
+#include "ftw_timer.h"			// for ::ftwl::STimer
 #include "ftw_frameinfo.h"
 
 #ifndef APPLICATION_H
@@ -22,19 +22,19 @@ namespace ftwapp {
 	};
 
 	struct SApplication {
-		::ftwlib::SScreenASCII													ScreenASCII							= {};
+		::ftwl::SScreenASCII													ScreenASCII							= {};
 		int64_t																	FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 
-		::ftwlib::STimer														Timer								= {};
-		::ftwlib::SParticle2Engine<float>										ParticleEngine						= {};
-		::ftwlib::SFrameInfo													FrameInfo							= {};
+		::ftwl::STimer														Timer								= {};
+		::ftwl::SParticle2Engine<float>										ParticleEngine						= {};
+		::ftwl::SFrameInfo													FrameInfo							= {};
 		::std::vector<SParticleInstance>										ParticleInstances					= {};
 	};
 
-	::ftwlib::error_t														setup								(::ftwapp::SApplication& applicationInstance);
-	::ftwlib::error_t														update								(::ftwapp::SApplication& applicationInstance);
-	::ftwlib::error_t														render								(::ftwapp::SApplication& applicationInstance);
-	::ftwlib::error_t														cleanup								(::ftwapp::SApplication& applicationInstance);
+	::ftwl::error_t														setup								(::ftwapp::SApplication& applicationInstance);
+	::ftwl::error_t														update								(::ftwapp::SApplication& applicationInstance);
+	::ftwl::error_t														render								(::ftwapp::SApplication& applicationInstance);
+	::ftwl::error_t														cleanup								(::ftwapp::SApplication& applicationInstance);
 }
 
 

@@ -10,17 +10,17 @@ static constexpr const uint32_t												SCREEN_WIDTH													= 128;
 static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 
 // Cleanup application resources.
-::ftwlib::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::ftwlib::consoleDestroy(applicationInstance.ScreenASCII);								
+::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
+	::ftwl::consoleDestroy(applicationInstance.ScreenASCII);								
 	return 0;
 }
 
 // Use this function to setup our game data
-::ftwlib::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwlib::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
+	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	applicationInstance.Game.CombatAreaSizeEffective							= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
 	applicationInstance.Game.CombatAreaSizeVisible								= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
-	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= 0x100000;
+	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= 0x100000;
 
 	::game::setup(applicationInstance.Game);
 	srand(0);
@@ -28,27 +28,28 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 }
 
 // Use this function to update our game data
-::ftwlib::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwlib::consolePresent(applicationInstance.ScreenASCII);
-	::ftwlib::ASCII_COLOR_INDEX														oldColor0							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
-	applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) + 0x10000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) - 0x10000);
-	//::ftwlib::ASCII_COLOR_INDEX														oldColor1							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
-	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) + 0x00100) : (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) - 0x00100);
-	//::ftwlib::ASCII_COLOR_INDEX														oldColor2							= (::ftwlib::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE];
-	//applicationInstance.ScreenASCII.Palette[::ftwlib::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) + 0x00001) : (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) - 0x00001);
-	::ftwlib::STimer																& timerInstance													= applicationInstance.Timer;
+::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
+	::ftwl::consolePresent(applicationInstance.ScreenASCII);
+
+	::ftwl::ASCII_COLOR_INDEX														oldColor0							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) + 0x10000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) - 0x10000);
+	//::ftwl::ASCII_COLOR_INDEX														oldColor1							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) + 0x00100) : (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) - 0x00100);
+	//::ftwl::ASCII_COLOR_INDEX														oldColor2							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) + 0x00001) : (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) - 0x00001);
+	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;
 	::game::update(applicationInstance.Game, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
 	return 0;
 }
 
-::ftwlib::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwlib::consoleClear(applicationInstance.ScreenASCII);
-	::ftwlib::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
+::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
+	//::ftwl::consoleClear(applicationInstance.ScreenASCII);
+	::ftwl::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
 	//for(uint32_t i=0; i<screenAscii.Colors.size(); ++i)
-	//	screenAscii.Colors[i]														= ::ftwlib::ASCII_COLOR_WHITE;
+	//	screenAscii.Colors[i]														= ::ftwl::ASCII_COLOR_WHITE;
 	::game::render(applicationInstance.Game, screenAscii);
 	return 0;
 }
@@ -82,5 +83,5 @@ int	WINAPI																	WinMain
 	)
 {
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF);
-	return ::ftwlib::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwl::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

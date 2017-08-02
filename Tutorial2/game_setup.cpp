@@ -1,7 +1,7 @@
 #include "game.h"
 
 // initialize game map
-::ftwlib::error_t													setupMap							(::game::SGame& gameObject) 														{
+::ftwl::error_t													setupMap							(::game::SGame& gameObject) 														{
 	gameObject.Map.Size.x												= game::MAP_WIDTH; // Set a proper width for our map, which has to be less than MAX_MAP_WIDTH
 	gameObject.Map.Size.y												= game::MAP_DEPTH; // Same for map depth   
 
@@ -27,7 +27,7 @@
 }
 
 // Use this function to setup player at level startup.
-::ftwlib::error_t													setupPlayer							(::game::SGame& gameObject)															{
+::ftwl::error_t													setupPlayer							(::game::SGame& gameObject)															{
 	// set some initial configuration to the player character
 	gameObject.Player.CurrentPoints										= { 100, 20, 0 }; 
 	gameObject.Player.Position.x										= 5;
@@ -40,7 +40,7 @@
 }
 
 // Use this function to setup enemy list at level startup.
-::ftwlib::error_t													setupEnemies						(::game::SGame& gameObject)															{
+::ftwl::error_t													setupEnemies						(::game::SGame& gameObject)															{
 #define INITIAL_ENEMY_COUNT 5
 	for( int iEnemy = 0; iEnemy < INITIAL_ENEMY_COUNT; ++iEnemy ) {
 		::game::SCharacter														newEnemy;
@@ -57,8 +57,8 @@
 	return 0;
 }
 
-::ftwlib::error_t													game::cleanup						(::game::SGame& /*gameObject*/)														{ return 0; }
-::ftwlib::error_t													game::setup							(::game::SGame& gameObject)															{
+::ftwl::error_t													game::cleanup						(::game::SGame& /*gameObject*/)														{ return 0; }
+::ftwl::error_t													game::setup							(::game::SGame& gameObject)															{
 	setupMap		(gameObject);
 	setupPlayer		(gameObject);
 	setupEnemies	(gameObject); // setup enemies in list

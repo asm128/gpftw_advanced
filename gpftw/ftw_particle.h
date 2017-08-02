@@ -3,20 +3,20 @@
 // A particle is the simplest object that can be simulated in the physics system.
 // It has position data (no orientation data), along with velocity. It can be integrated forward through time, and have linear forces, and impulses applied to it. 
 // This system allows defining the floating-point precision of the elements. It obviously won't work for integer types so don't use it in that way.
-#include "ftw_coord.h"	// for ::ftwlib::SCoord2<>
-#include "ftw_error.h"	// for ::ftwlib::error_t
+#include "ftw_coord.h"	// for ::ftwl::SCoord2<>
+#include "ftw_error.h"	// for ::ftwl::error_t
 
 #include <vector>		// for ::std::vector
 
 #ifndef FTW_PARTICLE_H_29384923874
 #define FTW_PARTICLE_H_29384923874
 
-namespace ftwlib 
+namespace ftwl 
 {
 #pragma pack(push, 1)
 	template<typename _tElement>
 	struct SParticle2Forces {
-		typedef				::ftwlib::SCoord2<_tElement>						TCoord;
+		typedef				::ftwl::SCoord2<_tElement>						TCoord;
 		static constexpr	const _tElement										VelocityEpsilon								= 0.0001f;
 
 							TCoord												AccumulatedForce							= {};
@@ -37,7 +37,7 @@ namespace ftwlib
 	template<typename _tElement>
 	struct SParticle2 {
 		// The member variables are organized such that matches the order in which they are used.
-							::ftwlib::SCoord2<_tElement>						Position									= {};	
+							::ftwl::SCoord2<_tElement>						Position									= {};	
 							SParticle2Forces<_tElement>							Forces										= {};
 							_tElement											InverseMass									= 0;
 							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction 
@@ -58,10 +58,10 @@ namespace ftwlib
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
 	template<typename _tElement>
 	static inline		void												particleIntegratePosition
-		(	const ::ftwlib::SCoord2<_tElement>	& velocity
+		(	const ::ftwl::SCoord2<_tElement>	& velocity
 		,	const double						timeElapsed
 		,	const double						timeElapsedHalfSquared
-		,	::ftwlib::SCoord2<_tElement>		& position
+		,	::ftwl::SCoord2<_tElement>		& position
 		)
 	{
 		position																+= velocity * timeElapsed;
@@ -70,18 +70,18 @@ namespace ftwlib
 
 	template<typename _tElement>
 	struct SParticle2Engine {
-		typedef				::ftwlib::SParticle2	<_tElement>					TParticle;
-		typedef				::ftwlib::SCoord2		<_tElement>					TCoord;
+		typedef				::ftwl::SParticle2	<_tElement>					TParticle;
+		typedef				::ftwl::SCoord2		<_tElement>					TCoord;
 
-							::std::vector<::ftwlib::SParticle2State>			ParticleState								= {};
+							::std::vector<::ftwl::SParticle2State>			ParticleState								= {};
 							::std::vector<TParticle>							Particle									= {};
 							::std::vector<TParticle>							ParticleNext								= {};
 		// --------------------------------------------------------------------
-		inline				::ftwlib::error_t									Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{
+		inline				::ftwl::error_t									Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{
 			for(uint32_t iParticle = 0, particleCount = (uint32_t)ParticleState.size(); iParticle < particleCount; ++iParticle)	
 				if(ParticleState[iParticle].RequiresProcessing()) {
 					TParticle																	& particle = ParticleNext[iParticle]		= Particle[iParticle];	// Copy the current particle state to the next
-					::ftwlib::particleIntegratePosition			(particle.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particle.Position);
+					::ftwl::particleIntegratePosition			(particle.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particle.Position);
 					particle.Forces.IntegrateAccumulatedForce	(particle.InverseMass, particle.Damping, timeElapsed);
 					if(particle.Forces.VelocityDepleted())
 						ParticleState[iParticle].Active										= false;
@@ -89,9 +89,9 @@ namespace ftwlib
 			return 0;
 		}
 		// --------------------------------------------------------------------
-							::ftwlib::error_t									AddParticle									(const TParticle& particleData)																			{
+							::ftwl::error_t									AddParticle									(const TParticle& particleData)																			{
 								const uint32_t											particleCount								= (uint32_t)ParticleState.size();
-			static constexpr	const ::ftwlib::SParticle2State							initialParticleState						= {false, true};
+			static constexpr	const ::ftwl::SParticle2State							initialParticleState						= {false, true};
 
 			for(uint32_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {

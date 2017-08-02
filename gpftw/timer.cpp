@@ -1,7 +1,7 @@
 #include "ftw_timer.h"
 #include <windows.h>
 
-void							ftwlib::STimer::Reset											()								{
+void							ftwl::STimer::Reset											()								{
 	QueryPerformanceFrequency( ( ::LARGE_INTEGER* )&CountsPerSecond );
 	SecondsPerCount					= (1.0 / (CountsPerSecond));
 	MicrosecondsPerCount			= (1.0 / (CountsPerSecond / 1000000.0));
@@ -10,7 +10,7 @@ void							ftwlib::STimer::Reset											()								{
 	LastTimeMicroseconds			= 0;
 }
 
-void							ftwlib::STimer::Frame											()								{
+void							ftwl::STimer::Frame											()								{
 	QueryPerformanceCounter( ( ::LARGE_INTEGER* ) &CurrentTimeStamp );
 	LastTimeSeconds					=  (float)	(( CurrentTimeStamp - PrevTimeStamp ) * SecondsPerCount);
 	LastTimeMicroseconds			=  uint64_t	(( CurrentTimeStamp - PrevTimeStamp ) / (CountsPerSecond / 1000000.0));

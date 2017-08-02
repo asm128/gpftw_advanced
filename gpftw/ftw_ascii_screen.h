@@ -4,20 +4,20 @@
 #ifndef GPFTW_ASCII_SCREEN_H
 #define GPFTW_ASCII_SCREEN_H
 
-namespace ftwlib 
+namespace ftwl 
 {
 	struct SScreenASCII {
 		uint32_t									Width					= 0;			
 		uint32_t									Height					= 0;
-		::ftwlib::array_view<uint8_t>				Characters				= {};
-		::ftwlib::array_view<uint16_t>				Colors					= {};
-		::ftwlib::array_view<uint32_t>				Palette					= {};
+		::ftwl::array_view<uint8_t>				Characters				= {};
+		::ftwl::array_view<uint16_t>				Colors					= {};
+		::ftwl::array_view<uint32_t>				Palette					= {};
 	};
 
-	::ftwlib::error_t							consoleCreate			(SScreenASCII& console, int width, int height);
-	::ftwlib::error_t							consoleDestroy			(SScreenASCII& console);
-	::ftwlib::error_t							consolePresent			(SScreenASCII& console);
-	::ftwlib::error_t							consoleClear			(SScreenASCII& console);
+	::ftwl::error_t							consoleCreate			(SScreenASCII& console, int width, int height);
+	::ftwl::error_t							consoleDestroy			(SScreenASCII& console);
+	::ftwl::error_t							consolePresent			(SScreenASCII& console);
+	::ftwl::error_t							consoleClear			(SScreenASCII& console);
 }
 
 #endif GPFTW_ASCII_SCREEN_H

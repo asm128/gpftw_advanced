@@ -4,7 +4,7 @@
 #include "ftw_ascii_color.h"
 
 // initialize game map
-::ftwlib::error_t															setupWorldMap													(::game::SGame& gameObject) 														{
+::ftwl::error_t															setupWorldMap													(::game::SGame& gameObject) 														{
 	gameObject.Map.Size.x														= game::MAP_WIDTH; // Set a proper width for our map, which has to be less than MAX_MAP_WIDTH
 	gameObject.Map.Size.y														= game::MAP_DEPTH; // Same for map depth   
 
@@ -30,7 +30,7 @@
 }
 
 // Use this function to setup player at level startup.
-::ftwlib::error_t															setupWorldPlayer												(::game::SGame& gameObject)															{
+::ftwl::error_t															setupWorldPlayer												(::game::SGame& gameObject)															{
 	// set some initial configuration to the player character
 	gameObject.Player.CurrentPoints												= { 100, 20, 0 }; 
 	gameObject.Player.Position.x												= 5;
@@ -43,7 +43,7 @@
 }
 
 // Use this function to setup enemy list at level startup.
-::ftwlib::error_t															setupWorldEnemies												(::game::SGame& gameObject)															{
+::ftwl::error_t															setupWorldEnemies												(::game::SGame& gameObject)															{
 	::game::SCharacter																newEnemy														= {};
 	for( uint32_t iEnemy = 0; iEnemy < ::game::CHARACTER_TYPE_COUNT; ++iEnemy ) {	
 		newEnemy																	= gameObject.Descriptions.Enemy[iEnemy];
@@ -53,7 +53,7 @@
 	return 0;
 }
 
-::ftwlib::error_t															setupDescriptionsMap											(::game::SGame& gameObject)														{ 
+::ftwl::error_t															setupDescriptionsMap											(::game::SGame& gameObject)														{ 
 	static ::game::STileFloor														descriptionsTableTileFloor	[::game::TILE_TYPE_COUNT		]	= {};
 	static ::game::STileASCII														imageTableTileFloor			[::game::TILE_TYPE_COUNT		]	= {};
 	
@@ -66,18 +66,18 @@
 	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_GRASS	, 1, 1, "Grass"	);
 	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_WATER	, 1, 0, "Water"	);
 	SET_FLOOR_TILE_RECORD(::game::TILE_TYPE_LAVA	, 1, 1, "Lava"	);
-	gameObject.Descriptions.Floor												= {descriptionsTableTileFloor, ::ftwlib::size(descriptionsTableTileFloor)};
+	gameObject.Descriptions.Floor												= {descriptionsTableTileFloor, ::ftwl::size(descriptionsTableTileFloor)};
 
-	imageTableTileFloor			[::game::TILE_TYPE_GRASS	]					= {'.', ::ftwlib::ASCII_COLOR_GREEN		| (::ftwlib::ASCII_COLOR_DARKGREEN	<< 4)};
-	imageTableTileFloor			[::game::TILE_TYPE_WALL		]					= {'#', ::ftwlib::ASCII_COLOR_LIGHTGREY	| (::ftwlib::ASCII_COLOR_DARKGREY	<< 4)};
-	imageTableTileFloor			[::game::TILE_TYPE_WATER	]					= {'~', ::ftwlib::ASCII_COLOR_BLUE		| (::ftwlib::ASCII_COLOR_DARKBLUE	<< 4)};
-	imageTableTileFloor			[::game::TILE_TYPE_LAVA		]					= {'~', ::ftwlib::ASCII_COLOR_YELLOW	| (::ftwlib::ASCII_COLOR_RED		<< 4)};
-	gameObject.Map.Floor.TileDescriptionTable									= {imageTableTileFloor, ::ftwlib::size(imageTableTileFloor)};
+	imageTableTileFloor			[::game::TILE_TYPE_GRASS	]					= {'.', ::ftwl::ASCII_COLOR_GREEN		| (::ftwl::ASCII_COLOR_DARKGREEN	<< 4)};
+	imageTableTileFloor			[::game::TILE_TYPE_WALL		]					= {'#', ::ftwl::ASCII_COLOR_LIGHTGREY	| (::ftwl::ASCII_COLOR_DARKGREY	<< 4)};
+	imageTableTileFloor			[::game::TILE_TYPE_WATER	]					= {'~', ::ftwl::ASCII_COLOR_BLUE		| (::ftwl::ASCII_COLOR_DARKBLUE	<< 4)};
+	imageTableTileFloor			[::game::TILE_TYPE_LAVA		]					= {'~', ::ftwl::ASCII_COLOR_YELLOW	| (::ftwl::ASCII_COLOR_RED		<< 4)};
+	gameObject.Map.Floor.TileDescriptionTable									= {imageTableTileFloor, ::ftwl::size(imageTableTileFloor)};
 
 	return 0; 
 }
 
-::ftwlib::error_t															setupDescriptionsShot											(::game::SGame& gameObject)														{ 
+::ftwl::error_t															setupDescriptionsShot											(::game::SGame& gameObject)														{ 
 	static ::game::SShot															descriptionsTableShot		[::game::SHOT_TYPE_COUNT		]	= {};
 	static ::game::STileASCII														imageTableShot				[::game::SHOT_TYPE_COUNT		]	= {};
 
@@ -88,20 +88,20 @@
 	descriptionsTableShot		[::game::SHOT_TYPE_COLD		].Damage			= 30;
 	descriptionsTableShot		[::game::SHOT_TYPE_ROCK		].Damage			= 30;
 	descriptionsTableShot		[::game::SHOT_TYPE_ROCKET	].Damage			= 40;
-	gameObject.Descriptions.Shot												= {descriptionsTableShot, ::ftwlib::size(descriptionsTableShot)};
+	gameObject.Descriptions.Shot												= {descriptionsTableShot, ::ftwl::size(descriptionsTableShot)};
 
-	imageTableShot				[::game::SHOT_TYPE_ARROW	]					= {'\x1A'	, ::ftwlib::ASCII_COLOR_LIGHTGREY	};
-	imageTableShot				[::game::SHOT_TYPE_BULLET	]					= {'-'		, ::ftwlib::ASCII_COLOR_WHITE		};
-	imageTableShot				[::game::SHOT_TYPE_DART		]					= {'-'		, ::ftwlib::ASCII_COLOR_GREEN		};
-	imageTableShot				[::game::SHOT_TYPE_FLAME	]					= {'"'		, ::ftwlib::ASCII_COLOR_RED			};
-	imageTableShot				[::game::SHOT_TYPE_COLD		]					= {'o'		, ::ftwlib::ASCII_COLOR_CYAN		};
-	imageTableShot				[::game::SHOT_TYPE_ROCK		]					= {'o'		, ::ftwlib::ASCII_COLOR_DARKGREEN	};
-	imageTableShot				[::game::SHOT_TYPE_ROCKET	]					= {'\xf'	, ::ftwlib::ASCII_COLOR_DARKCYAN	};
-	gameObject.Map.Shots.TileDescriptionTable									= {imageTableShot, ::ftwlib::size(imageTableShot)};
+	imageTableShot				[::game::SHOT_TYPE_ARROW	]					= {'\x1A'	, ::ftwl::ASCII_COLOR_LIGHTGREY	};
+	imageTableShot				[::game::SHOT_TYPE_BULLET	]					= {'-'		, ::ftwl::ASCII_COLOR_WHITE		};
+	imageTableShot				[::game::SHOT_TYPE_DART		]					= {'-'		, ::ftwl::ASCII_COLOR_GREEN		};
+	imageTableShot				[::game::SHOT_TYPE_FLAME	]					= {'"'		, ::ftwl::ASCII_COLOR_RED			};
+	imageTableShot				[::game::SHOT_TYPE_COLD		]					= {'o'		, ::ftwl::ASCII_COLOR_CYAN		};
+	imageTableShot				[::game::SHOT_TYPE_ROCK		]					= {'o'		, ::ftwl::ASCII_COLOR_DARKGREEN	};
+	imageTableShot				[::game::SHOT_TYPE_ROCKET	]					= {'\xf'	, ::ftwl::ASCII_COLOR_DARKCYAN	};
+	gameObject.Map.Shots.TileDescriptionTable									= {imageTableShot, ::ftwl::size(imageTableShot)};
 	return 0; 
 }
 
-::ftwlib::error_t															setupDescriptionsEnemies										(::game::SGame& gameObject)														{ 
+::ftwl::error_t															setupDescriptionsEnemies										(::game::SGame& gameObject)														{ 
 	static ::game::SCharacter														descriptionsTableEnemy		[::game::CHARACTER_TYPE_COUNT	]	= {};
 	static ::game::STileASCII														imageTableEnemy				[::game::CHARACTER_TYPE_COUNT	]	= {};
 
@@ -120,18 +120,18 @@
 	descriptionsTableEnemy	[::game::CHARACTER_TYPE_POKEY	].Speed				= 5;
 	descriptionsTableEnemy	[::game::CHARACTER_TYPE_POKEY	].CurrentPoints		=
 	descriptionsTableEnemy	[::game::CHARACTER_TYPE_POKEY	].MaxPoints			= {20, 0, 1};
-	gameObject.Descriptions.Enemy												= {descriptionsTableEnemy, ::ftwlib::size(descriptionsTableEnemy)};
+	gameObject.Descriptions.Enemy												= {descriptionsTableEnemy, ::ftwl::size(descriptionsTableEnemy)};
 
-	imageTableEnemy			[::game::CHARACTER_TYPE_SHADOW	]					= {'\x1', ::ftwlib::ASCII_COLOR_LIGHTGREY	};
-	imageTableEnemy			[::game::CHARACTER_TYPE_SPEEDY	]					= {'\x2', ::ftwlib::ASCII_COLOR_WHITE		};
-	imageTableEnemy			[::game::CHARACTER_TYPE_BASHFUL	]					= {'\x1', ::ftwlib::ASCII_COLOR_GREEN		};
-	imageTableEnemy			[::game::CHARACTER_TYPE_POKEY	]					= {'\x2', ::ftwlib::ASCII_COLOR_RED			};
-	gameObject.Map.Enemy.TileDescriptionTable									= {imageTableEnemy, ::ftwlib::size(imageTableEnemy)};
+	imageTableEnemy			[::game::CHARACTER_TYPE_SHADOW	]					= {'\x1', ::ftwl::ASCII_COLOR_LIGHTGREY	};
+	imageTableEnemy			[::game::CHARACTER_TYPE_SPEEDY	]					= {'\x2', ::ftwl::ASCII_COLOR_WHITE		};
+	imageTableEnemy			[::game::CHARACTER_TYPE_BASHFUL	]					= {'\x1', ::ftwl::ASCII_COLOR_GREEN		};
+	imageTableEnemy			[::game::CHARACTER_TYPE_POKEY	]					= {'\x2', ::ftwl::ASCII_COLOR_RED			};
+	gameObject.Map.Enemy.TileDescriptionTable									= {imageTableEnemy, ::ftwl::size(imageTableEnemy)};
 	return 0; 
 } // setup enemies in list
 
-::ftwlib::error_t															game::cleanup													(::game::SGame& /*gameObject*/)													{ return 0; }
-::ftwlib::error_t															game::setup														(::game::SGame& gameObject)														{
+::ftwl::error_t															game::cleanup													(::game::SGame& /*gameObject*/)													{ return 0; }
+::ftwl::error_t															game::setup														(::game::SGame& gameObject)														{
 	::setupDescriptionsMap		(gameObject);
 	::setupDescriptionsShot		(gameObject);
 	::setupDescriptionsEnemies	(gameObject); // setup enemies in list

@@ -5,8 +5,8 @@
 
 namespace game
 {
-	typedef	::ftwlib::SCoord2<float>					SVector2;
-	typedef	::ftwlib::SCoord2<int32_t>					STileCoord2;
+	typedef	::ftwl::SCoord2<float>					SVector2;
+	typedef	::ftwl::SCoord2<int32_t>					STileCoord2;
 
 	struct SMovingObject {
 				STileCoord2									Position								= {};		// Coordinates in tile map

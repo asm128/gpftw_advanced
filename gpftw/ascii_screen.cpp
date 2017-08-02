@@ -90,18 +90,22 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	for(uint32_t iColor = 0; iColor < 16; ++iColor)
 		csbiInfo.ColorTable[iColor]						= palette[iColor];
 
-	csbiInfo.wAttributes							= ::ftwlib::ASCII_COLOR_WHITE;
+	csbiInfo.wAttributes							= ::ftwl::ASCII_COLOR_WHITE;
 	
 	::SetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo);
 }
 
 
 // ------------------------------------------------- 
-::ftwlib::error_t								ftwlib::consoleDestroy			(::ftwlib::SScreenASCII& console)											{
+::ftwl::error_t								ftwl::consoleDestroy			(::ftwl::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
 	::FreeConsole();	// Tells Windows to close the console
+
+	::FILE*										
+	stream											= 0;	::freopen_s(&stream, "CONOUT$", "w+", stdout);
+	stream											= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
 
 	if(console.Colors		.size()) ::free(console.Colors		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
 	if(console.Characters	.size()) ::free(console.Characters	.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
@@ -114,42 +118,42 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;	// these functions hardly fail.
 }	
 
-::ftwlib::error_t								ftwlib::consoleCreate			(::ftwlib::SScreenASCII& console, int width, int height)						{
+::ftwl::error_t								ftwl::consoleCreate			(::ftwl::SScreenASCII& console, int width, int height)						{
 	if(::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
 	console.Width									= width		;
 	console.Height									= height	;
-	console.Palette									= ::ftwlib::array_view<uint32_t>((uint32_t*)::malloc(sizeof(uint32_t) * 16), 16);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
-	console.Palette[0 ]								= ::ftwlib::ASCII_COLOR_INDEX_0 ;
-	console.Palette[1 ]								= ::ftwlib::ASCII_COLOR_INDEX_1 ;
-	console.Palette[2 ]								= ::ftwlib::ASCII_COLOR_INDEX_2 ;
-	console.Palette[3 ]								= ::ftwlib::ASCII_COLOR_INDEX_3 ;
-	console.Palette[4 ]								= ::ftwlib::ASCII_COLOR_INDEX_4 ;
-	console.Palette[5 ]								= ::ftwlib::ASCII_COLOR_INDEX_5 ;
-	console.Palette[6 ]								= ::ftwlib::ASCII_COLOR_INDEX_6 ;
-	console.Palette[7 ]								= ::ftwlib::ASCII_COLOR_INDEX_7 ;
-	console.Palette[8 ]								= ::ftwlib::ASCII_COLOR_INDEX_8 ;
-	console.Palette[9 ]								= ::ftwlib::ASCII_COLOR_INDEX_9 ;
-	console.Palette[10]								= ::ftwlib::ASCII_COLOR_INDEX_10;
-	console.Palette[11]								= ::ftwlib::ASCII_COLOR_INDEX_11;
-	console.Palette[12]								= ::ftwlib::ASCII_COLOR_INDEX_12;
-	console.Palette[13]								= ::ftwlib::ASCII_COLOR_INDEX_13;
-	console.Palette[14]								= ::ftwlib::ASCII_COLOR_INDEX_14;
-	console.Palette[15]								= ::ftwlib::ASCII_COLOR_INDEX_15;
+	console.Palette									= ::ftwl::array_view<uint32_t>((uint32_t*)::malloc(sizeof(uint32_t) * 16), 16);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
+	console.Palette[0 ]								= ::ftwl::ASCII_COLOR_INDEX_0 ;
+	console.Palette[1 ]								= ::ftwl::ASCII_COLOR_INDEX_1 ;
+	console.Palette[2 ]								= ::ftwl::ASCII_COLOR_INDEX_2 ;
+	console.Palette[3 ]								= ::ftwl::ASCII_COLOR_INDEX_3 ;
+	console.Palette[4 ]								= ::ftwl::ASCII_COLOR_INDEX_4 ;
+	console.Palette[5 ]								= ::ftwl::ASCII_COLOR_INDEX_5 ;
+	console.Palette[6 ]								= ::ftwl::ASCII_COLOR_INDEX_6 ;
+	console.Palette[7 ]								= ::ftwl::ASCII_COLOR_INDEX_7 ;
+	console.Palette[8 ]								= ::ftwl::ASCII_COLOR_INDEX_8 ;
+	console.Palette[9 ]								= ::ftwl::ASCII_COLOR_INDEX_9 ;
+	console.Palette[10]								= ::ftwl::ASCII_COLOR_INDEX_10;
+	console.Palette[11]								= ::ftwl::ASCII_COLOR_INDEX_11;
+	console.Palette[12]								= ::ftwl::ASCII_COLOR_INDEX_12;
+	console.Palette[13]								= ::ftwl::ASCII_COLOR_INDEX_13;
+	console.Palette[14]								= ::ftwl::ASCII_COLOR_INDEX_14;
+	console.Palette[15]								= ::ftwl::ASCII_COLOR_INDEX_15;
 
 	::initWindowsConsole			();
 	::initWindowsConsoleFont		();
 	::initWindowsConsoleProperties	(width, height, &console.Palette[0]);
 
-	console.Characters								= ::ftwlib::array_view<uint8_t	>((uint8_t	*)::malloc(sizeof(uint8_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
-	console.Colors									= ::ftwlib::array_view<uint16_t	>((uint16_t	*)::malloc(sizeof(uint16_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
+	console.Characters								= ::ftwl::array_view<uint8_t	>((uint8_t	*)::malloc(sizeof(uint8_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
+	console.Colors									= ::ftwl::array_view<uint16_t	>((uint16_t	*)::malloc(sizeof(uint16_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
 
 	::SetConsoleTitle("ASCII Console for the Win");	// I don't need to explain this one, right?
 	return 0;
 }
 
-::ftwlib::error_t								ftwlib::consolePresent			(::ftwlib::SScreenASCII& console)											{
+::ftwl::error_t								ftwl::consolePresent			(::ftwl::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -172,7 +176,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;
 }
 
-::ftwlib::error_t								ftwlib::consoleClear			(::ftwlib::SScreenASCII& console)												{
+::ftwl::error_t								ftwl::consoleClear			(::ftwl::SScreenASCII& console)												{
 	int													screenSize				= console.Width * console.Height;
 	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);
 	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);
