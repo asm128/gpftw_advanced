@@ -97,15 +97,16 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 
 
 // ------------------------------------------------- 
-::ftwl::error_t								ftwl::consoleDestroy			(::ftwl::SScreenASCII& console)											{
+::ftwl::error_t									ftwl::consoleDestroy					(::ftwl::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
 	::FreeConsole();	// Tells Windows to close the console
 
+	::fclose(stdout);
 	::FILE*										
-	stream											= 0;	::freopen_s(&stream, "CONOUT$", "w+", stdout);
 	stream											= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
+	stream											= 0;	::fopen_s(&stream, "CONOUT$", "w+", stdout);
 
 	if(console.Colors		.size()) ::free(console.Colors		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
 	if(console.Characters	.size()) ::free(console.Characters	.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
@@ -118,7 +119,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;	// these functions hardly fail.
 }	
 
-::ftwl::error_t								ftwl::consoleCreate			(::ftwl::SScreenASCII& console, int width, int height)						{
+::ftwl::error_t									ftwl::consoleCreate						(::ftwl::SScreenASCII& console, int width, int height)						{
 	if(::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -153,7 +154,7 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	return 0;
 }
 
-::ftwl::error_t								ftwl::consolePresent			(::ftwl::SScreenASCII& console)											{
+::ftwl::error_t									ftwl::consolePresent					(::ftwl::SScreenASCII& console)											{
 	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -162,31 +163,31 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 
 	::initWindowsConsoleProperties(console.Width, console.Height, &console.Palette[0]);
 
-	int													screenSize				= console.Width * console.Height;
+	int													screenSize								= console.Width * console.Height;
 
-	const ::HANDLE										handleConsoleOut		= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle	
-	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo				= {};
+	const ::HANDLE										handleConsoleOut						= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle	
+	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo								= {};
     ::GetConsoleScreenBufferInfo( handleConsoleOut, &csbiInfo );
 
-	::COORD												Coords					= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
-	::DWORD												dummy					= 0;
+	::COORD												Coords									= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
+	::DWORD												dummy									= 0;
 	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	console.Characters	.begin(), screenSize, Coords, &dummy );
 	::WriteConsoleOutputAttribute ( handleConsoleOut,				console.Colors		.begin(), screenSize, Coords, &dummy );
 
 	return 0;
 }
 
-::ftwl::error_t								ftwl::consoleClear			(::ftwl::SScreenASCII& console)												{
-	int													screenSize				= console.Width * console.Height;
-	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);
-	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);
+::ftwl::error_t									ftwl::consoleClear						(::ftwl::SScreenASCII& console)												{
+	int													screenSize								= console.Width * console.Height;
+	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);			
+	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);			
 
-	const ::HANDLE										handleConsoleOut		= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle
-	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo				= {};
+	const ::HANDLE										handleConsoleOut						= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle
+	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo								= {};
     ::GetConsoleScreenBufferInfo( handleConsoleOut, &csbiInfo );
 
-	::COORD												coords					= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
-	::DWORD												dummy					= 0;
+	::COORD												coords									= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
+	::DWORD												dummy									= 0;
 	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	console.Characters	.begin(), screenSize, coords, &dummy );
 	::WriteConsoleOutputAttribute ( handleConsoleOut,				console.Colors		.begin(), screenSize, coords, &dummy );
 

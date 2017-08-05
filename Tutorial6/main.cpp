@@ -6,8 +6,8 @@
 #include <stdio.h>		// for printf()
 #include <windows.h>	// for interacting with Windows
 
-static constexpr const uint32_t												SCREEN_WIDTH													= 128;
-static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
+static constexpr const uint32_t											SCREEN_WIDTH													= 128;
+static constexpr const uint32_t											SCREEN_HEIGHT													= 36;
 
 // Cleanup application resources.
 ::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
@@ -18,9 +18,9 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 // Use this function to setup our game data
 ::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
 	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
-	applicationInstance.Game.CombatAreaSizeEffective							= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
-	applicationInstance.Game.CombatAreaSizeVisible								= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
-	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= 0x100000;
+	applicationInstance.Game.CombatAreaSizeEffective						= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
+	applicationInstance.Game.CombatAreaSizeVisible							= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
+	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= 0x100000;
 
 	::game::setup(applicationInstance.Game);
 	srand(0);
@@ -31,12 +31,12 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 ::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
 	::ftwl::consolePresent(applicationInstance.ScreenASCII);
 
-	::ftwl::ASCII_COLOR_INDEX														oldColor0							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
-	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) + 0x10000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) - 0x10000);
-	//::ftwl::ASCII_COLOR_INDEX														oldColor1							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
-	//applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) + 0x00100) : (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) - 0x00100);
-	//::ftwl::ASCII_COLOR_INDEX														oldColor2							= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
-	//applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]		= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) + 0x00001) : (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) - 0x00001);
+	::ftwl::ASCII_COLOR_INDEX													oldColor0														= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) + 0x10000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) - 0x10000);
+	//::ftwl::ASCII_COLOR_INDEX													oldColor1														= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) + 0x00100) : (oldColor1 & 0xFF00FF) | ((oldColor1 & 0x00FF00) - 0x00100);
+	//::ftwl::ASCII_COLOR_INDEX													oldColor2														= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	//applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) + 0x00001) : (oldColor2 & 0xFFFF00) | ((oldColor2 & 0x0000FF) - 0x00001);
 	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;
 	::game::update(applicationInstance.Game, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
@@ -45,7 +45,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 
 ::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
 	//::ftwl::consoleClear(applicationInstance.ScreenASCII);
-	::ftwl::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
+	::ftwl::SScreenASCII														& screenAscii													= applicationInstance.ScreenASCII;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
 	//for(uint32_t i=0; i<screenAscii.Colors.size(); ++i)
@@ -54,8 +54,8 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= 36;
 	return 0;
 }
 
-int																			main															()														{
-	::ftwapp::SApplication															* applicationInstance											= new ::ftwapp::SApplication();	// Create a new instance of our application.
+int																		main															()														{
+	::ftwapp::SApplication														* applicationInstance											= new ::ftwapp::SApplication();	// Create a new instance of our application.
 	if( 0 == applicationInstance )
 		return -1;	// return error because we couldn't allocate the main instance of our application.
 
@@ -75,7 +75,7 @@ int																			main															()														{
 	return 0; /// Exit from the function returning an (int)eger.
 }
 
-int	WINAPI																	WinMain								
+int	WINAPI																WinMain								
 	(	_In_		::HINSTANCE		// hInstance
 	,	_In_opt_	::HINSTANCE		// hPrevInstance
 	,	_In_		::LPSTR			// lpCmdLine
