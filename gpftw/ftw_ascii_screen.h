@@ -17,7 +17,7 @@ namespace ftwl
 		::ftwl::grid_view<uint16_t>					GridColors				= {};
 	};
 
-	::ftwl::error_t								consoleCreate			(SScreenASCII& console, int width, int height);
+	::ftwl::error_t								consoleCreate			(SScreenASCII& console, uint32_t width, uint32_t height);
 	::ftwl::error_t								consoleDestroy			(SScreenASCII& console);
 	::ftwl::error_t								consolePresent			(SScreenASCII& console);
 	::ftwl::error_t								consoleClear			(SScreenASCII& console);

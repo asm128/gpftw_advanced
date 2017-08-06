@@ -35,7 +35,7 @@ static bool										gpftw_isConsoleCreated					= false;
 	::fclose(stdout);
 	::FILE*										
 	stream											= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
-	stream											= 0;	::fopen_s(&stream, "w+", "CONOUT$");
+	stream											= 0;	::fopen_s(&stream, "CONOUT$", "w+");
 
 	if(console.Colors		.size()) ::free(console.Colors		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
 	if(console.Characters	.size()) ::free(console.Characters	.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
@@ -160,7 +160,7 @@ void											initWindowsConsole						()																	{
 	::gpftw_isConsoleCreated						= true;	// 
 }
 
-::ftwl::error_t									ftwl::consoleCreate						(::ftwl::SScreenASCII& console, int width, int height)						{
+::ftwl::error_t									ftwl::consoleCreate						(::ftwl::SScreenASCII& console, uint32_t width, uint32_t height)						{
 	if(::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
 
@@ -190,6 +190,9 @@ void											initWindowsConsole						()																	{
 
 	console.Characters								= ::ftwl::array_view<uint8_t	>((uint8_t	*)::malloc(sizeof(uint8_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
 	console.Colors									= ::ftwl::array_view<uint16_t	>((uint16_t	*)::malloc(sizeof(uint16_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
+
+	console.GridCharacters							= {console.Characters	.begin(), width, height};
+	console.GridColors								= {console.Colors		.begin(), width, height};
 
 	::SetConsoleTitle("ASCII Console for the Win");	// I don't need to explain this one, right?
 	return 0;
