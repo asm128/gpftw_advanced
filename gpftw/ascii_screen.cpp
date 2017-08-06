@@ -5,6 +5,104 @@
 #include <cstdio>
 #include <Windows.h>
 
+::ftwl::error_t									ftwl::consoleSetTitle					(const char* title)															{ return (0 == SetConsoleTitle(title)) ? -1 : 0; }
+::ftwl::error_t									ftwl::consoleClear						(::ftwl::SScreenASCII& console)												{
+	int													screenSize								= console.Width * console.Height;
+	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);			
+	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);			
+
+	const ::HANDLE										handleConsoleOut						= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle
+	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo								= {};
+    ::GetConsoleScreenBufferInfo( handleConsoleOut, &csbiInfo );
+
+	::COORD												coords									= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
+	::DWORD												dummy									= 0;
+	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	console.Characters	.begin(), screenSize, coords, &dummy );
+	::WriteConsoleOutputAttribute ( handleConsoleOut,				console.Colors		.begin(), screenSize, coords, &dummy );
+
+	return 0;
+}
+
+static bool										gpftw_isConsoleCreated					= false;
+
+// ------------------------------------------------- 
+::ftwl::error_t									ftwl::consoleDestroy					(::ftwl::SScreenASCII& console)											{
+	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
+		return -1; // return an error value
+
+	::FreeConsole();	// Tells Windows to close the console
+
+	::fclose(stdout);
+	::FILE*										
+	stream											= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
+	stream											= 0;	::fopen_s(&stream, "w+", "CONOUT$");
+
+	if(console.Colors		.size()) ::free(console.Colors		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
+	if(console.Characters	.size()) ::free(console.Characters	.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
+	if(console.Palette		.size()) ::free(console.Palette		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
+	console.Colors									= {};
+	console.Characters								= {};
+	console.Palette									= {};
+
+	::gpftw_isConsoleCreated						= false;	// set this to false so we can create it back later if we want to.
+	return 0;	// these functions hardly fail.
+}	
+
+
+void											initWindowsConsoleProperties			(int width, int height, const uint32_t* palette)					{
+	if(false == ::gpftw_isConsoleCreated) 	// we don't create the console twice.
+		return;
+	
+	const ::HANDLE										handleConsoleOut						= ::GetStdHandle(STD_OUTPUT_HANDLE);	// Get console output handle
+
+	::CONSOLE_SCREEN_BUFFER_INFOEX						csbiInfo								= {};
+	::GetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo);
+	csbiInfo.cbSize									= sizeof(::CONSOLE_SCREEN_BUFFER_INFOEX);
+	csbiInfo.dwSize.X								= (::SHORT)width;
+	csbiInfo.dwSize.Y								= (::SHORT)height;
+	csbiInfo.dwMaximumWindowSize.X					= (::SHORT)width;
+	csbiInfo.dwMaximumWindowSize.Y					= (::SHORT)height;
+
+	csbiInfo.srWindow.Top							= 10;
+	csbiInfo.srWindow.Left							= 10;
+	csbiInfo.srWindow.Right							= 800;
+	csbiInfo.srWindow.Bottom						= 600;
+
+	// We're forced to set up the colors at this point because for some reason the GetConsoleScreenBufferInfoEx() function doesn't return the color table properly,
+	// thus they're all 0 when we call SetConsoleScreenBufferInfoEx() causing all the colors to be reset to COLOR_BLACK.
+	// Ideally we would have a setConsoleColors() function to do this separately.
+	for(uint32_t iColor = 0; iColor < 16; ++iColor)
+		csbiInfo.ColorTable[iColor]						= palette[iColor];
+
+	csbiInfo.wAttributes							= ::ftwl::ASCII_COLOR_WHITE;
+	
+	::SetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo);
+}
+
+::ftwl::error_t									ftwl::consolePresent					(::ftwl::SScreenASCII& console)												{
+	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
+		return -1; // return an error value
+
+	if(0 == console.Colors.size() || 0 == console.Characters.size())
+		return -1; // return an error value
+
+	::initWindowsConsoleProperties(console.Width, console.Height, &console.Palette[0]);
+
+	int													screenSize								= console.Width * console.Height;
+
+	const ::HANDLE										handleConsoleOut						= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle	
+	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo								= {};
+    ::GetConsoleScreenBufferInfo( handleConsoleOut, &csbiInfo );
+
+	::COORD												Coords									= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
+	::DWORD												dummy									= 0;
+	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	console.Characters	.begin(), screenSize, Coords, &dummy );
+	::WriteConsoleOutputAttribute ( handleConsoleOut,				console.Colors		.begin(), screenSize, Coords, &dummy );
+
+	return 0;
+}
+
+
 // We need this function because we give its pointer to Windows so it can report to our program when CTRL_C was pressed
 ::BOOL WINAPI									HandlerRoutine							(_In_ ::DWORD dwCtrlType)											{
 	switch(dwCtrlType) {
@@ -13,8 +111,6 @@
 		return TRUE;
 	}
 }
-
-static bool										gpftw_isConsoleCreated					= false;
 
 void											initWindowsConsoleFont					()																	{
 	if(false == ::gpftw_isConsoleCreated) // we don't create the console twice.
@@ -64,61 +160,6 @@ void											initWindowsConsole						()																	{
 	::gpftw_isConsoleCreated						= true;	// 
 }
 
-
-void											initWindowsConsoleProperties			(int width, int height, const uint32_t* palette)					{
-	if(false == ::gpftw_isConsoleCreated) 	// we don't create the console twice.
-		return;
-	
-	const ::HANDLE										handleConsoleOut						= ::GetStdHandle(STD_OUTPUT_HANDLE);	// Get console output handle
-
-	::CONSOLE_SCREEN_BUFFER_INFOEX						csbiInfo								= {};
-	::GetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo);
-	csbiInfo.cbSize									= sizeof(::CONSOLE_SCREEN_BUFFER_INFOEX);
-	csbiInfo.dwSize.X								= (::SHORT)width;
-	csbiInfo.dwSize.Y								= (::SHORT)height;
-	csbiInfo.dwMaximumWindowSize.X					= (::SHORT)width;
-	csbiInfo.dwMaximumWindowSize.Y					= (::SHORT)height;
-
-	csbiInfo.srWindow.Top							= 10;
-	csbiInfo.srWindow.Left							= 10;
-	csbiInfo.srWindow.Right							= 800;
-	csbiInfo.srWindow.Bottom						= 600;
-
-	// We're forced to set up the colors at this point because for some reason the GetConsoleScreenBufferInfoEx() function doesn't return the color table properly,
-	// thus they're all 0 when we call SetConsoleScreenBufferInfoEx() causing all the colors to be reset to COLOR_BLACK.
-	// Ideally we would have a setConsoleColors() function to do this separately.
-	for(uint32_t iColor = 0; iColor < 16; ++iColor)
-		csbiInfo.ColorTable[iColor]						= palette[iColor];
-
-	csbiInfo.wAttributes							= ::ftwl::ASCII_COLOR_WHITE;
-	
-	::SetConsoleScreenBufferInfoEx(handleConsoleOut, &csbiInfo);
-}
-
-
-// ------------------------------------------------- 
-::ftwl::error_t									ftwl::consoleDestroy					(::ftwl::SScreenASCII& console)											{
-	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
-		return -1; // return an error value
-
-	::FreeConsole();	// Tells Windows to close the console
-
-	::fclose(stdout);
-	::FILE*										
-	stream											= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
-	stream											= 0;	::fopen_s(&stream, "CONOUT$", "w+", stdout);
-
-	if(console.Colors		.size()) ::free(console.Colors		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
-	if(console.Characters	.size()) ::free(console.Characters	.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
-	if(console.Palette		.size()) ::free(console.Palette		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
-	console.Colors									= {};
-	console.Characters								= {};
-	console.Palette									= {};
-
-	::gpftw_isConsoleCreated						= false;	// set this to false so we can create it back later if we want to.
-	return 0;	// these functions hardly fail.
-}	
-
 ::ftwl::error_t									ftwl::consoleCreate						(::ftwl::SScreenASCII& console, int width, int height)						{
 	if(::gpftw_isConsoleCreated)	// check if the console has been initialized.
 		return -1; // return an error value
@@ -151,45 +192,5 @@ void											initWindowsConsoleProperties			(int width, int height, const uint
 	console.Colors									= ::ftwl::array_view<uint16_t	>((uint16_t	*)::malloc(sizeof(uint16_t	) * width * height), width * height);	// Ask the system to give us a memory block of the desired size for us to use. We need to return it back to the system once we're done using it.
 
 	::SetConsoleTitle("ASCII Console for the Win");	// I don't need to explain this one, right?
-	return 0;
-}
-
-::ftwl::error_t									ftwl::consolePresent					(::ftwl::SScreenASCII& console)											{
-	if(false == ::gpftw_isConsoleCreated)	// check if the console has been initialized.
-		return -1; // return an error value
-
-	if(0 == console.Colors.size() || 0 == console.Characters.size())
-		return -1; // return an error value
-
-	::initWindowsConsoleProperties(console.Width, console.Height, &console.Palette[0]);
-
-	int													screenSize								= console.Width * console.Height;
-
-	const ::HANDLE										handleConsoleOut						= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle	
-	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo								= {};
-    ::GetConsoleScreenBufferInfo( handleConsoleOut, &csbiInfo );
-
-	::COORD												Coords									= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
-	::DWORD												dummy									= 0;
-	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	console.Characters	.begin(), screenSize, Coords, &dummy );
-	::WriteConsoleOutputAttribute ( handleConsoleOut,				console.Colors		.begin(), screenSize, Coords, &dummy );
-
-	return 0;
-}
-
-::ftwl::error_t									ftwl::consoleClear						(::ftwl::SScreenASCII& console)												{
-	int													screenSize								= console.Width * console.Height;
-	::memset(&console.Characters	[0], 0, sizeof(char		) * screenSize);			
-	::memset(&console.Colors		[0], 0, sizeof(short	) * screenSize);			
-
-	const ::HANDLE										handleConsoleOut						= ::GetStdHandle( STD_OUTPUT_HANDLE );	// Get console output handle
-	::CONSOLE_SCREEN_BUFFER_INFO						csbiInfo								= {};
-    ::GetConsoleScreenBufferInfo( handleConsoleOut, &csbiInfo );
-
-	::COORD												coords									= {0, csbiInfo.dwSize.Y - (::SHORT)console.Height};
-	::DWORD												dummy									= 0;
-	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	console.Characters	.begin(), screenSize, coords, &dummy );
-	::WriteConsoleOutputAttribute ( handleConsoleOut,				console.Colors		.begin(), screenSize, coords, &dummy );
-
 	return 0;
 }

@@ -5,6 +5,7 @@
 
 namespace ftwl 
 {
+#pragma pack(push, 1)
 	template <typename _tElement>
 	class grid_view {
 		// Properties / Member Variables
@@ -19,19 +20,20 @@ namespace ftwl
 				throw(::std::exception("Invalid parameters."));
 		}
 		// Operators
-							::ftwl::array_view<_tElement>			operator[]					(uint32_t row)																{ if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwl::array_view<_tElement>(&Data[row*Width], Width); }
-							const ::ftwl::array_view<_tElement>	operator[]					(uint32_t row)														const	{ if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwl::array_view<_tElement>(&Data[row*Width], Width); }
+							::ftwl::array_view<_tElement>			operator[]					(uint32_t row)																{ if(0 == Data) throw(::std::exception("Uninitialized array pointer.")); if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwl::array_view<_tElement			>(&Data[row*Width], Width); }
+							::ftwl::array_view<const _tElement>		operator[]					(uint32_t row)														const	{ if(0 == Data) throw(::std::exception("Uninitialized array pointer.")); if(row >= Height) throw(::std::exception("Invalid row.")); return ::ftwl::array_view<const _tElement	>(&Data[row*Width], Width); }
 		// Methods
-		inline				_tElement*								begin						()																			{ return Data;						}
 		inline constexpr	const _tElement*						begin						()																	const	{ return Data;						}
-
-		inline				_tElement*								end							()																			{ return Data + size();				}
 		inline constexpr	const _tElement*						end							()																	const	{ return Data + size();				}
+
+		inline				_tElement*								begin						()																			{ return Data;						}
+		inline				_tElement*								end							()																			{ return Data + size();				}
 
 		inline constexpr	uint32_t								size						()																	const	{ return Width	* Height;			}
 		inline constexpr	uint32_t								width						()																	const	{ return Width	;					}
 		inline constexpr	uint32_t								height						()																	const	{ return Height	;					}
 	};
+#pragma pack(pop)
 }
 
 #endif // GPFTW_GRID_VIEW_H

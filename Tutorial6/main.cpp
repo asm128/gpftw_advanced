@@ -21,7 +21,7 @@ static constexpr const uint32_t											SCREEN_HEIGHT													= 36;
 	applicationInstance.Game.CombatAreaSizeEffective						= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
 	applicationInstance.Game.CombatAreaSizeVisible							= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
 	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= 0x100000;
-
+	::ftwl::consoleSetTitle("Spaceship Game v0.01");
 	::game::setup(applicationInstance.Game);
 	srand(0);
 	return 0;
