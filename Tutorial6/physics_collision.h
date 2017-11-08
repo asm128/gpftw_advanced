@@ -8,7 +8,7 @@ namespace game
 	// Represents a bounding sphere that can be tested for overlap.
 	template<typename _tElement>
 	struct SBoundingSphere : public ::ftwl::SSphere2D<_tElement> {
-		typedef	::ftwl::SCoord2<_tElement>	TCoord;
+		typedef		::ftwl::SCoord2<_tElement>	TCoord;
 
 												SBoundingSphere				(const TCoord &center, _tElement radius)										: Center(center), Radius(radius)	{}
 
@@ -39,7 +39,7 @@ namespace game
 	}
 		// Reports how much this bouNding sphere would have to grow by to incorporate the given bounding sphere. Note that this calculation returns a value not in any particular units (i.e. its not a volume growth). 
 		// In fact the best implemenTation takes into account the growth in surface area (after the * Goldsmith-Salmon algorithm for tree construction).
-				double							GetGrowth					(const SBoundingSphere &other)									const			{
+					double						GetGrowth					(const SBoundingSphere &other)									const			{
 			const SBoundingSphere						newSphere					= {*this, other};
 			return newSphere.Radius * newSphere.Radius - Radius * Radius;	// We return a value proportional to the change in surface area of the sphere.
 		}

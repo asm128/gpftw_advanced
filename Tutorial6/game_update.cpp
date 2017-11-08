@@ -96,7 +96,8 @@ static		::ftwl::error_t																updateShips														(::game::SGame& 
 		//if(shotToTest.Unused)
 		//	continue;
 		const int32_t																					particleIndexShot												= shotToTest.ParticleIndex;
-		for(uint32_t iShot2 = 0; iShot2 < (uint32_t)shotInstances.size(); ++iShot2) {	// 
+		bool																							wasNotDeletedByCollision										= false;
+		for(uint32_t iShot2 = 1; iShot2 < (uint32_t)shotInstances.size(); ++iShot2) {	// 
 			if(iShot == iShot2)
 				continue;
 			const ::game::SShot																				& shotToTest2													= shotInstances[iShot2];
@@ -110,10 +111,12 @@ static		::ftwl::error_t																updateShips														(::game::SGame& 
 			if((particleShot.Position - particleShot2.Position).Length() < (areaShot.Radius + areaShot.Radius)) { // Handle collision - Damage Shot - Remove the particle instance and related information.
 				particleEngine.ParticleState[particleIndexShot].Unused										= true;
 				shotInstances.erase(shotInstances.begin() + iShot);
-				--iShot;
+				shotInstances.erase(shotInstances.begin() + (iShot2 - 1));
+				break;
 			}
 		}
-		particleEngine.Particle[particleIndexShot]													= particleEngine.ParticleNext[particleIndexShot];
+		if(wasNotDeletedByCollision)
+			particleEngine.Particle[particleIndexShot]													= particleEngine.ParticleNext[particleIndexShot];
 	}
 
 	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// Remove dead ships.

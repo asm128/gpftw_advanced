@@ -19,7 +19,6 @@
 	::DWORD												dummy									= 0;
 	::WriteConsoleOutputCharacter ( handleConsoleOut, (const char*)	console.Characters	.begin(), screenSize, coords, &dummy );
 	::WriteConsoleOutputAttribute ( handleConsoleOut,				console.Colors		.begin(), screenSize, coords, &dummy );
-
 	return 0;
 }
 
@@ -34,9 +33,8 @@ static bool										gpftw_isConsoleCreated					= false;
 
 	::fclose(stdout);
 	::FILE*										
-	stream											= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
-	stream											= 0;	::fopen_s(&stream, "CONOUT$", "w+");
-
+	stream											= 0;	::freopen_s	(&stream, "CONIN$", "r+", stdin);
+	stream											= 0;	::fopen_s	(&stream, "CONOUT$", "w+");
 	if(console.Colors		.size()) ::free(console.Colors		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
 	if(console.Characters	.size()) ::free(console.Characters	.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
 	if(console.Palette		.size()) ::free(console.Palette		.begin());	// Release the memory acquired with malloc() back to the system so it can be reused by us or other programs.
@@ -47,7 +45,6 @@ static bool										gpftw_isConsoleCreated					= false;
 	::gpftw_isConsoleCreated						= false;	// set this to false so we can create it back later if we want to.
 	return 0;	// these functions hardly fail.
 }	
-
 
 void											initWindowsConsoleProperties			(int width, int height, const uint32_t* palette)					{
 	if(false == ::gpftw_isConsoleCreated) 	// we don't create the console twice.

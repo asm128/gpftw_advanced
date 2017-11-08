@@ -24,4 +24,4 @@ namespace ftwl
 	::ftwl::error_t								consoleSetTitle			(const char* title);
 }
 
-#endif GPFTW_ASCII_SCREEN_H
+#endif // GPFTW_ASCII_SCREEN_H

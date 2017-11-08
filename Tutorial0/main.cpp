@@ -17,7 +17,7 @@ struct SApplication {
 // Define some functions to use from main(). These functions will contain our game code.
 void													cleanup								(::SApplication& applicationInstance)				{ ::ftwl::consoleDestroy(applicationInstance.ScreenASCII);									}	// Cleanup application resources.
 void													setup								(::SApplication& applicationInstance)				{ ::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	}	// Initialize console.
-void													update								(::SApplication& applicationInstance)				{ ++applicationInstance.FrameCounter;															}	// Increase our frame counter by 1.
+void													update								(::SApplication& applicationInstance)				{ ++applicationInstance.FrameCounter;														}	// Increase our frame counter by 1.
 void													draw								(::SApplication& applicationInstance)				{	
 	// This function now will draw some coloured symbols in each cell of the ASCII screen.
 	::ftwl::SScreenASCII										&asciiTarget						= applicationInstance.ScreenASCII;

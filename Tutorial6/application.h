@@ -10,9 +10,9 @@
 namespace ftwapp {
 
 	struct SApplication {
-		::game::SGame															Game								= {};
+		::game::SGame														Game								= {};
 		::ftwl::STimer														Timer								= {};
-		::ftwl::SScreenASCII													ScreenASCII							= {};
+		::ftwl::SScreenASCII												ScreenASCII							= {};
 	};
 
 	::ftwl::error_t														setup								(::ftwapp::SApplication& applicationInstance);
