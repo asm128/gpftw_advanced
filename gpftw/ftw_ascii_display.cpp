@@ -1,4 +1,4 @@
-#include "ftw_ascii_screen.h"
+#include "ftw_ascii_display.h"
 
 #include "ftw_ascii_color.h"
 

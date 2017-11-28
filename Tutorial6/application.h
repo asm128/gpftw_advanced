@@ -1,7 +1,7 @@
 #include "game.h"
 
 #include "ftw_particle.h"		// for ::game::SGame
-#include "ftw_ascii_screen.h"	// for ::ftwl::SScreenASCII
+#include "ftw_ascii_display.h"	// for ::ftwl::SScreenASCII
 #include "ftw_timer.h"			// for ::ftwl::STimer
 
 #ifndef APPLICATION_H

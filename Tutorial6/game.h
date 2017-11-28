@@ -1,7 +1,7 @@
 #include "ftw_particle.h"
 
 #include "ftw_frameinfo.h"		// for ::ftwl::SFrameInfo
-#include "ftw_ascii_screen.h"	// For ::ftwl::SScreenASCII
+#include "ftw_ascii_display.h"	// For ::ftwl::SScreenASCII
 
 #include <vector>				// For ::std::vector<>
 
