@@ -144,10 +144,12 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ftw_ascii_target.h" />
+    <ClInclude Include="ftw_color.h" />
     <ClInclude Include="ftw_frameinfo.h" />
     <ClInclude Include="ftw_array_view.h" />
     <ClInclude Include="ftw_ascii_color.h" />
-    <ClInclude Include="ftw_ascii_screen.h" />
+    <ClInclude Include="ftw_ascii_display.h" />
     <ClInclude Include="ftw_coord.h" />
     <ClInclude Include="ftw_error.h" />
     <ClInclude Include="ftw_eval.h" />
@@ -159,7 +161,8 @@
     <ClInclude Include="ftw_timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ascii_screen.cpp" />
+    <ClCompile Include="ftw_ascii_display.cpp" />
+    <ClCompile Include="ftw_ascii_target.cpp" />
     <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

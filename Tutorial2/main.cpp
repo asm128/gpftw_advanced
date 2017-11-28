@@ -9,19 +9,21 @@
 #include <stdio.h>		// for printf()
 #include <windows.h>	// for interacting with Windows
 
-static constexpr const uint32_t												SCREEN_WIDTH													= game::MAP_WIDTH + 16;
-static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP_DEPTH + 8;
+static constexpr const uint32_t											SCREEN_WIDTH													= game::MAP_WIDTH + 16;
+static constexpr const uint32_t											SCREEN_HEIGHT													= game::MAP_DEPTH + 8;
 
 // Cleanup application resources.
 ::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
 	::game::cleanup(applicationInstance.Game);
-	::ftwl::consoleDestroy(applicationInstance.ScreenASCII);								
+	::ftwl::asciiDisplayDestroy	();								
+	::ftwl::asciiTargetDestroy	(applicationInstance.ASCIIRenderTarget);								
 	return 0;
 }
 
 // Use this function to setup our game data
 ::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiTargetCreate(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiDisplayCreate(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
 	::srand(0);
 	// call setup game functions
 	::game::setup(applicationInstance.Game);
@@ -30,7 +32,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 // Use this function to update our game data
 ::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwl::consolePresent(applicationInstance.ScreenASCII);
+	::ftwl::asciiDisplayPresent(applicationInstance.ASCIIRenderTarget);
 
 	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
 	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;																	
@@ -40,12 +42,11 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 }
 
 ::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwl::consoleClear(applicationInstance.ScreenASCII);
-	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());
+	::game::draw(applicationInstance.Game, applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Characters.begin(), applicationInstance.ASCIIRenderTarget.Colors.begin());
 	return 0;
 }
 
-int																			main															()														{
+int																		main															()														{
 	::ftwapp::SApplication															* applicationInstance											= new ::ftwapp::SApplication();	// Create a new instance of our application.
 	if( 0 == applicationInstance )
 		return -1;	// return error because we couldn't allocate the main instance of our application.
@@ -65,13 +66,13 @@ int																			main															()														{
 	return 0; /// Exit from the function returning an (int)eger.
 }
 
-int	WINAPI														WinMain								
+int	WINAPI																WinMain	
 	(	_In_		::HINSTANCE		// hInstance
 	,	_In_opt_	::HINSTANCE		// hPrevInstance
 	,	_In_		::LPSTR			// lpCmdLine
 	,	_In_		::INT				// nShowCmd
 	)
 {
-	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	return ::ftwl::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	::_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
+	return ::ftwl::failed( 0 > ::main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

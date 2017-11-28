@@ -35,14 +35,16 @@ void																		setupParticles													()														{
 }
 
 // Cleanup application resources.
-::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::ftwl::consoleDestroy(applicationInstance.ScreenASCII);								
+::ftwl::error_t																ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
+	::ftwl::asciiDisplayDestroy	();								
+	::ftwl::asciiTargetDestroy	(applicationInstance.ASCIIRenderTarget);								
 	return 0;
 }
 
 // Use this function to setup our game data
-::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+::ftwl::error_t																ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
+	::ftwl::asciiTargetCreate(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiDisplayCreate(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
 	::setupParticles();
 	srand(0);
 	return 0;
@@ -69,7 +71,7 @@ void																		addParticle
 
 // Use this function to update our game data
 ::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwl::consolePresent(applicationInstance.ScreenASCII);
+	::ftwl::asciiDisplayPresent(applicationInstance.ASCIIRenderTarget);
 
 	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;																	
 	::ftwl::SFrameInfo															& frameInfo														= applicationInstance.FrameInfo;																	
@@ -92,8 +94,8 @@ void																		addParticle
 		SParticleInstance																& particleInstance												= particleInstances[iParticle];
 		int32_t																			physicsId														= particleInstance.PhysicsId;
 		::ftwl::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
-		if( particleNext.Position.x < 0 || particleNext.Position.x >= applicationInstance.ScreenASCII.Width
-		 || particleNext.Position.y < 0 || particleNext.Position.y >= applicationInstance.ScreenASCII.Height
+		if( particleNext.Position.x < 0 || particleNext.Position.x >= applicationInstance.ASCIIRenderTarget.Width	()
+		 || particleNext.Position.y < 0 || particleNext.Position.y >= applicationInstance.ASCIIRenderTarget.Height	()
 		 ) { // Remove the particle instance and related information.
 			particleEngine.ParticleState[physicsId].Unused								= true;
 			particleInstances.erase(particleInstances.begin()+iParticle);
@@ -113,19 +115,15 @@ void																		addParticle
 }
 
 ::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwl::consoleClear(applicationInstance.ScreenASCII);
-	::ftwl::SScreenASCII															& screenAscii													= applicationInstance.ScreenASCII;
-	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
-	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
-
-	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
+	::ftwl::SASCIITarget														& screenAscii													= applicationInstance.ASCIIRenderTarget;
+	::ftwl::asciiTargetClear(screenAscii);
+	::std::vector<SParticleInstance>											& particleInstances												= applicationInstance.ParticleInstances;
 	for(uint32_t iParticle = 0, particleCount = (uint32_t)particleInstances.size(); iParticle < particleCount; ++iParticle) {
-		SParticleInstance																& particleInstance												= particleInstances[iParticle];
-		const int32_t																	physicsId														= particleInstance.PhysicsId;
-		const ::ftwl::SCoord2<float>													particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
-		const int32_t																	linearIndex														= (int32_t)particlePosition.y * screenAscii.Width + (int32_t)particlePosition.x;
-		screenAscii.Characters	[linearIndex]	= 1 + particleInstance.Type;
-		screenAscii.Colors		[linearIndex]	
+		SParticleInstance															& particleInstance												= particleInstances[iParticle];
+		const int32_t																physicsId														= particleInstance.PhysicsId;
+		const ::ftwl::SCoord2<float>												particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
+		screenAscii.Characters	[(uint32_t)particlePosition.y][(uint32_t)particlePosition.x]	= 1 + particleInstance.Type;
+		screenAscii.Colors		[(uint32_t)particlePosition.y][(uint32_t)particlePosition.x]	
 			= (particleInstance.Type == PARTICLE_TYPE_FIRE) ? ::ftwl::ASCII_COLOR_RED
 			: (particleInstance.Type == PARTICLE_TYPE_SNOW) ? ::ftwl::ASCII_COLOR_CYAN
 			: (particleInstance.Type == PARTICLE_TYPE_LAVA) ? ::ftwl::ASCII_COLOR_RED

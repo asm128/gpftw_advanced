@@ -156,7 +156,7 @@ namespace game
 	// ------
 			::ftwl::error_t												setup														(SGame& gameInstance);
 			::ftwl::error_t												update														(SGame& gameInstance, uint64_t lastTimeMicroseconds);
-			::ftwl::error_t												render														(SGame& gameInstance, ::ftwl::SScreenASCII& screenASCII);
+			::ftwl::error_t												render														(SGame& gameInstance, ::ftwl::SASCIITarget& screenASCII);
 }
 
 #endif // GAME_H

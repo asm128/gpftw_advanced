@@ -11,17 +11,20 @@ static constexpr const uint32_t											SCREEN_HEIGHT													= 36;
 
 // Cleanup application resources.
 ::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
-	::ftwl::consoleDestroy(applicationInstance.ScreenASCII);								
+	::ftwl::asciiDisplayDestroy	();								
+	::ftwl::asciiTargetDestroy	(applicationInstance.ASCIIRenderTarget);								
 	return 0;
 }
 
 // Use this function to setup our game data
 ::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiTargetCreate(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiDisplayCreate(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
 	applicationInstance.Game.CombatAreaSizeEffective						= {::SCREEN_WIDTH, ::SCREEN_HEIGHT * 2};
 	applicationInstance.Game.CombatAreaSizeVisible							= {::SCREEN_WIDTH - 5, ::SCREEN_HEIGHT * 2 - 5};
-	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= 0x100000;
-	::ftwl::consoleSetTitle("Spaceship Game v0.01");
+	applicationInstance.Palette[::ftwl::ASCII_COLOR_DARKBLUE]				= 0x100000;
+	::ftwl::asciiDisplayPaletteSet({applicationInstance.Palette.data(), 16});
+	::ftwl::asciiDisplayTitleSet("Spaceship Game v0.01");
 	::game::setup(applicationInstance.Game);
 	srand(0);
 	return 0;
@@ -29,10 +32,13 @@ static constexpr const uint32_t											SCREEN_HEIGHT													= 36;
 
 // Use this function to update our game data
 ::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwl::consolePresent(applicationInstance.ScreenASCII);
+	::ftwl::asciiDisplayPresent(applicationInstance.ASCIIRenderTarget);
 
-	::ftwl::ASCII_COLOR_INDEX													oldColor0														= (::ftwl::ASCII_COLOR_INDEX)applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
-	applicationInstance.ScreenASCII.Palette[::ftwl::ASCII_COLOR_DARKBLUE]	= (((applicationInstance.Game.FrameInfo.FrameNumber / 2) % 32) < 16) ? (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) + 0x10000) : (oldColor0 & 0x00FFFF) | ((oldColor0 & 0xFF0000) - 0x10000);
+	::ftwl::SColorRGBA															& oldColor0							= applicationInstance.Palette[::ftwl::ASCII_COLOR_DARKBLUE];
+	oldColor0.r																= oldColor0.r;
+	oldColor0.g																= oldColor0.g;
+	oldColor0.b																= ((applicationInstance.Game.FrameInfo.FrameNumber % 32) >= 16) ? oldColor0.b + 1 : oldColor0.b - 1;
+	::ftwl::asciiDisplayPaletteSet({applicationInstance.Palette.data(), 16});
 	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;
 	::game::update(applicationInstance.Game, timerInstance.LastTimeMicroseconds);
 	timerInstance.Frame();
@@ -40,7 +46,7 @@ static constexpr const uint32_t											SCREEN_HEIGHT													= 36;
 }
 
 ::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	::ftwl::SScreenASCII														& screenAscii													= applicationInstance.ScreenASCII;
+	::ftwl::SASCIITarget														& screenAscii													= applicationInstance.ASCIIRenderTarget;
 	::memset(screenAscii.Characters	.begin(), 0, screenAscii.Characters	.size());
 	::memset(screenAscii.Colors		.begin(), 0, screenAscii.Colors		.size() * sizeof(uint16_t));
 	::game::render(applicationInstance.Game, screenAscii);
@@ -76,5 +82,5 @@ int	WINAPI																WinMain
 	)
 {
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF);
-	return ::ftwl::failed( 0 > main() ) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwl::failed(::main()) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

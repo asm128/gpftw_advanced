@@ -15,13 +15,15 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 // Cleanup application resources.
 ::ftwl::error_t															ftwapp::cleanup													(::ftwapp::SApplication& applicationInstance)			{ 
 	::game::cleanup				(applicationInstance.Game);
-	::ftwl::consoleDestroy	(applicationInstance.ScreenASCII);								
+	::ftwl::asciiDisplayDestroy	();								
+	::ftwl::asciiTargetDestroy	(applicationInstance.ASCIIRenderTarget);								
 	return 0;
 }
 
 // Use this function to setup our game data
 ::ftwl::error_t															ftwapp::setup													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address pointing to an SGame instance
-	::ftwl::consoleCreate(applicationInstance.ScreenASCII, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiTargetCreate(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiDisplayCreate(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
 	::srand(0);
 	::game::setup(applicationInstance.Game);	// call setup game functions
 	return 0;
@@ -29,7 +31,7 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 
 // Use this function to update our game data
 ::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
-	::ftwl::consolePresent(applicationInstance.ScreenASCII);
+	::ftwl::asciiDisplayPresent(applicationInstance.ASCIIRenderTarget);
 
 	::game::SGame																	& gameInstance													= applicationInstance.Game;																	
 	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;																	
@@ -39,10 +41,8 @@ static constexpr const uint32_t												SCREEN_HEIGHT													= game::MAP
 }
 
 ::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	//::ftwl::consoleClear(applicationInstance.ScreenASCII);
-	::memset(applicationInstance.ScreenASCII.Characters	.begin(), 0, applicationInstance.ScreenASCII.Characters	.size());
-	::memset(applicationInstance.ScreenASCII.Colors		.begin(), 0, applicationInstance.ScreenASCII.Colors		.size() * sizeof(uint16_t));
-	::game::draw(applicationInstance.Game, applicationInstance.ScreenASCII.Width, applicationInstance.ScreenASCII.Characters.begin(), applicationInstance.ScreenASCII.Colors.begin());
+	::ftwl::asciiTargetClear(applicationInstance.ASCIIRenderTarget);
+	::game::draw(applicationInstance.Game, applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Characters.begin(), applicationInstance.ASCIIRenderTarget.Colors.begin());
 	return 0;
 }
 

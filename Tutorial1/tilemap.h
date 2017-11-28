@@ -10,7 +10,7 @@ struct STileASCII {
 };
 
 struct STileMap {
-						::ftwl::grid_view<uint32_t>			ASCIIMap							= {};
+						::ftwl::grid_view<uint32_t>				ASCIIMap							= {};
 						::ftwl::array_view<const STileASCII>	TileDescriptionTable				= {};
 };
 
