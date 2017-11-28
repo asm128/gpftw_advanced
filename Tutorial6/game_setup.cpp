@@ -4,15 +4,15 @@
 
 				void																		setupEffects													(::game::SGame& gameInstance)							{
 	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_ROCKET			]				= {'.', ::ftwl::ASCII_COLOR_RED		};
-	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_STARS			]				= {'.', ::ftwl::ASCII_COLOR_WHITE		};
+	gameInstance.DefinitionsEffect			[::game::EFFECT_TYPE_STARS			]				= {'.', ::ftwl::ASCII_COLOR_WHITE	};
 }	
 				void																		setupShips														(::game::SGame& gameInstance)							{
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_FASTER			]				= { 70, 100, 232	, ::ftwl::ASCII_COLOR_WHITE		};
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_STRONGER			]				= {200, 100, 21		, ::ftwl::ASCII_COLOR_MAGENTA		};
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_STRONGER			]				= {200, 100, 21		, ::ftwl::ASCII_COLOR_MAGENTA	};
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_BETTER			]				= {150, 100, 238	, ::ftwl::ASCII_COLOR_CYAN		};
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_GOOD_LOOKING		]				= { 90, 100, 228	, ::ftwl::ASCII_COLOR_YELLOW		};
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_GOOD_LOOKING		]				= { 90, 100, 228	, ::ftwl::ASCII_COLOR_YELLOW	};
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_NICER			]				= { 80, 100, 67		, ::ftwl::ASCII_COLOR_GREEN		};
-	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_BULLY			]				= {170, 100, 'F'	, ::ftwl::ASCII_COLOR_YELLOW		};
+	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_BULLY			]				= {170, 100, 'F'	, ::ftwl::ASCII_COLOR_YELLOW	};
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_STALKER			]				= {250, 100, 'T'	, ::ftwl::ASCII_COLOR_LIGHTGREY	};
 	gameInstance.DefinitionsShip			[::game::SHIP_TYPE_POLITE			]				= {100, 100, 'E'	, ::ftwl::ASCII_COLOR_CYAN		};
 }																													
@@ -28,25 +28,25 @@
 	gameInstance.DefinitionsShot			[::game::SHOT_TYPE_GRAVITATIONAL	]				= {70, 100,  10 * .5f, 162	, ::ftwl::ASCII_COLOR_DARKMAGENTA	};
 }
 				void																		setupParticleShots												(::game::SGame& gameInstance)							{
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ROCK				].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ARROW			].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL			].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_LASER			].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BULLET			].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_POISON			].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_PLASMA			].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BOMB				].SetMass			(1);
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_GRAVITATIONAL	].SetMass			(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ROCK				].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ARROW			].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL			].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_LASER			].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BULLET			].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_POISON			].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_PLASMA			].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BOMB				].SetMass		(1);
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_GRAVITATIONAL	].SetMass		(1);
 
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ROCK				].Damping			= 0.8f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ARROW			].Damping			= 0.9f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL			].Damping			= 0.98f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_LASER			].Damping			= 1.0f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BULLET			].Damping			= 0.995f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_POISON			].Damping			= 0.7f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_PLASMA			].Damping			= 1.0f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BOMB				].Damping			= 0.6f;
-	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_GRAVITATIONAL	].Damping			= 0.6f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ROCK				].Damping		= 0.8f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_ARROW			].Damping		= 0.9f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_FIREBALL			].Damping		= 0.98f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_LASER			].Damping		= 1.0f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BULLET			].Damping		= 0.995f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_POISON			].Damping		= 0.7f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_PLASMA			].Damping		= 1.0f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_BOMB				].Damping		= 0.6f;
+	gameInstance.DefinitionsParticleShot	[::game::SHOT_TYPE_GRAVITATIONAL	].Damping		= 0.6f;
 }
 
 static			void																		setupParticleShips												(::game::SGame& gameInstance)							{
@@ -86,7 +86,7 @@ static inline	void																		setupParticles													(::game::SGame& g
 	::setupParticleShots	(gameInstance);
 	::setupParticleEffects	(gameInstance);
 }
-				::ftwl::error_t															game::setup														(::game::SGame& gameInstance)							{
+				::ftwl::error_t																game::setup														(::game::SGame& gameInstance)							{
 	::setupParticles	(gameInstance);
 	::setupShips		(gameInstance);
 	::setupShots		(gameInstance);
@@ -94,16 +94,16 @@ static inline	void																		setupParticles													(::game::SGame& g
 
 	gameInstance.Spawners.resize(100);
 	for(uint32_t iSpawner = 0, spawnerCount = (uint32_t)gameInstance.Spawners.size(); iSpawner < spawnerCount; ++ iSpawner) {
-		::game::SSpawner																				& spawner														= gameInstance.Spawners[iSpawner];
-		spawner.Position																			= {(int32_t)gameInstance.CombatAreaSizeVisible.x - 3, (int32_t)((iSpawner * 10) % gameInstance.CombatAreaSizeVisible.y)};
+		::game::SSpawner																			& spawner														= gameInstance.Spawners[iSpawner];
+		spawner.Position																		= {(int32_t)gameInstance.CombatAreaSizeVisible.x - 3, (int32_t)((iSpawner * 10) % gameInstance.CombatAreaSizeVisible.y)};
 		spawner.Records.resize(100);
 		for(uint32_t iSpawnRecord = 0; iSpawnRecord < spawner.Records.size(); ++iSpawnRecord) {
-			spawner.Records[iSpawnRecord].ShipTypeToSpawn												= ::game::SHIP_TYPE(iSpawner % ::game::SHIP_TYPE_COUNT);
-			spawner.Records[iSpawnRecord].TimeSinceGameStarted											= 5 + (iSpawnRecord * 100 + 1) + (iSpawner);
+			spawner.Records[iSpawnRecord].ShipTypeToSpawn											= ::game::SHIP_TYPE(iSpawner % ::game::SHIP_TYPE_COUNT);
+			spawner.Records[iSpawnRecord].TimeSinceGameStarted										= 5 + (iSpawnRecord * 100 + 1) + (iSpawner);
 		}
 	}
 	::game::addShip(gameInstance, ::game::SHIP_TYPE_FASTER);
-	gameInstance.Ships[0].SelectedShot															= ::game::SHOT_TYPE_ROCK; 
-	gameInstance.ParticleEngineGame.Particle[gameInstance.Ships[0].ParticleIndex].Position			= {gameInstance.CombatAreaSizeVisible.x * .25f, gameInstance.CombatAreaSizeVisible.y * .5f}; 
+	gameInstance.Ships[0].SelectedShot														= ::game::SHOT_TYPE_ROCK; 
+	gameInstance.ParticleEngineGame.Particle[gameInstance.Ships[0].ParticleIndex].Position	= {gameInstance.CombatAreaSizeVisible.x * .25f, gameInstance.CombatAreaSizeVisible.y * .5f}; 
 	return 0;
 }

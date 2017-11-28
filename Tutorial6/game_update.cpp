@@ -93,8 +93,6 @@ static		::ftwl::error_t																updateShips														(::game::SGame& 
 
 	for(uint32_t iShot = 0; iShot < (uint32_t)shotInstances.size(); ++iShot) {	// Update shots and damage shots.
 		::game::SShot																					& shotToTest													= shotInstances[iShot];
-		//if(shotToTest.Unused)
-		//	continue;
 		const int32_t																					particleIndexShot												= shotToTest.ParticleIndex;
 		bool																							wasNotDeletedByCollision										= false;
 		for(uint32_t iShot2 = 1; iShot2 < (uint32_t)shotInstances.size(); ++iShot2) {	// 
@@ -132,7 +130,7 @@ static		::ftwl::error_t																updateShips														(::game::SGame& 
 
 	for(uint32_t iShip = 1; iShip < (uint32_t)shipInstances.size(); ++iShip) {	// Make ships shoot.
 		const ::game::SShip																				& shootingShip														= shipInstances[iShip];
-		if(shootingShip.Unused || 95 > rand() % 100)
+		if(shootingShip.Unused || 95 > (rand() % 100))
 			continue;
 		const int32_t																					shotIndex															= ::game::addShot(gameInstance, shootingShip.SelectedShot, iShip); 
 		::game::SShot																					& newShot															= shotInstances[shotIndex];

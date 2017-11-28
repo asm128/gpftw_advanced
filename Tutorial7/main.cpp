@@ -94,5 +94,5 @@ int	WINAPI												WinMain
 	,	_In_		INT				// nShowCmd
 	)
 {
-	return ::ftwl::failed(::main()) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	return ::ftwl::failed(main()) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

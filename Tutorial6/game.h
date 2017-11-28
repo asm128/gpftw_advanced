@@ -125,9 +125,9 @@ namespace game
 	};
 
 	struct SGame {
-				::ftwl::SFrameInfo											FrameInfo													= {};	// -- Stores data such as the frame number and the elapsed frame time since the previous update
-				::ftwl::SParticle2Engine<float>								ParticleEngineGame											= {};	// -- Physics stuff
-				::ftwl::SParticle2Engine<float>								ParticleEngineEffects										= {};	// -- Physics stuff
+				::ftwl::SFrameInfo												FrameInfo													= {};	// -- Stores data such as the frame number and the elapsed frame time since the previous update
+				::ftwl::SParticle2Engine<float>									ParticleEngineGame											= {};	// -- Physics stuff
+				::ftwl::SParticle2Engine<float>									ParticleEngineEffects										= {};	// -- Physics stuff
 
 				// -- Game object instances
 				::std::vector<SShip>											Ships														= {};
@@ -150,13 +150,13 @@ namespace game
 				::ftwl::SParticle2<float>										DefinitionsParticleEffect	[::game::EFFECT_TYPE_COUNT	]	= {};
 	};
 	// ------
-			::ftwl::error_t												addShip														(SGame& gameInstance, SHIP_TYPE type);
-			::ftwl::error_t												addShot														(SGame& gameInstance, SHOT_TYPE type, int32_t shipIndex);
-			::ftwl::error_t												addEffect													(SGame& gameInstance, EFFECT_TYPE type);
+			::ftwl::error_t													addShip														(SGame& gameInstance, SHIP_TYPE type);
+			::ftwl::error_t													addShot														(SGame& gameInstance, SHOT_TYPE type, int32_t shipIndex);
+			::ftwl::error_t													addEffect													(SGame& gameInstance, EFFECT_TYPE type);
 	// ------
-			::ftwl::error_t												setup														(SGame& gameInstance);
-			::ftwl::error_t												update														(SGame& gameInstance, uint64_t lastTimeMicroseconds);
-			::ftwl::error_t												render														(SGame& gameInstance, ::ftwl::SASCIITarget& screenASCII);
+			::ftwl::error_t													setup														(SGame& gameInstance);
+			::ftwl::error_t													update														(SGame& gameInstance, uint64_t lastTimeMicroseconds);
+			::ftwl::error_t													render														(SGame& gameInstance, ::ftwl::SASCIITarget& screenASCII);
 }
 
 #endif // GAME_H
