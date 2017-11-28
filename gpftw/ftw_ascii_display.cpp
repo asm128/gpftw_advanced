@@ -121,8 +121,8 @@ static constexpr	const ::ftwl::SColorRGBA			g_DefaultPalette	[]							=
 	::COORD														offset											= {0, 0};
 	::DWORD														dummy											= 0;
 	const ::HANDLE												handleConsoleOut								= ::GetStdHandle(STD_OUTPUT_HANDLE);	// Get console output handle
-	ree_if(0 == ::WriteConsoleOutputCharacterA	(handleConsoleOut, (const char*)	g_bufferClearCharacter	.data(), ::ftwl::max(0U, ::ftwl::min(g_bufferClearCharacter	.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy ), "How did this happen?");
-	ree_if(0 == ::WriteConsoleOutputAttribute	(handleConsoleOut,					g_bufferClearColors		.data(), ::ftwl::max(0U, ::ftwl::min(g_bufferClearColors	.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy ), "How did this happen?");
+	ree_if(0 == ::WriteConsoleOutputCharacterA	(handleConsoleOut, (const char*)	g_bufferClearCharacter	.data(), ::ftwl::max(0U, ::ftwl::min((uint32_t)g_bufferClearCharacter	.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy ), "How did this happen?");
+	ree_if(0 == ::WriteConsoleOutputAttribute	(handleConsoleOut,					g_bufferClearColors		.data(), ::ftwl::max(0U, ::ftwl::min((uint32_t)g_bufferClearColors		.size(), (uint32_t)sizeFrontBuffer)), offset, &dummy ), "How did this happen?");
 	return 0;
 }
 

@@ -18,7 +18,7 @@ namespace ftwapp {
 
 	struct SParticleInstance {
 		PARTICLE_TYPE															Type								= PARTICLE_TYPE_INVALID;
-		int32_t																	PhysicsId							= -1;
+		int32_t																	ParticleIndex							= -1;
 	};
 
 	struct SApplication {

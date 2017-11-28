@@ -58,33 +58,33 @@ void																		addParticle
 {
 	::ftwapp::SParticleInstance														newInstance														= {}; 
 	newInstance.Type															= particleType; 
-	newInstance.PhysicsId														= particleEngine.AddParticle(particleDefinitions[newInstance.Type]); 
-	particleEngine.Particle[newInstance.PhysicsId].Position						= {(float)(rand() % SCREEN_WIDTH), (float)(rand() % SCREEN_HEIGHT)};
+	newInstance.ParticleIndex													= particleEngine.AddParticle(particleDefinitions[newInstance.Type]); 
+	particleEngine.Particle[newInstance.ParticleIndex].Position					= {(float)(rand() % SCREEN_WIDTH), (float)(rand() % SCREEN_HEIGHT)};
 	switch(particleType) {
-	case ::ftwapp::PARTICLE_TYPE_FIRE:	particleEngine.Particle[newInstance.PhysicsId].Position		= {SCREEN_WIDTH / 2 + (rand() % 3 - 1.0f) * (SCREEN_WIDTH / 5), SCREEN_HEIGHT / 2 + SCREEN_HEIGHT / 4}; break;
-	case ::ftwapp::PARTICLE_TYPE_LAVA:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= SCREEN_HEIGHT - 1; break;
+	case ::ftwapp::PARTICLE_TYPE_FIRE:	particleEngine.Particle[newInstance.ParticleIndex].Position		= {SCREEN_WIDTH / 2 + (rand() % 3 - 1.0f) * (SCREEN_WIDTH / 5), SCREEN_HEIGHT / 2 + SCREEN_HEIGHT / 4}; break;
+	case ::ftwapp::PARTICLE_TYPE_LAVA:	particleEngine.Particle[newInstance.ParticleIndex].Position.y	= SCREEN_HEIGHT - 1; break;
 	case ::ftwapp::PARTICLE_TYPE_RAIN:
-	case ::ftwapp::PARTICLE_TYPE_SNOW:	particleEngine.Particle[newInstance.PhysicsId].Position.y	= 0; particleEngine.Particle[newInstance.PhysicsId].Forces.Velocity.y	= .001f; break;
+	case ::ftwapp::PARTICLE_TYPE_SNOW:	particleEngine.Particle[newInstance.ParticleIndex].Position.y	= 0; particleEngine.Particle[newInstance.ParticleIndex].Forces.Velocity.y	= .001f; break;
 	}
 	particleInstances.push_back(newInstance);
 }
 
 // Use this function to update our game data
-::ftwl::error_t															ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
+::ftwl::error_t																ftwapp::update													(::ftwapp::SApplication& applicationInstance)			{ // Accepts an address of an SGame instance
 	::ftwl::asciiDisplayPresent(applicationInstance.ASCIIRenderTarget);
 
-	::ftwl::STimer																& timerInstance													= applicationInstance.Timer;																	
-	::ftwl::SFrameInfo															& frameInfo														= applicationInstance.FrameInfo;																	
+	::ftwl::STimer																	& timerInstance													= applicationInstance.Timer;																	
+	::ftwl::SFrameInfo																& frameInfo														= applicationInstance.FrameInfo;																	
 	frameInfo.Frame(timerInstance.LastTimeMicroseconds);
 	const float																		lastFrameSeconds												= (float)frameInfo.Seconds.LastFrame;
 
 	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
-	::ftwl::SParticle2Engine<float>												& particleEngine												= applicationInstance.ParticleEngine;
+	::ftwl::SParticle2Engine<float>													& particleEngine												= applicationInstance.ParticleEngine;
 	static float																	windDirection													= 0.1f;
-	if(GetAsyncKeyState('1')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_SNOW, particleInstances, particleEngine);
-	if(GetAsyncKeyState('2')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_FIRE, particleInstances, particleEngine);
-	if(GetAsyncKeyState('3')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_RAIN, particleInstances, particleEngine);
-	if(GetAsyncKeyState('4')) for(uint32_t i = 0; i < 3; ++i) addParticle(PARTICLE_TYPE_LAVA, particleInstances, particleEngine);
+	if(::GetAsyncKeyState('1')) for(uint32_t i = 0; i < 3; ++i) ::addParticle(PARTICLE_TYPE_SNOW, particleInstances, particleEngine);
+	if(::GetAsyncKeyState('2')) for(uint32_t i = 0; i < 3; ++i) ::addParticle(PARTICLE_TYPE_FIRE, particleInstances, particleEngine);
+	if(::GetAsyncKeyState('3')) for(uint32_t i = 0; i < 3; ++i) ::addParticle(PARTICLE_TYPE_RAIN, particleInstances, particleEngine);
+	if(::GetAsyncKeyState('4')) for(uint32_t i = 0; i < 3; ++i) ::addParticle(PARTICLE_TYPE_LAVA, particleInstances, particleEngine);
 
 	particleEngine.Integrate(lastFrameSeconds, frameInfo.Seconds.LastFrameHalfSquared);
 
@@ -92,7 +92,7 @@ void																		addParticle
 
 	for(uint32_t iParticle = 0; iParticle < particleInstances.size(); ++iParticle) {
 		SParticleInstance																& particleInstance												= particleInstances[iParticle];
-		int32_t																			physicsId														= particleInstance.PhysicsId;
+		int32_t																			physicsId														= particleInstance.ParticleIndex;
 		::ftwl::SParticle2<float>														& particleNext													= particleEngine.ParticleNext[physicsId];
 		if( particleNext.Position.x < 0 || particleNext.Position.x >= applicationInstance.ASCIIRenderTarget.Width	()
 		 || particleNext.Position.y < 0 || particleNext.Position.y >= applicationInstance.ASCIIRenderTarget.Height	()
@@ -114,14 +114,14 @@ void																		addParticle
 	return 0;
 }
 
-::ftwl::error_t															ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
-	::ftwl::SASCIITarget														& screenAscii													= applicationInstance.ASCIIRenderTarget;
+::ftwl::error_t																ftwapp::render													(::ftwapp::SApplication& applicationInstance)			{
+	::ftwl::SASCIITarget															& screenAscii													= applicationInstance.ASCIIRenderTarget;
 	::ftwl::asciiTargetClear(screenAscii);
-	::std::vector<SParticleInstance>											& particleInstances												= applicationInstance.ParticleInstances;
+	::std::vector<SParticleInstance>												& particleInstances												= applicationInstance.ParticleInstances;
 	for(uint32_t iParticle = 0, particleCount = (uint32_t)particleInstances.size(); iParticle < particleCount; ++iParticle) {
-		SParticleInstance															& particleInstance												= particleInstances[iParticle];
-		const int32_t																physicsId														= particleInstance.PhysicsId;
-		const ::ftwl::SCoord2<float>												particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
+		SParticleInstance																& particleInstance												= particleInstances[iParticle];
+		const int32_t																	physicsId														= particleInstance.ParticleIndex;
+		const ::ftwl::SCoord2<float>													particlePosition												= applicationInstance.ParticleEngine.Particle[physicsId].Position;
 		screenAscii.Characters	[(uint32_t)particlePosition.y][(uint32_t)particlePosition.x]	= 1 + particleInstance.Type;
 		screenAscii.Colors		[(uint32_t)particlePosition.y][(uint32_t)particlePosition.x]	
 			= (particleInstance.Type == PARTICLE_TYPE_FIRE) ? ::ftwl::ASCII_COLOR_RED
@@ -148,7 +148,6 @@ int																			main															()														{
 	}
 
 	::ftwapp::cleanup	(*applicationInstance);
-
 	delete( applicationInstance );	// Destroy the applcation instance and release its memory.
 	return 0; /// Exit from the function returning an (int)eger.
 }

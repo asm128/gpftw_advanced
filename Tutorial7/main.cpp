@@ -10,6 +10,7 @@ static constexpr	const int							SCREEN_WIDTH						= 48	;
 static constexpr	const int							SCREEN_HEIGHT						= 32	;
 
 struct SApplication {
+	int64_t													FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 	::ftwl::SASCIITarget									ASCIIRenderTarget					= {};
 	::ftwl::SPalette										Palette								= 
 		{	(uint32_t)::ftwl::ASCII_COLOR_INDEX_0		
@@ -29,7 +30,6 @@ struct SApplication {
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_14	
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_15	
 		};
-	int														FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 };
 
 void													cleanup								(::SApplication& applicationInstance)				{ 
@@ -45,7 +45,7 @@ void													setup								(::SApplication& applicationInstance)				{
 
 void													update								(::SApplication& applicationInstance)				{ ++applicationInstance.FrameCounter;														}	// Increase our frame counter by 1.
 void													draw								(::SApplication& applicationInstance)				{	
-	// This function now will draw some coloured symbols in each cell of the ASCII screen.
+	// --- This function now will draw some coloured symbols in each cell of the ASCII screen.
 	::ftwl::SASCIITarget										&asciiTarget						= applicationInstance.ASCIIRenderTarget;
 	uint32_t													color0								= (0xFF & applicationInstance.FrameCounter * 1) | ((0xFF & applicationInstance.FrameCounter * 2) << 8) | ((0xFF & applicationInstance.FrameCounter * 5) << 16);
 	uint32_t													color1								= (0xFF & applicationInstance.FrameCounter * 2) | ((0xFF & applicationInstance.FrameCounter * 1) << 8) | ((0xFF & applicationInstance.FrameCounter * 3) << 16);
@@ -83,7 +83,7 @@ int														main								()													{
 
 	::cleanup(*applicationInstance);
 
-	delete( applicationInstance );	// Destroy the applcation instance and release its memory.
+	delete(applicationInstance);	// Destroy the applcation instance and release its memory.
 	return 0; /// Exit from the function returning an (int)eger.
 }
 
