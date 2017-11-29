@@ -2,7 +2,6 @@
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 //
 #include "application.h"	// for
-#include "ftw_ascii_color.h"
 
 #include <stdio.h>		// for printf()
 #include <windows.h>	// for interacting with Windows

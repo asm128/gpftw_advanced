@@ -1,7 +1,7 @@
 // Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once. 
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "application.h"	// for
-#include "ftw_ascii_color.h"
+#include "ftw_ascii_display.h"	// for ::ftwl::SScreenASCII
 
 #include <stdio.h>		// for printf()
 #include <windows.h>	// for interacting with Windows

@@ -2,7 +2,6 @@
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 //
 #include "ftw_ascii_display.h"
-#include "ftw_ascii_color.h"
 
 #include <windows.h>    // for interacting with Windows
 
@@ -10,6 +9,7 @@ static constexpr	const int							SCREEN_WIDTH						= 48	;
 static constexpr	const int							SCREEN_HEIGHT						= 32	;
 
 struct SApplication {
+	int64_t													FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 	::ftwl::SASCIITarget									ASCIIRenderTarget					= {};
 	::ftwl::SPalette										Palette								= 
 		{	(uint32_t)::ftwl::ASCII_COLOR_INDEX_0		
@@ -29,23 +29,21 @@ struct SApplication {
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_14	
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_15	
 		};
-	int														FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 };
 
 void													cleanup								(::SApplication& applicationInstance)				{ 
-	::ftwl::asciiDisplayDestroy();
+	::ftwl::asciiDisplayDestroy();	// the ascii display and ascii render targets are unrelated and can be destroyed in any order.
 	::ftwl::asciiTargetDestroy(applicationInstance.ASCIIRenderTarget);
 }	// Cleanup application resources.
 
 void													setup								(::SApplication& applicationInstance)				{ 
 	// --- Initialize console.
-	::ftwl::asciiTargetCreate(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
-	::ftwl::asciiDisplayCreate(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
+	::ftwl::asciiTargetCreate(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);	// The render target is the memory in which our game or application is drawn.
+	::ftwl::asciiDisplayCreate(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());	// Once the application is done writing in the render target, we send the contents of the render target's memory to the display output
 }
 
 void													update								(::SApplication& applicationInstance)				{ ++applicationInstance.FrameCounter;														}	// Increase our frame counter by 1.
-void													draw								(::SApplication& applicationInstance)				{	
-	// This function now will draw some coloured symbols in each cell of the ASCII screen.
+void													draw								(::SApplication& applicationInstance)				{		// This function will draw some coloured symbols in each cell of the ASCII screen.
 	::ftwl::SASCIITarget										&asciiTarget						= applicationInstance.ASCIIRenderTarget;
 	uint32_t													color0								= (0xFF & applicationInstance.FrameCounter * 1) | ((0xFF & applicationInstance.FrameCounter * 2) << 8) | ((0xFF & applicationInstance.FrameCounter * 5) << 16);
 	uint32_t													color1								= (0xFF & applicationInstance.FrameCounter * 2) | ((0xFF & applicationInstance.FrameCounter * 1) << 8) | ((0xFF & applicationInstance.FrameCounter * 3) << 16);
@@ -55,7 +53,7 @@ void													draw								(::SApplication& applicationInstance)				{
 	applicationInstance.Palette[1]							= color1;
 	applicationInstance.Palette[2]							= color2;
 	applicationInstance.Palette[3]							= color3;
-	::ftwl::asciiDisplayPaletteSet({&applicationInstance.Palette[0], 16});
+	::ftwl::asciiDisplayPaletteSet({&applicationInstance.Palette[0], 16});	// Update the palette used by the display.
 	// 2d loop
 	for(uint32_t y = 0; y < asciiTarget.Height	(); ++y)
 	for(uint32_t x = 0; x < asciiTarget.Width	(); ++x) {
@@ -82,8 +80,8 @@ int														main								()													{
 	}
 
 	::cleanup(*applicationInstance);
-
 	delete( applicationInstance );	// Destroy the applcation instance and release its memory.
+
 	return 0; /// Exit from the function returning an (int)eger.
 }
 

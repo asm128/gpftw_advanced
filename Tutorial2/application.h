@@ -1,11 +1,13 @@
 #include "game.h"
 
-#include "ftw_ascii_display.h"
+#include "ftw_ascii_target.h"
 
 #include "ftw_timer.h"
 
 namespace ftwapp {
 	struct SApplication {
+		::ftwl::STimer															Timer								= {};
+		::game::SGame															Game								= {};
 		int64_t																	FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 		::ftwl::SASCIITarget													ASCIIRenderTarget					= {};
 		::ftwl::SPalette														Palette								= 
@@ -27,8 +29,6 @@ namespace ftwapp {
 			,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_15	
 			};
 
-		::ftwl::STimer															Timer								= {};
-		::game::SGame															Game								= {};
 	};
 
 	::ftwl::error_t															setup								(::ftwapp::SApplication& applicationInstance);

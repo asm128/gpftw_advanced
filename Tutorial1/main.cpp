@@ -4,7 +4,6 @@
 #define NOMINMAX
 
 #include "ftw_ascii_display.h"
-#include "ftw_ascii_color.h"
 
 #include "tilemap.h"
 
@@ -18,7 +17,8 @@ template<typename _tValue>	static inline constexpr	const _tValue		max									(c
 template<typename _tValue>	static inline constexpr	const _tValue		min									(const _tValue& a, const _tValue& b)				{ return (a < b) ? a : b; }
 
 struct SApplication {
-	int																		FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
+	STileMap																TileMap								= {};
+	int64_t																	FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 	::ftwl::SASCIITarget													ASCIIRenderTarget					= {};
 	::ftwl::SPalette														Palette								= 
 		{	(uint32_t)::ftwl::ASCII_COLOR_INDEX_0		
@@ -39,7 +39,6 @@ struct SApplication {
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_15	
 		};
 
-	STileMap																TileMap								= {};
 };
 
 // Cleanup application resources.

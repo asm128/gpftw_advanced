@@ -2,12 +2,16 @@
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 //
 #include "ftw_ascii_display.h"
-#include "ftw_ascii_color.h"
 
 #include <windows.h>    // for interacting with Windows
 
 static constexpr	const int							SCREEN_WIDTH						= 48	;
 static constexpr	const int							SCREEN_HEIGHT						= 32	;
+
+struct SInput {
+	uint8_t													KeyboardPrevious	[256]		= {};
+	uint8_t													KeyboardCurrent		[256]		= {};
+};
 
 struct SApplication {
 	int64_t													FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
@@ -58,8 +62,7 @@ void													draw								(::SApplication& applicationInstance)				{
 	::ftwl::asciiDisplayPaletteSet({&applicationInstance.Palette[0], 16});
 	// 2d loop
 	for(uint32_t y = 0; y < asciiTarget.Height	(); ++y)
-	for(uint32_t x = 0; x < asciiTarget.Width	(); ++x) {
-		// Set the target cell with a given character and color.
+	for(uint32_t x = 0; x < asciiTarget.Width	(); ++x) { // Set the target cell with a given character and color.
 		asciiTarget.Characters	[y][x]							= (((applicationInstance.FrameCounter % 2) + y + x) % 2) ? '!' : '?';
 		asciiTarget.Colors		[y][x]							= (((applicationInstance.FrameCounter % 2) + y + x) % 2) ? 0 | (2 << 4) : 1 | (3 << 4) ;
 	}

@@ -46,10 +46,10 @@ namespace game
 		};
 
 	struct STileFloor {
-		uint64_t														ShotThrough				: 1;
-		uint64_t														Transitable				: 1;
-		uint64_t														Damage					: 8;
-		::std::string													Name					= "Unnamed tile";
+		uint64_t														ShotThrough								: 1;
+		uint64_t														Transitable								: 1;
+		uint64_t														Damage									: 8;
+		::std::string													Name									= "Unnamed tile";
 	};
 
 	struct SFrameInfo {
@@ -67,26 +67,26 @@ namespace game
 	};
 
 	struct SDescriptionTables { // 
-		::ftwl::array_view<const ::game::SCharacter	>				Enemy;		// 
-		::ftwl::array_view<const ::game::SShot		>				Shot;		// 
-		::ftwl::array_view<const ::game::STileFloor	>				Floor;		// 
+		::ftwl::array_view<const ::game::SCharacter	>					Enemy;		// 
+		::ftwl::array_view<const ::game::SShot		>					Shot;		// 
+		::ftwl::array_view<const ::game::STileFloor	>					Floor;		// 
 	};
 
 	struct SGame { // holds the game data
 		::game::SMap													Map;		// declare a variable of type SMap
 		::game::SCharacter												Player;		// Declare a variable of type SCharacter for the player
 		::game::SFrameInfo												FrameInfo;
-		::std::vector<SCharacter>										Enemy;		// Enemy list
-		::std::vector<SShot>											Shots;		// Shot list
+		::std::vector<::game::SCharacter>								Enemy;		// Enemy list
+		::std::vector<::game::SShot>									Shots;		// Shot list
 
 		SDescriptionTables												Descriptions;
 	};
 
 	// -- game functions			
-	::ftwl::error_t												setup									(::game::SGame& gameObject);
-	::ftwl::error_t												cleanup									(::game::SGame& gameObject);
-	::ftwl::error_t												update									(::game::SGame& gameObject, uint64_t timeElapsedMicroseconds);
-	::ftwl::error_t												draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
+	::ftwl::error_t													setup									(::game::SGame& gameObject);
+	::ftwl::error_t													cleanup									(::game::SGame& gameObject);
+	::ftwl::error_t													update									(::game::SGame& gameObject, uint64_t timeElapsedMicroseconds);
+	::ftwl::error_t													draw									(const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid);	// take the map data and print it on the console
 }
 //-------------------------------------------------------------------------
 #endif // GAME_H_90237409238740923749023

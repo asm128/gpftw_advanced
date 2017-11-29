@@ -22,6 +22,10 @@ namespace ftwapp {
 	};
 
 	struct SApplication {
+		::ftwl::SParticle2Engine<float>											ParticleEngine						= {};
+		::std::vector<SParticleInstance>										ParticleInstances					= {};
+		::ftwl::STimer															Timer								= {};
+		::ftwl::SFrameInfo														FrameInfo							= {};
 		int64_t																	FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 		::ftwl::SASCIITarget													ASCIIRenderTarget					= {};
 		::ftwl::SPalette														Palette								= 
@@ -43,10 +47,6 @@ namespace ftwapp {
 			,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_15	
 			};
 
-		::ftwl::STimer															Timer								= {};
-		::ftwl::SParticle2Engine<float>											ParticleEngine						= {};
-		::ftwl::SFrameInfo														FrameInfo							= {};
-		::std::vector<SParticleInstance>										ParticleInstances					= {};
 	};
 
 	::ftwl::error_t															setup								(::ftwapp::SApplication& applicationInstance);

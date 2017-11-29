@@ -1,7 +1,5 @@
 #include "ftw_ascii_display.h"
 
-#include "ftw_ascii_color.h"
-
 #include <cstdio>
 #include <Windows.h>
 

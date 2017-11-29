@@ -1,6 +1,4 @@
 #include "tilemap.h"
-#include "ftw_ascii_color.h"
-
 
 ::ftwl::error_t								initializeTileMap					(STileMap& tileMapToInitialize, uint32_t width, uint32_t height, const STileASCII* tileDescriptions, uint32_t tileDescriptionCount)		{ 
 	tileMapToInitialize.ASCIIMap					= {(uint32_t*)::malloc(sizeof(uint32_t)*width*height), width, height}; 

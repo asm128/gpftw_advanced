@@ -1,7 +1,5 @@
-#include "ftw_grid_view.h"	// for grid_view<>
-#include "ftw_error.h"		// for error_t and failed()
-#include "ftw_ascii_target.h"
-#include "ftw_color.h"
+#include "ftw_grid_view.h"		// for grid_view<>
+#include "ftw_ascii_target.h"	// for SASCIITarget
 
 #ifndef GPFTW_ASCII_SCREEN_H
 #define GPFTW_ASCII_SCREEN_H
