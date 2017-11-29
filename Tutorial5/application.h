@@ -26,7 +26,6 @@ namespace ftwapp {
 		::std::vector<SParticleInstance>										ParticleInstances					= {};
 		::ftwl::STimer															Timer								= {};
 		::ftwl::SFrameInfo														FrameInfo							= {};
-		int64_t																	FrameCounter						= 0;	// Declare and initialize a variable of (int)eger type for keeping track of the number of frame since execution began.
 		::ftwl::SASCIITarget													ASCIIRenderTarget					= {};
 		::ftwl::SPalette														Palette								= 
 			{	(uint32_t)::ftwl::ASCII_COLOR_INDEX_0		
