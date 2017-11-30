@@ -25,7 +25,6 @@ namespace ftwl
 			, ::ftwl::array_view<const uint16_t>{renderTarget.Colors		.begin(), renderTarget.Colors		.size()}
 			);
 	}
-
 }
 
 #endif // GPFTW_ASCII_SCREEN_H

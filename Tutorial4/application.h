@@ -27,7 +27,6 @@ namespace ftwapp {
 			,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_14	
 			,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_15	
 			};
-
 	};
 
 	::ftwl::error_t														setup								(::ftwapp::SApplication& applicationInstance);

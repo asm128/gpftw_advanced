@@ -151,6 +151,7 @@ void																	draw								(::SApplication& applicationInstance)				{
 }
 
 int																		main								()													{
+	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
 	::SApplication																* applicationInstance				= new ::SApplication();	// Create a new instance of our application.
 	if( 0 == applicationInstance )
 		return -1;	// return error because we couldn't allocate the main instance of our application.
@@ -177,6 +178,5 @@ int	WINAPI																WinMain
 	,	_In_		INT				// nShowCmd
 	)
 {
-	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
 	return ::ftwl::failed(::main()) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

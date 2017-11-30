@@ -96,20 +96,19 @@ static constexpr	const ::ftwl::SColorRGBA			g_DefaultPalette	[]							=
 					::ftwl::error_t						ftwl::asciiDisplayClear							(uint8_t character, uint16_t colorRef)																	{
 	ree_if(false == ::g_ConsoleInfo.Created, "Cannot clear console if the console wasn't created!");
 	ree_if(0 == ::g_bufferClearCharacter.size(), "Cannot clear zero-sized console!");
-	if(g_bufferClearCharacter[0] != character)
-		memset(&g_bufferClearCharacter[0], character, g_bufferClearCharacter.size());
+	::memset(&g_bufferClearCharacter[0], character, g_bufferClearCharacter.size());
 	const uint16_t												colors[4]										= {colorRef, colorRef, colorRef, colorRef};
 	if(g_bufferClearColors[0] != colorRef) {
-		 if(g_bufferClearColors.size() % 4) {
-			for(uint32_t iCell = 0; iCell < g_bufferClearColors.size(); ++iCell)
+		 if(0 == (g_bufferClearColors.size() % 4)) {
+			for(uint32_t iCell = 0, cellCount = g_bufferClearColors.size() / 4; iCell < cellCount; ++iCell)
 				*(uint64_t*)g_bufferClearColors[iCell]						= *(uint64_t*)colors;
 		}
-		else if(g_bufferClearColors.size() % 2) {
-			for(uint32_t iCell = 0; iCell < g_bufferClearColors.size(); ++iCell)
+		else if(0 == (g_bufferClearColors.size() % 2)) {
+			for(uint32_t iCell = 0, cellCount = g_bufferClearColors.size() / 2; iCell < cellCount; ++iCell)
 				*(uint32_t*)g_bufferClearColors[iCell]						= *(uint32_t*)colors;
 		}
 		else {
-			for(uint32_t iCell = 0; iCell < g_bufferClearColors.size(); ++iCell)
+			for(uint32_t iCell = 0, cellCount = g_bufferClearColors.size(); iCell < cellCount; ++iCell)
 				g_bufferClearColors[iCell]									= colorRef;
 		}
 	}
