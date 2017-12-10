@@ -33,7 +33,7 @@ namespace ftwl
 								uint16_t										Color		;
 	};
 
-	static inline				::ftwl::error_t									drawRectangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
+	static inline			::ftwl::error_t									drawRectangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
 		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min(rectangle.Offset.y + rectangle.Size.y, (int32_t)asciiTarget.Height	()); y < yStop; ++y)
 		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min(rectangle.Offset.x + rectangle.Size.x, (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
 			asciiTarget.Characters	[y][x]												= value.Character;
@@ -42,7 +42,7 @@ namespace ftwl
 		return 0;
 	}
 
-	static inline				::ftwl::error_t									drawCircle									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SCircle2D<int32_t>& circle)			{
+	static inline			::ftwl::error_t									drawCircle									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SCircle2D<int32_t>& circle)			{
 		for(int32_t y = ::ftwl::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::ftwl::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.Height	()); y < yStop; ++y)
 		for(int32_t x = ::ftwl::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::ftwl::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
 			::ftwl::SCoord2<int32_t>														cellCurrent									= {x, y};
@@ -55,42 +55,25 @@ namespace ftwl
 		return 0;
 	}
 
-	static inline				::ftwl::error_t									drawTriangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
-		::ftwl::SCoord2		<int32_t>													areaMin										= {::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x)};
-		::ftwl::SCoord2		<int32_t>													areaMax										= {::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x)};
-		::ftwl::SLine2D		<double>													segment0									= {triangle.A.Cast<double>(), triangle.B.Cast<double>()};
-		::ftwl::SLine2D		<double>													segment1									= {triangle.B.Cast<double>(), triangle.C.Cast<double>()};
-		::ftwl::SLine2D		<double>													segment2									= {triangle.C.Cast<double>(), triangle.A.Cast<double>()};
-		::ftwl::SRectangle2D<int32_t>													outerRect									= 
-			{	{ ::ftwl::max(0, areaMin.y)
-				, ::ftwl::max(0, areaMin.x)
-				}
-			,	{ ::ftwl::min(areaMax.y, (int32_t)asciiTarget.Height	())
-				, ::ftwl::min(areaMax.x, (int32_t)asciiTarget.Width		())
-				}
-			};	
-
-		for(int32_t y = outerRect.Offset.y, yStop = outerRect.Offset.y + outerRect.Size.y; y < yStop; ++y)
-		for(int32_t x = outerRect.Offset.x, xStop = outerRect.Offset.x + outerRect.Size.x; x < xStop; ++x) {	
-			::ftwl::SCoord2<int32_t>														cellCurrent									= {x, y};
-			const double																	y0											= (segment0.B.y - segment0.A.y) / (y - segment0.A.y);
-			const double																	y1											= (segment1.B.y - segment1.A.y) / (y - segment1.A.y);
-			const double																	y2											= (segment2.B.y - segment2.A.y) / (y - segment2.A.y);
-			bool																			paintCell									= false;	// Here we should set this variable to true or false depending on how many segments we've crossed from the left border of the rectangle
-			if(x > segment0.A.x + (segment0.B.x - segment0.A.x) * y0)
-				paintCell																	= !paintCell;
-			if(x > segment1.A.x + (segment1.B.x - segment1.A.x) * y1)
-				paintCell																	= !paintCell;
-			if(x > segment2.A.x + (segment2.B.x - segment2.A.x) * y2)
-				paintCell																	= !paintCell;
-			if(paintCell) {
+	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/ 
+	static inline constexpr	int32_t											orient2d									(const ::ftwl::SLine2D<int32_t>& segment, const ::ftwl::SCoord2<int32_t>& point)										{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	static inline			::ftwl::error_t									drawTriangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
+		::ftwl::SCoord2		<int32_t>												areaMin										= {::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::min(::ftwl::min(triangle.A.y, triangle.B.y), triangle.C.y)};
+		::ftwl::SCoord2		<int32_t>												areaMax										= {::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::max(::ftwl::max(triangle.A.y, triangle.B.y), triangle.C.y)};
+		for(int32_t y = ::ftwl::max(areaMin.y, 0), yStop = ::ftwl::min(areaMax.y, (int32_t)asciiTarget.Height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(areaMin.x, 0), xStop = ::ftwl::min(areaMax.x, (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
+			const ::ftwl::SCoord2<int32_t>													cellCurrent									= {x, y};
+			// Determine barycentric coordinates
+			int																				w0											= ::ftwl::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int																				w1											= ::ftwl::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int																				w2											= ::ftwl::orient2d({triangle.C, triangle.A}, cellCurrent);
+			if (w0 >= 0 && w1 >= 0 && w2 >= 0) { // If p is on or inside all edges, render pixel.
 				asciiTarget.Characters	[y][x]												= value.Character;
 				asciiTarget.Colors		[y][x]												= value.Color;
 			}
 		}
 		return 0;
 	}
-
 }
 
 #endif // FTW_ASCII_TARGET_H_29874982734

@@ -56,8 +56,7 @@ void													update								(::SApplication& applicationInstance)				{
 	::ftwl::asciiTargetClear(applicationInstance.ASCIIRenderTarget);
 	applicationInstance.Timer.Frame();
 	applicationInstance.FrameInfo.Frame(applicationInstance.Timer.LastTimeMicroseconds);														
-
-}	
+}
 
 void													draw								(::SApplication& applicationInstance)				{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 	::ftwl::SASCIITarget										& asciiTarget						= applicationInstance.ASCIIRenderTarget;
@@ -70,10 +69,15 @@ void													draw								(::SApplication& applicationInstance)				{	// --- T
 	applicationInstance.Palette[2]							= color2;
 	applicationInstance.Palette[3]							= color3;
 	::ftwl::asciiDisplayPaletteSet({&applicationInstance.Palette[0], 16});
-	::ftwl::SRectangle2D<int32_t>								geometry0							= {{2, 2}, {(int32_t)((applicationInstance.FrameInfo.FrameNumber / 2) % (SCREEN_WIDTH - 2)), 5}};
-	::ftwl::SCircle2D	<int32_t>								geometry1							= {5.0 + (applicationInstance.FrameInfo.FrameNumber / 5) % 5, {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}};	
-	::ftwl::STriangle2D	<int32_t>								geometry2							= {{10, 10}, {15, 15}, {5, 12}};	
 
+	::ftwl::SCoord2		<int32_t>								screenCenter						= {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
+	::ftwl::SRectangle2D<int32_t>								geometry0							= {{2, 2}, {(int32_t)((applicationInstance.FrameInfo.FrameNumber / 2) % (SCREEN_WIDTH - 2)), 5}};
+	::ftwl::SCircle2D	<int32_t>								geometry1							= {5.0 + (applicationInstance.FrameInfo.FrameNumber / 5) % 5, screenCenter};	
+	::ftwl::STriangle2D	<int32_t>								geometry2							= {{0, 0}, {20, 20}, {2, 10}};	
+
+	geometry2.A												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};//::ftwl::SCoord2<int32_t>{30, 25};
+	geometry2.B												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};//::ftwl::SCoord2<int32_t>{30, 25};
+	geometry2.C												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};//::ftwl::SCoord2<int32_t>{30, 25};
 	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_CYAN	}, geometry0);
 	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_BLUE	}, {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
 	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_GREEN	}, geometry1);
