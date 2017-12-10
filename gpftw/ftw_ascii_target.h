@@ -26,6 +26,34 @@ namespace ftwl
 
 	template<typename _tUnit>
 	static inline			::ftwl::error_t									asciiTargetCreate							(::ftwl::SASCIITarget& target, const ::ftwl::SCoord2<_tUnit>& size)						{ return ::ftwl::asciiTargetCreate(console, (uint32_t)size.x, (uint32_t)size.y); }
+
+	// ------------------------------------------------------ 
+	struct SASCIICell {
+								uint8_t											Character	;
+								uint16_t										Color		;
+	};
+
+	static					::ftwl::error_t									drawRectangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
+		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min(rectangle.Offset.y + rectangle.Size.y, (int32_t)asciiTarget.Height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min(rectangle.Offset.x + rectangle.Size.x, (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
+			asciiTarget.Characters	[y][x]												= value.Character;
+			asciiTarget.Colors		[y][x]												= value.Color;
+		}
+		return 0;
+	}
+
+	static					::ftwl::error_t									drawCircle									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SCircle2D<int32_t>& circle)			{
+		for(int32_t y = ::ftwl::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::ftwl::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.Height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::ftwl::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
+			::ftwl::SCoord2<int32_t>														cellCurrent									= {x, y};
+			double																			distance									= (cellCurrent - circle.Center).Length();
+			if(distance < circle.Radius) {
+				asciiTarget.Characters	[y][x]												= value.Character;
+				asciiTarget.Colors		[y][x]												= value.Color;
+			}
+		}
+		return 0;
+	}
 }
 
 #endif // FTW_ASCII_TARGET_H_29874982734
