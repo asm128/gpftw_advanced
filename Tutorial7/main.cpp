@@ -40,7 +40,6 @@ struct SApplication {
 		};
 };
 
-
 // --- Cleanup application resources.
 void													cleanup								(::SApplication& applicationInstance)											{ 
 	::ftwl::asciiDisplayDestroy();
@@ -71,11 +70,15 @@ void													draw								(::SApplication& applicationInstance)				{	// --- T
 	applicationInstance.Palette[2]							= color2;
 	applicationInstance.Palette[3]							= color3;
 	::ftwl::asciiDisplayPaletteSet({&applicationInstance.Palette[0], 16});
+	::ftwl::SRectangle2D<int32_t>								geometry0							= {{2, 2}, {(int32_t)((applicationInstance.FrameInfo.FrameNumber / 2) % (SCREEN_WIDTH - 2)), 5}};
+	::ftwl::SCircle2D	<int32_t>								geometry1							= {5.0 + (applicationInstance.FrameInfo.FrameNumber / 5) % 5, {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}};	
+	::ftwl::STriangle2D	<int32_t>								geometry2							= {{10, 10}, {15, 15}, {5, 12}};	
 
-	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_CYAN	}, {{5		, 5		}, {(int32_t)(5.0 + (applicationInstance.FrameInfo.FrameNumber / 10) % 5)		, 15	}});
-	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_BLUE	}, {{5 + 1	, 5 + 1	}, {(int32_t)(5.0 + (applicationInstance.FrameInfo.FrameNumber / 10) % 5) - 2	, 15 - 2}});
-	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_GREEN	}, {5.0 + (applicationInstance.FrameInfo.FrameNumber / 10) % 5		, {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}});
-	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_RED		}, {5.0 + (applicationInstance.FrameInfo.FrameNumber / 10) % 5 - 1	, {SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2}});
+	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_CYAN	}, geometry0);
+	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_BLUE	}, {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
+	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_GREEN	}, geometry1);
+	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_RED		}, {geometry1.Radius - 1, geometry1.Center});
+	::ftwl::drawTriangle	(asciiTarget, {'o', ::ftwl::ASCII_COLOR_YELLOW	}, geometry2);
 }
  	
 int														main								()													{
