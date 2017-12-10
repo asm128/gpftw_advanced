@@ -14,13 +14,17 @@ namespace ftwl
 	static constexpr		const double			math_epsilon		= 0.00001;
 
 	template<typename _tNumber>	
-	static inline constexpr	double					sqrt_safe			(_tNumber _valueSquared)											noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
+	static inline constexpr	double					sqrt_safe			(_tNumber _valueSquared)													noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
+	
 	template<typename _tNumber>	
-	static inline constexpr	_tNumber				clamp				(const _tNumber _value, const _tNumber _min, const _tNumber _max)	noexcept	{ return ::ftwl::min(_max, ::ftwl::max(_min, _value));	}
+	static inline constexpr	_tNumber				clamp				(const _tNumber _value, const _tNumber _min, const _tNumber _max)			noexcept	{ return ::ftwl::min(_max, ::ftwl::max(_min, _value));	}
+
+	template<typename _tValue>	
+	static inline constexpr	bool					in_range			(const _tValue& value, const _tValue& minValue, const _tValue& maxValue)				{ return value < maxValue && value > minValue; }
 
 	struct					SPairSinCos				{ double Sin, Cos; };	
 
-	static inline			SPairSinCos				getSinCos			(double theta)														noexcept	{ return {sin(theta), cos(theta)};						}
+	static inline			SPairSinCos				getSinCos			(double theta)																noexcept	{ return {sin(theta), cos(theta)};						}
 #pragma pack(pop)
 }
 

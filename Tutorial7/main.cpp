@@ -78,11 +78,14 @@ void													draw								(::SApplication& applicationInstance)				{	// --- T
 	geometry2.A												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};//::ftwl::SCoord2<int32_t>{30, 25};
 	geometry2.B												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};//::ftwl::SCoord2<int32_t>{30, 25};
 	geometry2.C												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};//::ftwl::SCoord2<int32_t>{30, 25};
-	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_CYAN	}, geometry0);
-	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_BLUE	}, {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
-	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_GREEN	}, geometry1);
-	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_RED		}, {geometry1.Radius - 1, geometry1.Center});
-	::ftwl::drawTriangle	(asciiTarget, {'o', ::ftwl::ASCII_COLOR_YELLOW	}, geometry2);
+	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_CYAN		}, geometry0);
+	::ftwl::drawRectangle	(asciiTarget, {'!', ::ftwl::ASCII_COLOR_BLUE		}, {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
+	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_GREEN		}, geometry1);
+	::ftwl::drawCircle		(asciiTarget, {'?', ::ftwl::ASCII_COLOR_RED			}, {geometry1.Radius - 1, geometry1.Center});
+	::ftwl::drawTriangle	(asciiTarget, {'o', ::ftwl::ASCII_COLOR_YELLOW		}, geometry2);
+	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_MAGENTA		}, ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
+	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_WHITE		}, ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
+	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_LIGHTGREY	}, ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
 }
  	
 int														main								()													{

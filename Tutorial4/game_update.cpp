@@ -55,9 +55,6 @@ void																updatePlayerInput					( ::game::SGame& gameObject)										
 	}
 }
 
-template<typename _tValue>	
-static inline constexpr	bool										in_range							(const _tValue& value, const _tValue& minValue, const _tValue& maxValue)								{ return value < maxValue && value > minValue; }
-
 void																evaluateAction						( ::game::SCharacter& playerInstance, double fLastFrameTime )											{
 	const double															timeScale							= 3;
 	
@@ -78,11 +75,11 @@ void																evaluateAction						( ::game::SCharacter& playerInstance, do
 
 void																updatePlayer						( ::game::SGame& gameObject, double fLastFrameTime )													{
 	::game::SCharacter														& playerInstance					= gameObject.Player;
-	::game::SParticleEngine												& bodyEngine						= gameObject.ParticleEngine;
+	::game::SParticleEngine													& bodyEngine						= gameObject.ParticleEngine;
 	::game::SParticle														& playerBody						= bodyEngine.Particle		[playerInstance.Particle];
 	::game::SParticle														& playerBodyNext					= bodyEngine.ParticleNext	[playerInstance.Particle];
 	::game::SParticleState													& playerBodyState					= bodyEngine.ParticleState	[playerInstance.Particle];
-	::game::SCellCoord2													& playerPosition					= playerBody.Position;
+	::game::SCellCoord2														& playerPosition					= playerBody.Position;
 	::game::STileCoord2														& playerCell						= playerPosition.Tile;
 	::game::SVector2														& playerDeltas						= playerPosition.Deltas;
 

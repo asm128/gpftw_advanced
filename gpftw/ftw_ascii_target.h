@@ -74,6 +74,50 @@ namespace ftwl
 		}
 		return 0;
 	}
+
+	// Bresenham's line algorithm
+	template<typename _tCoord>
+	static					void											drawLine									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SLine2D<_tCoord>& line)				{
+		float																		x1											= (float)line.A.x
+			,																		y1											= (float)line.A.y
+			,																		x2											= (float)line.B.x
+			,																		y2											= (float)line.B.y
+			;
+		const bool																	steep										= (fabs(y2 - y1) > fabs(x2 - x1));
+		if(steep){
+			::std::swap(x1, y1);
+			::std::swap(x2, y2);
+		}
+		if(x1 > x2) {
+			::std::swap(x1, x2);
+			::std::swap(y1, y2);
+		}
+		const float																	dx											= x2 - x1;
+		const float																	dy											= fabs(y2 - y1);
+		float																		error										= dx / 2.0f;
+		const int32_t																ystep										= (y1 < y2) ? 1 : -1;
+		int32_t																		y											= (int32_t)y1;
+		for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
+			if(steep) {
+				if(false == ::ftwl::in_range(x, 0, (int32_t)asciiTarget.Height()) || false == ::ftwl::in_range(y, 0, (int32_t)asciiTarget.Width()))
+					continue;
+				asciiTarget.Characters	[x][y]											= value.Character;
+				asciiTarget.Colors		[x][y]											= value.Color;
+			}
+			else {
+				if(false == ::ftwl::in_range(y, 0, (int32_t)asciiTarget.Height()) || false == ::ftwl::in_range(x, 0, (int32_t)asciiTarget.Width()))
+					continue;
+				asciiTarget.Characters	[y][x]											= value.Character;
+				asciiTarget.Colors		[y][x]											= value.Color;
+			}
+ 
+			error																-= dy;
+			if(error < 0) {
+				y																	+= ystep;
+				error																+= dx;
+			}
+		}
+	}
 }
 
 #endif // FTW_ASCII_TARGET_H_29874982734
