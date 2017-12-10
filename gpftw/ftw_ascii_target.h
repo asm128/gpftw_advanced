@@ -58,6 +58,9 @@ namespace ftwl
 	static inline				::ftwl::error_t									drawTriangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
 		::ftwl::SCoord2		<int32_t>													areaMin										= {::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x)};
 		::ftwl::SCoord2		<int32_t>													areaMax										= {::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x)};
+		::ftwl::SLine2D		<double>													segment0									= {triangle.A.Cast<double>(), triangle.B.Cast<double>()};
+		::ftwl::SLine2D		<double>													segment1									= {triangle.B.Cast<double>(), triangle.C.Cast<double>()};
+		::ftwl::SLine2D		<double>													segment2									= {triangle.C.Cast<double>(), triangle.A.Cast<double>()};
 		::ftwl::SRectangle2D<int32_t>													outerRect									= 
 			{	{ ::ftwl::max(0, areaMin.y)
 				, ::ftwl::max(0, areaMin.x)
@@ -70,10 +73,16 @@ namespace ftwl
 		for(int32_t y = outerRect.Offset.y, yStop = outerRect.Offset.y + outerRect.Size.y; y < yStop; ++y)
 		for(int32_t x = outerRect.Offset.x, xStop = outerRect.Offset.x + outerRect.Size.x; x < xStop; ++x) {	
 			::ftwl::SCoord2<int32_t>														cellCurrent									= {x, y};
-			::ftwl::SCoord2<int32_t>														segmentPoint0								= {x, y};
-			::ftwl::SCoord2<int32_t>														segmentPoint1								= {x, y};
-			::ftwl::SCoord2<int32_t>														segmentPoint2								= {x, y};
-			bool																			paintCell									= true;	// Here we should set this variable to true or false depending on how many segments we've crossed from the left border of the rectangle
+			const double																	y0											= (segment0.B.y - segment0.A.y) / (y - segment0.A.y);
+			const double																	y1											= (segment1.B.y - segment1.A.y) / (y - segment1.A.y);
+			const double																	y2											= (segment2.B.y - segment2.A.y) / (y - segment2.A.y);
+			bool																			paintCell									= false;	// Here we should set this variable to true or false depending on how many segments we've crossed from the left border of the rectangle
+			if(x > segment0.A.x + (segment0.B.x - segment0.A.x) * y0)
+				paintCell																	= !paintCell;
+			if(x > segment1.A.x + (segment1.B.x - segment1.A.x) * y1)
+				paintCell																	= !paintCell;
+			if(x > segment2.A.x + (segment2.B.x - segment2.A.x) * y2)
+				paintCell																	= !paintCell;
 			if(paintCell) {
 				asciiTarget.Characters	[y][x]												= value.Character;
 				asciiTarget.Colors		[y][x]												= value.Color;
