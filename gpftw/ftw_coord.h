@@ -72,6 +72,7 @@ namespace ftwl {
 	template<typename _tElement>	static inline constexpr	_tElement				rise					(const SLine2D<_tElement>& line)											noexcept	{ return line.B.y - line.A.y;		}
 	template<typename _tElement>	static inline constexpr	_tElement				run						(const SLine2D<_tElement>& line)											noexcept	{ return line.B.x - line.A.x;		}
 	template<typename _tElement>	static inline constexpr	_tElement				slope					(const SLine2D<_tElement>& line)											noexcept	{ return rise(line) / run(line);	}
+	template<typename _tElement>	static inline constexpr	_tElement				orient2d				(const ::ftwl::SLine2D<_tElement>& segment, const ::ftwl::SCoord2<_tElement>& point)	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
 
 	// ---- Collision
 	template<typename _tElement>	static					bool					raySegmentIntersect		(SCoord2<_tElement> r_d, SCoord2<_tElement> r_p, SCoord2<_tElement> s_d, SCoord2<_tElement> s_p)								{

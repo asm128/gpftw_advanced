@@ -29,7 +29,7 @@ namespace ftwl
 		inline				_tElement*								begin						()																			{ return Data;						}
 		inline				_tElement*								end							()																			{ return Data + size();				}
 
-		inline constexpr	uint32_t								size						()																	const	{ return Width	* Height;			}
+		inline constexpr	uint32_t								size						()																	const	{ return Width * Height;			}
 		inline constexpr	uint32_t								width						()																	const	{ return Width	;					}
 		inline constexpr	uint32_t								height						()																	const	{ return Height	;					}
 	};

@@ -4,6 +4,7 @@
 #include "ftw_ascii_display.h"
 #include "ftw_frameinfo.h"
 #include "ftw_timer.h"
+#include "ftw_bitmap_target.h"
 
 #include <windows.h>    // for interacting with Windows
 
@@ -20,6 +21,7 @@ struct SApplication {
 	::ftwl::STimer											Timer								= {};
 	::ftwl::SFrameInfo										FrameInfo							= {};
 	::ftwl::SASCIITarget									ASCIIRenderTarget					= {};
+	::ftwl::SBitmapTargetRGBA								BitmapRenderTarget					= {};
 	::ftwl::SPalette										Palette								= 
 		{	(uint32_t)::ftwl::ASCII_COLOR_INDEX_0		
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_1 	
@@ -41,7 +43,7 @@ struct SApplication {
 };
 
 // --- Cleanup application resources.
-void													cleanup								(::SApplication& applicationInstance)											{ 
+void													cleanup								(::SApplication& applicationInstance)				{ 
 	::ftwl::asciiDisplayDestroy();
 	::ftwl::asciiTargetDestroy(applicationInstance.ASCIIRenderTarget);
 }

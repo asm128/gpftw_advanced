@@ -15,6 +15,7 @@ struct SWindowsConsoleInfo {
 						::CONSOLE_SCREEN_BUFFER_INFOEX		InfoScreenBufferOriginal						= {sizeof(::CONSOLE_SCREEN_BUFFER_INFOEX)};
 						::CONSOLE_SCREEN_BUFFER_INFOEX		InfoScreenBufferCurrent							= {sizeof(::CONSOLE_SCREEN_BUFFER_INFOEX)};
 						bool								Created											= false;
+						bool								SystemOwned										= false;
 };
 
 static				::std::vector<uint8_t >				g_bufferClearCharacter							= {};
@@ -156,32 +157,39 @@ static constexpr	const ::ftwl::SColorRGBA			g_DefaultPalette	[]							=
 	const ::HANDLE												hConsoleOut										= ::GetStdHandle( STD_OUTPUT_HANDLE );
 	::SetCurrentConsoleFontEx		(hConsoleOut, FALSE, &g_ConsoleInfo.InfoFontOriginal	);
 	::SetConsoleScreenBufferInfoEx	(hConsoleOut, &g_ConsoleInfo.InfoScreenBufferOriginal	);
-	::FreeConsole();
-	::fclose(stdout);
-	::FILE*										
-	stream													= 0; ::freopen_s	(&stream, "CONIN$", "r+", stdin);
-	stream													= 0; ::fopen_s		(&stream, "CONOUT$", "w+");
+	if(false == g_ConsoleInfo.SystemOwned) {
+		::FreeConsole();
+		::fclose(stdout);
+		::FILE*										
+		stream													= 0; ::freopen_s	(&stream, "CONIN$", "r+", stdin);
+		stream													= 0; ::fopen_s		(&stream, "CONOUT$", "w+");
+	}
 	g_ConsoleInfo.Created									= false;
 	return 0; 
 }
 
 					::ftwl::error_t						ftwl::asciiDisplayCreate						(uint32_t frontBufferWidth, uint32_t frontBufferHeight)													{
-	::AllocConsole();
-	::AttachConsole(::GetCurrentProcessId());
+	bool														createdConsole = (FALSE == ::AllocConsole()) ? false : true;
+	if(createdConsole)
+		::AttachConsole(::GetCurrentProcessId());
+
 	::EnableMenuItem
 		( ::GetSystemMenu(::GetConsoleWindow(), FALSE)
-	    , SC_CLOSE
-	    , MF_BYCOMMAND | MF_GRAYED 
+		, SC_CLOSE
+		, MF_BYCOMMAND | MF_GRAYED 
 		);
-	const HANDLE												hConsoleIn										= ::GetStdHandle(STD_INPUT_HANDLE);
-    DWORD														mode											= 0;
-    ::GetConsoleMode(hConsoleIn, &mode);
-    mode													&= ~(DWORD)ENABLE_QUICK_EDIT_MODE;
-    ::SetConsoleMode(hConsoleIn, mode);
 
-	FILE*												
-	stream													= 0;	::freopen_s(&stream, "CONOUT$", "w+", stdout);
-	stream													= 0;	::freopen_s(&stream, "CONIN$", "r+", stdin);
+	if(createdConsole) {
+		const HANDLE												hConsoleIn										= ::GetStdHandle(STD_INPUT_HANDLE);
+		DWORD														mode											= 0;
+		::GetConsoleMode(hConsoleIn, &mode);
+		mode													&= ~(DWORD)ENABLE_QUICK_EDIT_MODE;
+		::SetConsoleMode(hConsoleIn, mode);
+
+		FILE*												
+		stream													= 0; ::freopen_s(&stream, "CONOUT$", "w+", stdout);
+		stream													= 0; ::freopen_s(&stream, "CONIN$", "r+", stdin);
+	}
 
 	SetConsoleTitle("ASCII Console FTW");
 	::SetConsoleCtrlHandler(::handlerConsoleRoutine, TRUE);
@@ -204,5 +212,6 @@ static constexpr	const ::ftwl::SColorRGBA			g_DefaultPalette	[]							=
 	csbiInfo.srWindow.Bottom								= 600;
 	::initWindowsConsoleProperties(frontBufferWidth, frontBufferHeight, g_DefaultPalette);
 	g_ConsoleInfo.Created									= true;
+	g_ConsoleInfo.SystemOwned								= createdConsole ? false : true;
 	return 0; 
 }

@@ -28,6 +28,9 @@
     <Filter Include="physics">
       <UniqueIdentifier>{53e5a8f1-6be3-4db3-86a5-0e75f55a434f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="bitmap">
+      <UniqueIdentifier>{b35c2579-efcf-4a53-8b2a-b1dcd1dff0d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -77,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="ftw_ascii_display.h">
       <Filter>ascii</Filter>
+    </ClInclude>
+    <ClInclude Include="ftw_bitmap_target.h">
+      <Filter>bitmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

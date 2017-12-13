@@ -56,7 +56,6 @@ namespace ftwl
 	}
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/ 
-	static inline constexpr	int32_t											orient2d									(const ::ftwl::SLine2D<int32_t>& segment, const ::ftwl::SCoord2<int32_t>& point)										{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
 	static inline			::ftwl::error_t									drawTriangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
 		::ftwl::SCoord2		<int32_t>												areaMin										= {::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::min(::ftwl::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::ftwl::SCoord2		<int32_t>												areaMax										= {::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::max(::ftwl::max(triangle.A.y, triangle.B.y), triangle.C.y)};
@@ -77,7 +76,7 @@ namespace ftwl
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					void											drawLine									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SLine2D<_tCoord>& line)				{
+	static					::ftwl::error_t									drawLine									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SLine2D<_tCoord>& line)				{
 		float																		x1											= (float)line.A.x
 			,																		y1											= (float)line.A.y
 			,																		x2											= (float)line.B.x
@@ -117,6 +116,7 @@ namespace ftwl
 				error																+= dx;
 			}
 		}
+		return 0;
 	}
 }
 
