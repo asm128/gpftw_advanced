@@ -1,8 +1,8 @@
 #include "ftw_grid_view.h"		// for grid_view<>
 #include "ftw_ascii_target.h"	// for SASCIITarget
 
-#ifndef GPFTW_ASCII_SCREEN_H
-#define GPFTW_ASCII_SCREEN_H
+#ifndef GPFTW_ASCII_DISPLAY_H
+#define GPFTW_ASCII_DISPLAY_H
 
 namespace ftwl 
 {
@@ -27,4 +27,4 @@ namespace ftwl
 	}
 }
 
-#endif // GPFTW_ASCII_SCREEN_H
+#endif // GPFTW_ASCII_DISPLAY_H

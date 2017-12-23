@@ -192,14 +192,14 @@ static 			::ftwl::error_t																updateSpawners														(::game::SG
 	{	// ---------------------------- Handle player input
 		::game::SShip																					& playerShip													= shipInstances[0];
 		// SWitch weapon
-			 if(::GetAsyncKeyState('1') || ::GetAsyncKeyState(VK_NUMPAD1)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_ROCK		; else { playerShip.ShipDescription = (SHIP_TYPE)(1 % SHIP_TYPE_COUNT); } }
-		else if(::GetAsyncKeyState('2') || ::GetAsyncKeyState(VK_NUMPAD2)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_ARROW	; else { playerShip.ShipDescription = (SHIP_TYPE)(2 % SHIP_TYPE_COUNT); } }
-		else if(::GetAsyncKeyState('3') || ::GetAsyncKeyState(VK_NUMPAD3)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_FIREBALL	; else { playerShip.ShipDescription = (SHIP_TYPE)(3 % SHIP_TYPE_COUNT); } }
-		else if(::GetAsyncKeyState('4') || ::GetAsyncKeyState(VK_NUMPAD4)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_LASER	; else { playerShip.ShipDescription = (SHIP_TYPE)(4 % SHIP_TYPE_COUNT); } }
-		else if(::GetAsyncKeyState('5') || ::GetAsyncKeyState(VK_NUMPAD5)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_POISON	; else { playerShip.ShipDescription = (SHIP_TYPE)(5 % SHIP_TYPE_COUNT); } }
-		else if(::GetAsyncKeyState('6') || ::GetAsyncKeyState(VK_NUMPAD6)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_BULLET	; else { playerShip.ShipDescription = (SHIP_TYPE)(6 % SHIP_TYPE_COUNT); } }
-		else if(::GetAsyncKeyState('7') || ::GetAsyncKeyState(VK_NUMPAD7)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_PLASMA	; else { playerShip.ShipDescription = (SHIP_TYPE)(7 % SHIP_TYPE_COUNT); } }
-		else if(::GetAsyncKeyState('8') || ::GetAsyncKeyState(VK_NUMPAD8)) { if(!GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = SHOT_TYPE_BOMB		; else { playerShip.ShipDescription = (SHIP_TYPE)(8 % SHIP_TYPE_COUNT); } }
+			 if(::GetAsyncKeyState('1') || ::GetAsyncKeyState(VK_NUMPAD1)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_ROCK		; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(1 % ::game::SHIP_TYPE_COUNT); } }
+		else if(::GetAsyncKeyState('2') || ::GetAsyncKeyState(VK_NUMPAD2)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_ARROW		; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(2 % ::game::SHIP_TYPE_COUNT); } }
+		else if(::GetAsyncKeyState('3') || ::GetAsyncKeyState(VK_NUMPAD3)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_FIREBALL	; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(3 % ::game::SHIP_TYPE_COUNT); } }
+		else if(::GetAsyncKeyState('4') || ::GetAsyncKeyState(VK_NUMPAD4)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_LASER		; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(4 % ::game::SHIP_TYPE_COUNT); } }
+		else if(::GetAsyncKeyState('5') || ::GetAsyncKeyState(VK_NUMPAD5)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_POISON		; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(5 % ::game::SHIP_TYPE_COUNT); } }
+		else if(::GetAsyncKeyState('6') || ::GetAsyncKeyState(VK_NUMPAD6)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_BULLET		; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(6 % ::game::SHIP_TYPE_COUNT); } }
+		else if(::GetAsyncKeyState('7') || ::GetAsyncKeyState(VK_NUMPAD7)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_PLASMA		; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(7 % ::game::SHIP_TYPE_COUNT); } }
+		else if(::GetAsyncKeyState('8') || ::GetAsyncKeyState(VK_NUMPAD8)) { if(!::GetAsyncKeyState(VK_CONTROL)) playerShip.SelectedShot = ::game::SHOT_TYPE_BOMB		; else { playerShip.ShipDescription = (::game::SHIP_TYPE)(8 % ::game::SHIP_TYPE_COUNT); } }
 
 		if(::GetAsyncKeyState(VK_SPACE)) // Shoot
 			for(uint32_t i = 0; i < 2; ++i ) {
@@ -218,10 +218,10 @@ static 			::ftwl::error_t																updateSpawners														(::game::SG
 		bool																							bLeft															= ::GetAsyncKeyState('A');
 
 		::ftwl::SParticle2<float>																		& playerParticle												= particleEngine.Particle[playerShip.ParticleIndex];
-		if( bUp		) playerParticle.Forces.AccumulatedForce.y											-= lastFrameSeconds * 1000 * (GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
-		if( bRight	) playerParticle.Forces.AccumulatedForce.x											+= lastFrameSeconds * 1000 * (GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
-		if( bDown	) playerParticle.Forces.AccumulatedForce.y											+= lastFrameSeconds * 1000 * (GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
-		if( bLeft	) playerParticle.Forces.AccumulatedForce.x											-= lastFrameSeconds * 1000 * (GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
+		if( bUp		) playerParticle.Forces.AccumulatedForce.y											-= lastFrameSeconds * 1000 * (::GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
+		if( bRight	) playerParticle.Forces.AccumulatedForce.x											+= lastFrameSeconds * 1000 * (::GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
+		if( bDown	) playerParticle.Forces.AccumulatedForce.y											+= lastFrameSeconds * 1000 * (::GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
+		if( bLeft	) playerParticle.Forces.AccumulatedForce.x											-= lastFrameSeconds * 1000 * (::GetAsyncKeyState(VK_SHIFT) ? 5.0f : 1);
 		if(!bUp && !bRight && !bDown && !bLeft) {
 		}
 		else {
@@ -231,11 +231,11 @@ static 			::ftwl::error_t																updateSpawners														(::game::SG
 	}
 
 	// -- Spawn a background star.
-	if(0 == rand() % 10) {
+	if(0 == ::rand() % 10) {
 		int32_t																								newEffectIndex													= ::game::addEffect(gameInstance, ::game::EFFECT_TYPE_STARS);
 		int32_t																								effectParticleIndex												= gameInstance.Effects[newEffectIndex].ParticleIndex;
 		gameInstance.ParticleEngineEffects.Particle[effectParticleIndex].Position						= {gameInstance.CombatAreaSizeEffective.x - 1.0f, float(rand() % gameInstance.CombatAreaSizeEffective.y)};
-		gameInstance.ParticleEngineEffects.Particle[effectParticleIndex].Forces.Velocity.x				*= 1 + (rand() % 10) * .1f;
+		gameInstance.ParticleEngineEffects.Particle[effectParticleIndex].Forces.Velocity.x				*= 1 + (::rand() % 10) * .1f;
 	}
 
 	// -- Apply background force.

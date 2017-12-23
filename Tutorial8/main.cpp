@@ -12,17 +12,28 @@ static constexpr	const int							SCREEN_WIDTH						= 132	;
 static constexpr	const int							SCREEN_HEIGHT						= 50	;
 
 struct SInput {
-	uint8_t													KeyboardPrevious	[256]		= {};
-	uint8_t													KeyboardCurrent		[256]		= {};
+						uint8_t								KeyboardPrevious	[256]			= {};
+						uint8_t								KeyboardCurrent		[256]			= {};
+};
+
+struct SRuntimeValues {
+						::HINSTANCE							hInstance							= {}; 
+						::HINSTANCE							hPrevInstance						= {}; 
+						::LPSTR								lpCmdLine							= {}; 
+						::INT								nShowCmd							= {}; 
 };
 
 struct SApplication {
-	::SInput												SystemInput							= {};
-	::ftwl::STimer											Timer								= {};
-	::ftwl::SFrameInfo										FrameInfo							= {};
-	::ftwl::SASCIITarget									ASCIIRenderTarget					= {};
-	::ftwl::SBitmapTargetRGBA								BitmapRenderTarget					= {};
-	::ftwl::SPalette										Palette								= 
+						::HWND								MainWindowHandle					= {};
+						::WNDCLASSEX						MainWindowClass						= {};
+	static constexpr	const char							MainWindowClassName	[256]			= "FTWL_WINDOW";
+						::SRuntimeValues					RuntimeValues						= {};
+						::SInput							SystemInput							= {};
+						::ftwl::STimer						Timer								= {};
+						::ftwl::SFrameInfo					FrameInfo							= {};
+						::ftwl::SASCIITarget				ASCIIRenderTarget					= {};
+						::ftwl::SBitmapTargetRGBA			BitmapRenderTarget					= {};
+						::ftwl::SPalette					Palette								= 
 		{	(uint32_t)::ftwl::ASCII_COLOR_INDEX_0		
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_1 	
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_2 	
@@ -40,27 +51,79 @@ struct SApplication {
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_14	
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_15	
 		};
+
+															SApplication						(SRuntimeValues& runtimeValues)													: RuntimeValues(runtimeValues) {}
 };
 
+static	::SApplication									* g_ApplicationInstance				= 0;
+
+LRESULT WINAPI											mainWndProc							(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
+	::SApplication												& applicationInstance				= *g_ApplicationInstance;
+	switch(uMsg) {
+	case WM_DESTROY	: 
+		PostQuitMessage	(0); 
+		applicationInstance.MainWindowHandle					= 0;
+		return 0;
+	case WM_CLOSE	: DestroyWindow		(hWnd)	; return 0;
+	default: break;		
+	}
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+void													initWndClass						(::HINSTANCE hInstance, const char* className, ::WNDCLASSEX& wndClassToInit)	{
+	wndClassToInit											= {sizeof(::WNDCLASSEX),};
+	wndClassToInit.lpfnWndProc								= ::mainWndProc;
+	wndClassToInit.hInstance								= hInstance;
+	wndClassToInit.hCursor									= LoadCursor(NULL, IDC_ARROW);
+	wndClassToInit.hbrBackground							= (::HBRUSH)(COLOR_3DFACE + 1);
+	wndClassToInit.lpszClassName							= className;
+}
+
+void													updateMainWindow					(::SApplication& applicationInstance)											{ 
+	::MSG														msg									= {};
+	while(PeekMessage(&msg, applicationInstance.MainWindowHandle, 0, 0, PM_REMOVE)) {
+		TranslateMessage(&msg);
+		DispatchMessage	(&msg);
+		if(msg.message == WM_QUIT) {
+			applicationInstance.MainWindowHandle					= 0;
+			break;
+		}
+	}
+}
+
 // --- Cleanup application resources.
-void													cleanup								(::SApplication& applicationInstance)				{ 
-	::ftwl::asciiDisplayDestroy();
-	::ftwl::asciiTargetDestroy(applicationInstance.ASCIIRenderTarget);
+void													cleanup								(::SApplication& applicationInstance)											{ 
+	if(applicationInstance.MainWindowHandle) {
+		::DestroyWindow(applicationInstance.MainWindowHandle);
+		::updateMainWindow(applicationInstance);
+	}
+
+	UnregisterClass(applicationInstance.MainWindowClassName, applicationInstance.MainWindowClass.hInstance);
+	::ftwl::asciiDisplayDestroy	();
+	::ftwl::asciiTargetDestroy	(applicationInstance.ASCIIRenderTarget);
+	g_ApplicationInstance									= 0;
 }
 
 // --- Initialize console.
-void													setup								(::SApplication& applicationInstance)				{ 
-	::ftwl::asciiTargetCreate(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
-	::ftwl::asciiDisplayCreate(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
+void													setup								(::SApplication& applicationInstance)											{ 
+	g_ApplicationInstance									= &applicationInstance;
+	::ftwl::asciiTargetCreate	(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
+	::ftwl::asciiDisplayCreate	(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
+	::initWndClass(applicationInstance.RuntimeValues.hInstance, applicationInstance.MainWindowClassName, applicationInstance.MainWindowClass);
+	RegisterClassEx(&applicationInstance.MainWindowClass);
+	applicationInstance.MainWindowHandle					= CreateWindow(applicationInstance.MainWindowClassName, "Window FTW", WS_OVERLAPPEDWINDOW, 10, 10, 320, 240, 0, 0, applicationInstance.MainWindowClass.hInstance, 0);
+	::ShowWindow	(applicationInstance.MainWindowHandle, SW_SHOW);
+	::UpdateWindow	(applicationInstance.MainWindowHandle);
 }
 
-void													update								(::SApplication& applicationInstance)				{ 
+void													update								(::SApplication& applicationInstance)											{ 
 	::ftwl::asciiTargetClear(applicationInstance.ASCIIRenderTarget);
 	applicationInstance.Timer.Frame();
-	applicationInstance.FrameInfo.Frame(applicationInstance.Timer.LastTimeMicroseconds);														
+	applicationInstance.FrameInfo.Frame(applicationInstance.Timer.LastTimeMicroseconds);																				
+	::updateMainWindow(applicationInstance);
 }
 
-void													draw								(::SApplication& applicationInstance)				{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+void													draw								(::SApplication& applicationInstance)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 	::ftwl::SASCIITarget										& asciiTarget						= applicationInstance.ASCIIRenderTarget;
 	uint32_t													color0								= (0xFF & applicationInstance.FrameInfo.FrameNumber * 1) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 2) << 8) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 5) << 16);
 	uint32_t													color1								= (0xFF & applicationInstance.FrameInfo.FrameNumber * 2) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 1) << 8) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 3) << 16);
@@ -76,7 +139,6 @@ void													draw								(::SApplication& applicationInstance)				{	// --- T
 	::ftwl::SRectangle2D<int32_t>								geometry0							= {{2, 2}, {(int32_t)((applicationInstance.FrameInfo.FrameNumber / 2) % (::SCREEN_WIDTH - 2)), 5}};
 	::ftwl::SCircle2D	<int32_t>								geometry1							= {5.0 + (applicationInstance.FrameInfo.FrameNumber / 5) % 5, screenCenter};	
 	::ftwl::STriangle2D	<int32_t>								geometry2							= {{0, 0}, {15, 15}, {-5, 10}};	
-
 	geometry2.A												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
 	geometry2.B												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
 	geometry2.C												+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
@@ -88,11 +150,20 @@ void													draw								(::SApplication& applicationInstance)				{	// --- T
 	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_MAGENTA		}, ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
 	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_WHITE		}, ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
 	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_LIGHTGREY	}, ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
+	::ftwl::SBitmapTargetRGBA									bmpTarget							= {};
+	::ftwl::drawRectangle	(bmpTarget, {0xFF, 0x00, 0x00, 0xFF}, geometry0);
+	::ftwl::drawRectangle	(bmpTarget, {0xFF, 0xFF, 0x00, 0xFF}, {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
+	::ftwl::drawCircle		(bmpTarget, {0xFF, 0xFF, 0xFF, 0xFF}, geometry1);
+	::ftwl::drawCircle		(bmpTarget, {0xFF, 0x00, 0xFF, 0xFF}, {geometry1.Radius - 1, geometry1.Center});
+	::ftwl::drawTriangle	(bmpTarget, {0xFF, 0x00, 0x00, 0xFF}, geometry2);
+	::ftwl::drawLine		(bmpTarget, {0xFF, 0xFF, 0x00, 0xFF}, ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
+	::ftwl::drawLine		(bmpTarget, {0xFF, 0xFF, 0xFF, 0xFF}, ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
+	::ftwl::drawLine		(bmpTarget, {0xFF, 0x00, 0xFF, 0xFF}, ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
 }
- 	
-int														main								()													{
+
+int														rtMain								(::SRuntimeValues& runtimeValues)												{
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	::SApplication												* applicationInstance				= new ::SApplication();		// Create a new instance of our application.
+	::SApplication												* applicationInstance				= new ::SApplication(runtimeValues);		// Create a new instance of our application.
 	if(0 == applicationInstance)
 		return -1;	// return error because we couldn't allocate the main instance of our application.
 
@@ -107,17 +178,27 @@ int														main								()													{
 	}
 
 	::cleanup(*applicationInstance);
-
 	delete(applicationInstance);	// Destroy the applcation instance and release its memory.
-	return 0;						// Exit from the function returning an (int)eger.
+	return 0;
+}
+
+int														main								()																				{
+	::SRuntimeValues											runtimeValues						= {};
+	return ::ftwl::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }
 
 int	WINAPI												WinMain								
-	(	_In_		HINSTANCE		// hInstance
-	,	_In_opt_	HINSTANCE		// hPrevInstance
-	,	_In_		LPSTR			// lpCmdLine
-	,	_In_		INT				// nShowCmd
+	(	_In_		HINSTANCE		hInstance
+	,	_In_opt_	HINSTANCE		hPrevInstance
+	,	_In_		LPSTR			lpCmdLine
+	,	_In_		INT				nShowCmd
 	)
 {
-	return ::ftwl::failed(main()) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
+	::SRuntimeValues											runtimeValues						= 
+		{	hInstance
+		,	hPrevInstance
+		,	lpCmdLine
+		,	nShowCmd
+		};
+	return ::ftwl::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.
 }

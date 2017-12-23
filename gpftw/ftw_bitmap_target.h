@@ -7,25 +7,24 @@
 
 namespace ftwl
 {
-	struct SBitmapTargetBGRA	{ typedef SColorBGRA	TColor; ::ftwl::grid_view<SColorBGRA	> Colors; };
-	struct SBitmapTargetBGR		{ typedef SColorBGR		TColor; ::ftwl::grid_view<SColorBGR		> Colors; };
-	struct SBitmapTargetRGBA	{ typedef SColorRGBA	TColor; ::ftwl::grid_view<SColorRGBA	> Colors; };
-	struct SBitmapTargetFloat32	{ typedef SColorFloat	TColor; ::ftwl::grid_view<SColorFloat	> Colors; };
+	struct SBitmapTargetBGRA	{ typedef SColorBGRA	TColor; ::ftwl::grid_view<TColor> Colors; };
+	struct SBitmapTargetBGR		{ typedef SColorBGR		TColor; ::ftwl::grid_view<TColor> Colors; };
+	struct SBitmapTargetRGBA	{ typedef SColorRGBA	TColor; ::ftwl::grid_view<TColor> Colors; };
+	struct SBitmapTargetFloat32	{ typedef SColorFloat	TColor; ::ftwl::grid_view<TColor> Colors; };
 
 	template<typename _tTarget>
 	static inline			::ftwl::error_t									drawRectangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
-		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min(rectangle.Offset.y + rectangle.Size.y, (int32_t)bitmapTarget.Height	()); y < yStop; ++y)
-		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min(rectangle.Offset.x + rectangle.Size.x, (int32_t)bitmapTarget.Width	()); x < xStop; ++x) {	
-			bitmapTarget.Characters	[y][x]												= value.Character;
-			bitmapTarget.Colors		[y][x]												= value.Color;
+		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min(rectangle.Offset.y + rectangle.Size.y, (int32_t)bitmapTarget.Colors.height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min(rectangle.Offset.x + rectangle.Size.x, (int32_t)bitmapTarget.Colors.width	()); x < xStop; ++x) {	
+			bitmapTarget.Colors		[y][x]												= value;
 		}
 		return 0;
 	}
 
 	template<typename _tTarget>
 	static inline			::ftwl::error_t									drawCircle									(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SCircle2D<int32_t>& circle)			{
-		for(int32_t y = ::ftwl::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::ftwl::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)bitmapTarget.Height	()); y < yStop; ++y)
-		for(int32_t x = ::ftwl::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::ftwl::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)bitmapTarget.Width		()); x < xStop; ++x) {	
+		for(int32_t y = ::ftwl::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::ftwl::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)bitmapTarget.Colors.height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::ftwl::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)bitmapTarget.Colors.width	()); x < xStop; ++x) {	
 			::ftwl::SCoord2<int32_t>														cellCurrent									= {x, y};
 			double																			distance									= (cellCurrent - circle.Center).Length();
 			if(distance < circle.Radius) 
@@ -39,8 +38,8 @@ namespace ftwl
 	static inline			::ftwl::error_t									drawTriangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
 		::ftwl::SCoord2		<int32_t>												areaMin										= {::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::min(::ftwl::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::ftwl::SCoord2		<int32_t>												areaMax										= {::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::max(::ftwl::max(triangle.A.y, triangle.B.y), triangle.C.y)};
-		for(int32_t y = ::ftwl::max(areaMin.y, 0), yStop = ::ftwl::min(areaMax.y, (int32_t)bitmapTarget.Height	()); y < yStop; ++y)
-		for(int32_t x = ::ftwl::max(areaMin.x, 0), xStop = ::ftwl::min(areaMax.x, (int32_t)bitmapTarget.Width	()); x < xStop; ++x) {	
+		for(int32_t y = ::ftwl::max(areaMin.y, 0), yStop = ::ftwl::min(areaMax.y, (int32_t)bitmapTarget.Colors.height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(areaMin.x, 0), xStop = ::ftwl::min(areaMax.x, (int32_t)bitmapTarget.Colors.width	()); x < xStop; ++x) {	
 			const ::ftwl::SCoord2<int32_t>													cellCurrent									= {x, y};
 			// Determine barycentric coordinates
 			int																				w0											= ::ftwl::orient2d({triangle.A, triangle.B}, cellCurrent);
@@ -76,16 +75,14 @@ namespace ftwl
 		int32_t																		y											= (int32_t)y1;
 		for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
 			if(steep) {
-				if(false == ::ftwl::in_range(x, 0, (int32_t)bitmapTarget.Height()) || false == ::ftwl::in_range(y, 0, (int32_t)bitmapTarget.Width()))
+				if(false == ::ftwl::in_range(x, 0, (int32_t)bitmapTarget.Colors.height()) || false == ::ftwl::in_range(y, 0, (int32_t)bitmapTarget.Colors.width()))
 					continue;
-				bitmapTarget.Characters	[x][y]											= value.Character;
-				bitmapTarget.Colors		[x][y]											= value.Color;
+				bitmapTarget.Colors		[x][y]											= value;
 			}
 			else {
-				if(false == ::ftwl::in_range(y, 0, (int32_t)bitmapTarget.Height()) || false == ::ftwl::in_range(x, 0, (int32_t)bitmapTarget.Width()))
+				if(false == ::ftwl::in_range(y, 0, (int32_t)bitmapTarget.Colors.height()) || false == ::ftwl::in_range(x, 0, (int32_t)bitmapTarget.Colors.width()))
 					continue;
-				bitmapTarget.Characters	[y][x]											= value.Character;
-				bitmapTarget.Colors		[y][x]											= value.Color;
+				bitmapTarget.Colors		[y][x]											= value;
 			}
  
 			error																-= dy;
