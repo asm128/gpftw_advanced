@@ -105,21 +105,22 @@ static	::SApplication																			* g_ApplicationInstance						= 0;
 }
 
 LRESULT WINAPI																					mainWndProc									(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
+	::RECT																								finalClientRect								= {100, 100, 100 + ::SCREEN_WIDTH, 100 + ::SCREEN_HEIGHT};
+	::AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 	::SApplication																						& applicationInstance						= *g_ApplicationInstance;
+	::HDC																								dc											= ::GetDC(applicationInstance.MainWindowHandle);
+	::PAINTSTRUCT																						ps;
 	switch(uMsg) {
 	default: break;		
-	case WM_GETMINMAXINFO	: ((MINMAXINFO*)lParam)->ptMinTrackSize = {::SCREEN_WIDTH, ::SCREEN_HEIGHT}; return 0;	// Catch this message so to prevent the window from becoming too small.
+	case WM_GETMINMAXINFO	: ((MINMAXINFO*)lParam)->ptMinTrackSize = {finalClientRect.right - finalClientRect.left, finalClientRect.bottom - finalClientRect.top}; return 0;	// Catch this message so to prevent the window from becoming too small.
 	case WM_SIZE	: break;
 	case WM_PAINT	: 
-		//::PAINTSTRUCT ps;
-		//::BeginPaint(hWnd, &ps);
-		// HDC dc = ::GetDC(applicationInstance.MainWindowHandle);
-		// ::drawBuffer(dc, applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
-		// ::ReleaseDC(applicationInstance.MainWindowHandle, dc);
-		//::EndPaint(hWnd, &ps);
-		//return 0;
-//		RECT																								finalClientRect								= {10, 10, 10 + ::SCREEN_WIDTH, 10 + ::SCREEN_HEIGHT};
-		break;
+		::BeginPaint(hWnd, &ps);
+		::drawBuffer(dc, applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
+		::ReleaseDC(applicationInstance.MainWindowHandle, dc);
+		::EndPaint(hWnd, &ps);
+		return 0;
+		//break;
 	case WM_CLOSE	: DestroyWindow		(hWnd)	; return 0;
 	case WM_DESTROY	: 
 		::PostQuitMessage	(0); 
@@ -130,7 +131,7 @@ LRESULT WINAPI																					mainWndProc									(HWND hWnd, UINT uMsg, WP
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-void																							initWndClass								(::HINSTANCE hInstance, const char* className, ::WNDCLASSEX& wndClassToInit)	{
+void																							initWndClass								(::HINSTANCE hInstance, const TCHAR* className, ::WNDCLASSEX& wndClassToInit)	{
 	wndClassToInit																					= {sizeof(::WNDCLASSEX),};
 	wndClassToInit.lpfnWndProc																		= ::mainWndProc;
 	wndClassToInit.hInstance																		= hInstance;
@@ -148,6 +149,7 @@ void																							updateMainWindow							(::SApplication& applicationIn
 			applicationInstance.MainWindowHandle															= 0;
 			break;
 		}
+		break;
 	}
 }
 
@@ -172,10 +174,10 @@ void																							setup										(::SApplication& applicationInstance)	
 	::initWndClass(applicationInstance.RuntimeValues.hInstance, applicationInstance.MainWindowClassName, applicationInstance.MainWindowClass);
 	RegisterClassEx(&applicationInstance.MainWindowClass);
 
-	RECT																								finalClientRect								= {100, 100, 100 + ::SCREEN_WIDTH, 100 + ::SCREEN_HEIGHT};
-	AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
+	::RECT																								finalClientRect								= {100, 100, 100 + ::SCREEN_WIDTH, 100 + ::SCREEN_HEIGHT};
+	::AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 	
-	applicationInstance.MainWindowHandle															= CreateWindowEx(0, applicationInstance.MainWindowClassName, "Window FTW", WS_OVERLAPPEDWINDOW, finalClientRect.left, finalClientRect.top, finalClientRect.right - finalClientRect.left, finalClientRect.bottom - finalClientRect.top, 0, 0, applicationInstance.MainWindowClass.hInstance, 0);
+	applicationInstance.MainWindowHandle															= CreateWindowEx(0, applicationInstance.MainWindowClassName, TEXT("Window FTW"), WS_OVERLAPPEDWINDOW, finalClientRect.left, finalClientRect.top, finalClientRect.right - finalClientRect.left, finalClientRect.bottom - finalClientRect.top, 0, 0, applicationInstance.MainWindowClass.hInstance, 0);
 	::ShowWindow	(applicationInstance.MainWindowHandle, SW_SHOW);
 	::UpdateWindow	(applicationInstance.MainWindowHandle);
 }
