@@ -7,10 +7,19 @@
 
 namespace ftwl
 {
-	struct SBitmapTargetBGRA	{ typedef SColorBGRA	TColor; ::ftwl::grid_view<TColor> Colors; };
-	struct SBitmapTargetBGR		{ typedef SColorBGR		TColor; ::ftwl::grid_view<TColor> Colors; };
-	struct SBitmapTargetRGBA	{ typedef SColorRGBA	TColor; ::ftwl::grid_view<TColor> Colors; };
-	struct SBitmapTargetFloat32	{ typedef SColorFloat	TColor; ::ftwl::grid_view<TColor> Colors; };
+	struct SBitmapTargetBGRA	{ typedef SColorBGRA	TColor; ::ftwl::grid_view<TColor>	Colors; };
+	struct SBitmapTargetBGR		{ typedef SColorBGR		TColor; ::ftwl::grid_view<TColor>	Colors; };
+	struct SBitmapTargetRGBA	{ typedef SColorRGBA	TColor; ::ftwl::grid_view<TColor>	Colors; };
+	struct SBitmapTargetFloat32	{ typedef SColorFloat	TColor; ::ftwl::grid_view<TColor>	Colors; };
+	
+	template<typename _tColor, size_t _nWidth, size_t _nHeight>
+	struct SBitmapOffscreen	{ 
+		typedef				_tColor														TColor; 
+							TColor														Colors[_nHeight][_nWidth]; 
+
+		static constexpr	const uint32_t												Width						= _nWidth;	
+		static constexpr	const uint32_t												Height						= _nHeight;
+	};
 
 	template<typename _tTarget>
 	static inline			::ftwl::error_t									drawRectangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
@@ -59,7 +68,7 @@ namespace ftwl
 			,																		x2											= (float)line.B.x
 			,																		y2											= (float)line.B.y
 			;
-		const bool																	steep										= (fabs(y2 - y1) > fabs(x2 - x1));
+		const bool																	steep										= (::fabs(y2 - y1) > ::fabs(x2 - x1));
 		if(steep){
 			::std::swap(x1, y1);
 			::std::swap(x2, y2);
@@ -69,7 +78,7 @@ namespace ftwl
 			::std::swap(y1, y2);
 		}
 		const float																	dx											= x2 - x1;
-		const float																	dy											= fabs(y2 - y1);
+		const float																	dy											= ::fabs(y2 - y1);
 		float																		error										= dx / 2.0f;
 		const int32_t																ystep										= (y1 < y2) ? 1 : -1;
 		int32_t																		y											= (int32_t)y1;
