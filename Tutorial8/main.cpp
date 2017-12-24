@@ -89,19 +89,17 @@ static	::SApplication																			* g_ApplicationInstance						= 0;
 	}
 	::HBITMAP																							hBmpOld										= (::HBITMAP)::SelectObject(dcIntermediate, hBitmap);    // <- altering state
 	if(FALSE == ::BitBlt(hdc, 0, 0, width, height, dcIntermediate, 0, 0, SRCCOPY)) {
-		char buffer[256] = {};
+		char																								buffer[256]									= {};
 		::sprintf_s(buffer, "error blitting bitmap: 0x%x.\n", ::GetLastError());
 		OutputDebugString(buffer);
-		::va_list arguments = {};
+		::va_list																							arguments									= {};
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ::GetLastError(), 0, buffer, 256, &arguments);
 		OutputDebugString(buffer);
 	}  // <- no significnce
 
-	//// this is how you clean up:
-	::SelectObject(hdc, hBmpOld);  // put the old bitmap back in the DC (restore state)
-	::DeleteObject(hBitmap);  // delete the bitmap we created
-	//::DeleteObject(hBmpOld);  // delete the bitmap we created
-	::DeleteDC(dcIntermediate);  // delete the DC we created
+	::SelectObject(hdc, hBmpOld);	// put the old bitmap back in the DC (restore state)
+	::DeleteObject(hBitmap);		// delete the bitmap we created
+	::DeleteDC(dcIntermediate);		// delete the DC we created
 	::free(bi);
 	return 0;
 }
@@ -111,6 +109,7 @@ LRESULT WINAPI																					mainWndProc									(HWND hWnd, UINT uMsg, WP
 	switch(uMsg) {
 	default: break;		
 	case WM_GETMINMAXINFO	: ((MINMAXINFO*)lParam)->ptMinTrackSize = {::SCREEN_WIDTH, ::SCREEN_HEIGHT}; return 0;	// Catch this message so to prevent the window from becoming too small.
+	case WM_SIZE	: break;
 	case WM_PAINT	: 
 		//::PAINTSTRUCT ps;
 		//::BeginPaint(hWnd, &ps);
@@ -119,6 +118,7 @@ LRESULT WINAPI																					mainWndProc									(HWND hWnd, UINT uMsg, WP
 		// ::ReleaseDC(applicationInstance.MainWindowHandle, dc);
 		//::EndPaint(hWnd, &ps);
 		//return 0;
+//		RECT																								finalClientRect								= {10, 10, 10 + ::SCREEN_WIDTH, 10 + ::SCREEN_HEIGHT};
 		break;
 	case WM_CLOSE	: DestroyWindow		(hWnd)	; return 0;
 	case WM_DESTROY	: 
@@ -126,6 +126,7 @@ LRESULT WINAPI																					mainWndProc									(HWND hWnd, UINT uMsg, WP
 		applicationInstance.MainWindowHandle															= 0;
 		return 0;
 	}
+
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
@@ -170,7 +171,11 @@ void																							setup										(::SApplication& applicationInstance)	
 	::ftwl::asciiDisplayCreate	(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
 	::initWndClass(applicationInstance.RuntimeValues.hInstance, applicationInstance.MainWindowClassName, applicationInstance.MainWindowClass);
 	RegisterClassEx(&applicationInstance.MainWindowClass);
-	applicationInstance.MainWindowHandle															= CreateWindow(applicationInstance.MainWindowClassName, "Window FTW", WS_OVERLAPPEDWINDOW, 10, 10, ::SCREEN_WIDTH, ::SCREEN_HEIGHT, 0, 0, applicationInstance.MainWindowClass.hInstance, 0);
+
+	RECT																								finalClientRect								= {100, 100, 100 + ::SCREEN_WIDTH, 100 + ::SCREEN_HEIGHT};
+	AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
+	
+	applicationInstance.MainWindowHandle															= CreateWindowEx(0, applicationInstance.MainWindowClassName, "Window FTW", WS_OVERLAPPEDWINDOW, finalClientRect.left, finalClientRect.top, finalClientRect.right - finalClientRect.left, finalClientRect.bottom - finalClientRect.top, 0, 0, applicationInstance.MainWindowClass.hInstance, 0);
 	::ShowWindow	(applicationInstance.MainWindowHandle, SW_SHOW);
 	::UpdateWindow	(applicationInstance.MainWindowHandle);
 }
@@ -210,21 +215,23 @@ void																							draw										(::SApplication& applicationInstance)		
 	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_WHITE		}, ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
 	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_LIGHTGREY	}, ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
 
-	::ftwl::SBitmapTargetBGRA																			bmpTarget									= {};
-	bmpTarget.Colors																				= ::ftwl::grid_view<::ftwl::SColorBGRA>(&applicationInstance.BitmapOffsceen.Colors[0][0], applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height);
-	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(color0), {{0, 0}, {::SCREEN_WIDTH, ::SCREEN_HEIGHT}});
-	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), geometry0);
-	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
-	::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_GREEN		]), geometry1);
-	::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_RED			]), {geometry1.Radius - 1, geometry1.Center});
-	::ftwl::drawTriangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_YELLOW		]), geometry2);
-	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_MAGENTA		]), ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
-	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_WHITE		]), ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
-	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_LIGHTGREY	]), ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
+	if(applicationInstance.MainWindowHandle) {
+		::ftwl::SBitmapTargetBGRA																			bmpTarget									= {};
+		bmpTarget.Colors																				= ::ftwl::grid_view<::ftwl::SColorBGRA>(&applicationInstance.BitmapOffsceen.Colors[0][0], applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height);
+		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(color0), {{0, 0}, {::SCREEN_WIDTH, ::SCREEN_HEIGHT}});
+		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), geometry0);
+		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
+		::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_GREEN		]), geometry1);
+		::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_RED			]), {geometry1.Radius - 1, geometry1.Center});
+		::ftwl::drawTriangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_YELLOW		]), geometry2);
+		::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_MAGENTA		]), ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
+		::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_WHITE		]), ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
+		::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_LIGHTGREY	]), ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
 
-	HDC dc = ::GetDC(applicationInstance.MainWindowHandle);
-	::drawBuffer(dc, applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
-	::ReleaseDC(applicationInstance.MainWindowHandle, dc);
+		HDC																									dc											= ::GetDC(applicationInstance.MainWindowHandle);
+		::drawBuffer(dc, applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
+		::ReleaseDC(applicationInstance.MainWindowHandle, dc);
+	}
 }
 
 int																								rtMain										(::SRuntimeValues& runtimeValues)												{
