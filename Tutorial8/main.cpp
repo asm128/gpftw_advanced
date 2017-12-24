@@ -83,6 +83,8 @@ static	::SApplication																			* g_ApplicationInstance						= 0;
 	::HBITMAP																							hBitmap										= ::CreateDIBSection(dcIntermediate, bi, DIB_RGB_COLORS, (void**) &ppvBits, NULL, 0);
 	if(0 == ::SetDIBits(NULL, hBitmap, 0, height, bi->bmiColors, bi, DIB_RGB_COLORS)) {
 		OutputDebugString("Cannot copy bits into dib section.\n");
+		::DeleteObject(hBitmap);  // delete the bitmap we created
+		::DeleteDC(dcIntermediate);  // delete the DC we created
 		return -1;
 	}
 	::HBITMAP																							hBmpOld										= (::HBITMAP)::SelectObject(dcIntermediate, hBitmap);    // <- altering state
@@ -96,9 +98,9 @@ static	::SApplication																			* g_ApplicationInstance						= 0;
 	}  // <- no significnce
 
 	//// this is how you clean up:
-	//::SelectObject(hdc, hBmpOld);  // put the old bitmap back in the DC (restore state)
-	//::DeleteObject(hBitmap);  // delete the bitmap we created
-	::DeleteObject(hBmpOld);  // delete the bitmap we created
+	::SelectObject(hdc, hBmpOld);  // put the old bitmap back in the DC (restore state)
+	::DeleteObject(hBitmap);  // delete the bitmap we created
+	//::DeleteObject(hBmpOld);  // delete the bitmap we created
 	::DeleteDC(dcIntermediate);  // delete the DC we created
 	::free(bi);
 	return 0;
@@ -112,7 +114,9 @@ LRESULT WINAPI																					mainWndProc									(HWND hWnd, UINT uMsg, WP
 	case WM_PAINT	: 
 		//::PAINTSTRUCT ps;
 		//::BeginPaint(hWnd, &ps);
-		//::drawBuffer(::GetDC(applicationInstance.MainWindowHandle), applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
+		// HDC dc = ::GetDC(applicationInstance.MainWindowHandle);
+		// ::drawBuffer(dc, applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
+		// ::ReleaseDC(applicationInstance.MainWindowHandle, dc);
 		//::EndPaint(hWnd, &ps);
 		//return 0;
 		break;
@@ -208,17 +212,19 @@ void																							draw										(::SApplication& applicationInstance)		
 
 	::ftwl::SBitmapTargetBGRA																			bmpTarget									= {};
 	bmpTarget.Colors																				= ::ftwl::grid_view<::ftwl::SColorBGRA>(&applicationInstance.BitmapOffsceen.Colors[0][0], applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height);
-	::ftwl::drawRectangle	(bmpTarget, {0x80, 0x80, 0x80, 0x00}, {{0, 0}, {::SCREEN_WIDTH, ::SCREEN_HEIGHT}});
-	::ftwl::drawRectangle	(bmpTarget, {0xFF, 0x00, 0x00, 0x00}, geometry0);
-	::ftwl::drawRectangle	(bmpTarget, {0x00, 0xFF, 0x00, 0x00}, {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
-	::ftwl::drawCircle		(bmpTarget, {0x00, 0x00, 0xFF, 0x00}, geometry1);
-	::ftwl::drawCircle		(bmpTarget, {0xFF, 0x00, 0xFF, 0x00}, {geometry1.Radius - 1, geometry1.Center});
-	::ftwl::drawTriangle	(bmpTarget, {0xFF, 0xFF, 0x00, 0x00}, geometry2);
-	::ftwl::drawLine		(bmpTarget, {0x00, 0xFF, 0xFF, 0x00}, ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
-	::ftwl::drawLine		(bmpTarget, {0xFF, 0xFF, 0xFF, 0x00}, ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
-	::ftwl::drawLine		(bmpTarget, {0xC0, 0xC0, 0xC0, 0x00}, ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
+	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(color0), {{0, 0}, {::SCREEN_WIDTH, ::SCREEN_HEIGHT}});
+	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), geometry0);
+	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
+	::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_GREEN		]), geometry1);
+	::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_RED			]), {geometry1.Radius - 1, geometry1.Center});
+	::ftwl::drawTriangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_YELLOW		]), geometry2);
+	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_MAGENTA		]), ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
+	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_WHITE		]), ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
+	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_LIGHTGREY	]), ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
 
-	::drawBuffer(::GetDC(applicationInstance.MainWindowHandle), applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
+	HDC dc = ::GetDC(applicationInstance.MainWindowHandle);
+	::drawBuffer(dc, applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height, &applicationInstance.BitmapOffsceen.Colors[0][0]);
+	::ReleaseDC(applicationInstance.MainWindowHandle, dc);
 }
 
 int																								rtMain										(::SRuntimeValues& runtimeValues)												{

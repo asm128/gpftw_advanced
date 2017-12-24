@@ -32,6 +32,7 @@ namespace ftwl
 							uint8_t			b = 0, g = 0, r = 0, a = 0xff; 
 
 		inline constexpr					SColorBGRA		()																noexcept	= default;
+		inline constexpr					SColorBGRA		(const SColorRGBA& other)										noexcept	: b(other.b), g(other.g), r(other.r), a(other.a)																																										{}
 		inline constexpr					SColorBGRA		(const SColorBGRA& other)										noexcept	= default;
 		inline constexpr					SColorBGRA		(uint8_t r_, uint8_t g_, uint8_t b_, uint8_t a_=0xff)			noexcept	: b(b_), g(g_), r(r_), a(a_)																																										{}
 		inline constexpr					SColorBGRA		(uint32_t other)												noexcept	: b((uint8_t)(((other & 0x000000FF) >> 0))), g((uint8_t)(((other & 0x0000FF00) >> 8))), r((uint8_t)(((other & 0x00FF0000) >> 16))), a((uint8_t)(((other & 0xFF000000) >> 24)))						{}
