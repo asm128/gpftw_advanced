@@ -48,6 +48,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial7 (raster)", "Tutor
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial8 (window)", "Tutorial8\Tutorial8.vcxproj", "{241505C2-2904-4BBB-9607-72E8C3B6F402}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
