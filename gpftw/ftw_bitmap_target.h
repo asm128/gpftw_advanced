@@ -22,7 +22,7 @@ namespace ftwl
 	};
 
 	template<typename _tTarget>
-	static inline			::ftwl::error_t									drawRectangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
+	static					::ftwl::error_t									drawRectangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
 		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min(rectangle.Offset.y + rectangle.Size.y, (int32_t)bitmapTarget.Colors.height	()); y < yStop; ++y)
 		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min(rectangle.Offset.x + rectangle.Size.x, (int32_t)bitmapTarget.Colors.width	()); x < xStop; ++x) {	
 			bitmapTarget.Colors		[y][x]												= value;
@@ -31,7 +31,7 @@ namespace ftwl
 	}
 
 	template<typename _tTarget>
-	static inline			::ftwl::error_t									drawCircle									(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SCircle2D<int32_t>& circle)			{
+	static					::ftwl::error_t									drawCircle									(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SCircle2D<int32_t>& circle)			{
 		for(int32_t y = ::ftwl::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::ftwl::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)bitmapTarget.Colors.height	()); y < yStop; ++y)
 		for(int32_t x = ::ftwl::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::ftwl::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)bitmapTarget.Colors.width	()); x < xStop; ++x) {	
 			::ftwl::SCoord2<int32_t>														cellCurrent									= {x, y};
@@ -44,7 +44,7 @@ namespace ftwl
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/ 
 	template<typename _tTarget>
-	static inline			::ftwl::error_t									drawTriangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
+	static					::ftwl::error_t									drawTriangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
 		::ftwl::SCoord2		<int32_t>												areaMin										= {::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::min(::ftwl::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::ftwl::SCoord2		<int32_t>												areaMax										= {::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::max(::ftwl::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		for(int32_t y = ::ftwl::max(areaMin.y, 0), yStop = ::ftwl::min(areaMax.y, (int32_t)bitmapTarget.Colors.height	()); y < yStop; ++y)

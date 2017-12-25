@@ -104,8 +104,6 @@ struct SOffscreenPlatformDetail {
 	offscreenDetail.IntermediateBitmap																	= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &ppvBits, NULL, 0);
 	if(0 == ::SetDIBits(NULL, offscreenDetail.IntermediateBitmap, 0, height, offscreenDetail.BitmapInfo->bmiColors, offscreenDetail.BitmapInfo, DIB_RGB_COLORS)) {
 		OutputDebugString("Cannot copy bits into dib section.\n");
-		::DeleteObject(offscreenDetail.IntermediateBitmap);  // delete the bitmap we created
-		::DeleteDC(offscreenDetail.IntermediateDeviceContext);  // delete the DC we created
 		return -1;
 	}
 	::HBITMAP																								hBmpOld										= (::HBITMAP)::SelectObject(offscreenDetail.IntermediateDeviceContext, offscreenDetail.IntermediateBitmap);    // <- altering state
@@ -150,7 +148,7 @@ struct SOffscreenPlatformDetail {
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-void																								initWndClass								(::HINSTANCE hInstance, const TCHAR* className, ::WNDCLASSEX& wndClassToInit)	{
+		void																						initWndClass								(::HINSTANCE hInstance, const TCHAR* className, ::WNDCLASSEX& wndClassToInit)	{
 	wndClassToInit																						= {sizeof(::WNDCLASSEX),};
 	wndClassToInit.lpfnWndProc																			= ::mainWndProc;
 	wndClassToInit.hInstance																			= hInstance;
@@ -159,7 +157,7 @@ void																								initWndClass								(::HINSTANCE hInstance, const TC
 	wndClassToInit.lpszClassName																		= className;
 }
 
-void																								updateMainWindow							(::SApplication& applicationInstance)											{ 
+		void																						updateMainWindow							(::SApplication& applicationInstance)											{ 
 	::MSG																									msg											= {};
 	while(::PeekMessage(&msg, applicationInstance.MainWindow.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE)) {
 		::TranslateMessage(&msg);
@@ -173,7 +171,7 @@ void																								updateMainWindow							(::SApplication& applicationI
 }
 
 // --- Cleanup application resources.
-void																								cleanup										(::SApplication& applicationInstance)											{ 
+		void																						cleanup										(::SApplication& applicationInstance)											{ 
 	SDisplayPlatformDetail																					& displayDetail								= applicationInstance.MainWindow.PlatformDetail;
 	if(displayDetail.WindowHandle) {
 		::DestroyWindow(displayDetail.WindowHandle);
@@ -187,7 +185,7 @@ void																								cleanup										(::SApplication& applicationInstanc
 }
 
 // --- Initialize console.
-void																								setup										(::SApplication& applicationInstance)											{ 
+		void																						setup										(::SApplication& applicationInstance)											{ 
 	g_ApplicationInstance																				= &applicationInstance;
 	::ftwl::asciiTargetCreate	(applicationInstance.ASCIIRenderTarget, ::SCREEN_WIDTH, ::SCREEN_HEIGHT);
 	::ftwl::asciiDisplayCreate	(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
@@ -209,14 +207,14 @@ void																								setup										(::SApplication& applicationInstance)
 	::UpdateWindow	(displayDetail.WindowHandle);
 }
 
-void																								update										(::SApplication& applicationInstance)											{ 
+		void																						update										(::SApplication& applicationInstance)											{ 
 	::ftwl::asciiTargetClear(applicationInstance.ASCIIRenderTarget);
 	applicationInstance.Timer.Frame();
 	applicationInstance.FrameInfo.Frame(applicationInstance.Timer.LastTimeMicroseconds);																							
 	::updateMainWindow(applicationInstance);
 }
 
-void																								draw										(::SApplication& applicationInstance)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		void																						draw										(::SApplication& applicationInstance)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 	::ftwl::SASCIITarget																					& asciiTarget								= applicationInstance.ASCIIRenderTarget;
 	uint32_t																								color0										= (0xFF & applicationInstance.FrameInfo.FrameNumber * 1) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 2) << 8) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 5) << 16);
 	uint32_t																								color1										= (0xFF & applicationInstance.FrameInfo.FrameNumber * 2) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 1) << 8) | ((0xFF & applicationInstance.FrameInfo.FrameNumber * 3) << 16);
@@ -245,9 +243,8 @@ void																								draw										(::SApplication& applicationInstance)	
 	::ftwl::drawLine		(asciiTarget, {'o', ::ftwl::ASCII_COLOR_LIGHTGREY	}, ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
 
 	if(applicationInstance.MainWindow.PlatformDetail.WindowHandle) {
-		::ftwl::SBitmapTargetBGRA																				bmpTarget									= {};
-		bmpTarget.Colors																					= ::ftwl::grid_view<::ftwl::SColorBGRA>(&applicationInstance.BitmapOffsceen.Colors[0][0], applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height);
-		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(color0), {{0, 0}, {::SCREEN_WIDTH, ::SCREEN_HEIGHT}});
+		::ftwl::SBitmapTargetBGRA																				bmpTarget									= {{&applicationInstance.BitmapOffsceen.Colors[0][0], applicationInstance.BitmapOffsceen.Width, applicationInstance.BitmapOffsceen.Height},};
+		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLACK		]), {{0, 0}, {::SCREEN_WIDTH, ::SCREEN_HEIGHT}});
 		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), geometry0);
 		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
 		::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_GREEN		]), geometry1);
@@ -263,7 +260,7 @@ void																								draw										(::SApplication& applicationInstance)	
 	}
 }
 
-int																								rtMain										(::SRuntimeValues& runtimeValues)												{
+		int																						rtMain										(::SRuntimeValues& runtimeValues)												{
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
 	::SApplication																						* applicationInstance						= new ::SApplication(runtimeValues);		// Create a new instance of our application.
 	if(0 == applicationInstance)
@@ -284,12 +281,12 @@ int																								rtMain										(::SRuntimeValues& runtimeValues)				
 	return 0;
 }
 
-int																								main										()																				{
-	::SRuntimeValues																					runtimeValues								= {};
+		int																						main										()																				{
+	::SRuntimeValues																					runtimeValues								= {GetModuleHandle(NULL), 0, 0, SW_SHOW};
 	return ::ftwl::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.		
 }
 
-int	WINAPI																						WinMain										
+		int	WINAPI																				WinMain										
 	(	_In_		HINSTANCE		hInstance
 	,	_In_opt_	HINSTANCE		hPrevInstance
 	,	_In_		LPSTR			lpCmdLine
