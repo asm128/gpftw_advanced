@@ -133,6 +133,7 @@ struct SOffscreenPlatformDetail {
 	case WM_CLOSE			: DestroyWindow(hWnd); return 0;
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
 		((MINMAXINFO*)lParam)->ptMinTrackSize																= {finalClientRect.right - finalClientRect.left, finalClientRect.bottom - finalClientRect.top}; 
+		((MINMAXINFO*)lParam)->ptMaxTrackSize																= {finalClientRect.right - finalClientRect.left, finalClientRect.bottom - finalClientRect.top}; 
 		return 0;
 	case WM_SIZE			: //break;
 	case WM_PAINT			: 

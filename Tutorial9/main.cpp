@@ -122,11 +122,12 @@ struct SOffscreenPlatformDetail {
 		::va_list																								arguments									= {};
 		::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, ::GetLastError(), 0, buffer, 256, &arguments);
 		OutputDebugString(buffer);
-	}  // <- no significnce
+	}
 
 	::SelectObject(hdc, hBmpOld);	// put the old bitmap back in the DC (restore state)
 	return 0;
 }
+
 		void																						updateOffscreen								(::SApplication& applicationInstance)											{ 
 	::std::vector<::ftwl::SColorBGRA>																		& bmpOffscreen								= applicationInstance.BitmapOffsceen;
 	uint32_t																								linearScreenSize							= applicationInstance.MainWindow.Size.x * applicationInstance.MainWindow.Size.y;
@@ -140,6 +141,7 @@ struct SOffscreenPlatformDetail {
 		applicationInstance.BitmapRenderTarget.Colors														= {&bmpOffscreen[0], applicationInstance.MainWindow.Size.x, applicationInstance.MainWindow.Size.y};
 	}
 }
+
 		void																						presentTarget								(::SApplication& applicationInstance)											{ 
 	::HWND																									windowHandle								= applicationInstance.MainWindow.PlatformDetail.WindowHandle;
 	::HDC																									dc											= ::GetDC(windowHandle);
@@ -148,18 +150,16 @@ struct SOffscreenPlatformDetail {
 	::ReleaseDC(windowHandle, dc);
 }
 
+static	::RECT																						minClientRect								= {100, 100, 100 + 320, 100 + 200};
+
 		void																						update										(::SApplication& applicationInstance);
 		void																						draw										(::SApplication& applicationInstance);
 		LRESULT WINAPI																				mainWndProc									(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
 	::SApplication																							& applicationInstance						= *g_ApplicationInstance;
-	//::std::vector<::ftwl::SColorBGRA>																		& bmpOffscreen								= applicationInstance.BitmapOffsceen;
 	::RECT																									finalClientRect								= {100, 100, 100 + (LONG)applicationInstance.MainWindow.Size.x, 100 + (LONG)applicationInstance.MainWindow.Size.y};
 	::AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
+	static	const int																						adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
-	static ::RECT																							minClientRect								= {100, 100, 100 + 320, 100 + 200};
-	static const BOOL																						adjustedRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
-
-	::PAINTSTRUCT																							ps;
 	::SDisplayPlatformDetail																				& displayDetail								= applicationInstance.MainWindow.PlatformDetail;
 	switch(uMsg) {
 	default: break;		
@@ -196,11 +196,7 @@ struct SOffscreenPlatformDetail {
 			applicationInstance.MainWindow.MinOrMaxed = applicationInstance.MainWindow.NoDraw					= false;
 		}
 		break;
-	case WM_PAINT			: 
-		::BeginPaint		(displayDetail.WindowHandle, &ps);
-		::EndPaint			(displayDetail.WindowHandle, &ps);
-		return 0;
-		break;
+	case WM_PAINT			: break;
 	case WM_DESTROY			: 
 		::PostQuitMessage(0); 
 		displayDetail.WindowHandle																			= 0;
@@ -238,7 +234,6 @@ struct SOffscreenPlatformDetail {
 		::DestroyWindow(displayDetail.WindowHandle);
 		::updateMainWindow(applicationInstance);
 	}
-
 	::UnregisterClass(displayDetail.WindowClassName, displayDetail.WindowClass.hInstance);
 	//::ftwl::asciiDisplayDestroy	();
 	//::ftwl::asciiTargetDestroy	(applicationInstance.ASCIIRenderTarget);
@@ -250,16 +245,16 @@ struct SOffscreenPlatformDetail {
 	g_ApplicationInstance																				= &applicationInstance;
 	//::ftwl::asciiTargetCreate	(applicationInstance.ASCIIRenderTarget, ::ASCII_SCREEN_WIDTH, ::ASCII_SCREEN_HEIGHT);
 	//::ftwl::asciiDisplayCreate	(applicationInstance.ASCIIRenderTarget.Width(), applicationInstance.ASCIIRenderTarget.Height());
-
-	::SDisplayPlatformDetail																				& displayDetail								= applicationInstance.MainWindow.PlatformDetail;
+	::SDisplay																								& mainWindow								= applicationInstance.MainWindow;
+	::SDisplayPlatformDetail																				& displayDetail								= mainWindow.PlatformDetail;
 	::initWndClass(applicationInstance.RuntimeValues.hInstance, displayDetail.WindowClassName, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
 
 	//::std::vector<::ftwl::SColorBGRA>																		& bmpOffscreen								= applicationInstance.BitmapOffsceen;
 	applicationInstance.MainWindow.Size																	= {::BMP_SCREEN_WIDTH, ::BMP_SCREEN_HEIGHT};
-	::RECT																									finalClientRect								= {100, 100, 100 + (LONG)applicationInstance.MainWindow.Size.x, 100 + (LONG)applicationInstance.MainWindow.Size.y};
+	::RECT																									finalClientRect								= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
 	::AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
-	applicationInstance.MainWindow.PlatformDetail.WindowHandle											= CreateWindowEx(0, displayDetail.WindowClassName, TEXT("Window FTW"), WS_OVERLAPPEDWINDOW
+	mainWindow.PlatformDetail.WindowHandle																= CreateWindowEx(0, displayDetail.WindowClassName, TEXT("Window FTW"), WS_OVERLAPPEDWINDOW
 		, finalClientRect.left
 		, finalClientRect.top
 		, finalClientRect.right		- finalClientRect.left
@@ -270,44 +265,35 @@ struct SOffscreenPlatformDetail {
 	::UpdateWindow	(displayDetail.WindowHandle);
 }
 
-
 		void																						update										(::SApplication& applicationInstance)											{ 
 	//::ftwl::asciiDisplayPresent(applicationInstance.ASCIIRenderTarget);
 	//::ftwl::asciiTargetClear(applicationInstance.ASCIIRenderTarget);
-	applicationInstance.Timer.Frame();
-	applicationInstance.FrameInfo.Frame(applicationInstance.Timer.LastTimeMicroseconds);																							
-	::updateMainWindow(applicationInstance);
-	::updateOffscreen(applicationInstance);
-	::presentTarget(applicationInstance);
+	applicationInstance.Timer		.Frame();
+	applicationInstance.FrameInfo	.Frame(applicationInstance.Timer.LastTimeMicroseconds);
+	::updateMainWindow	(applicationInstance);
+	::updateOffscreen	(applicationInstance);
+	::presentTarget		(applicationInstance);
 	char																									buffer		[256]							= {};
-	sprintf_s(buffer, "[%u x %u]. Last frame seconds: %g.", applicationInstance.MainWindow.Size.x, applicationInstance.MainWindow.Size.y, applicationInstance.Timer.LastTimeSeconds);
-	::HWND																									windowHandle								= applicationInstance.MainWindow.PlatformDetail.WindowHandle;
+	const ::SDisplay																						& mainWindow								= applicationInstance.MainWindow;
+	sprintf_s(buffer, "[%u x %u]. Last frame seconds: %g.", mainWindow.Size.x, mainWindow.Size.y, applicationInstance.Timer.LastTimeSeconds);
+	::HWND																									windowHandle								= mainWindow.PlatformDetail.WindowHandle;
 	SetWindowText(windowHandle, buffer);
 }
 
 		void																						draw										(::SApplication& applicationInstance)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-	uint32_t																								linearScreenSize							= applicationInstance.MainWindow.Size.x * applicationInstance.MainWindow.Size.y;
-	if(applicationInstance.MainWindow.Resized) {
-		applicationInstance.BitmapOffsceen.resize(linearScreenSize);
-		applicationInstance.BitmapRenderTarget.Colors														= {&applicationInstance.BitmapOffsceen[0], applicationInstance.MainWindow.Size.x, applicationInstance.MainWindow.Size.y};
-	}
-
-	if(linearScreenSize < applicationInstance.BitmapOffsceen.size()) {
-		applicationInstance.BitmapOffsceen.resize(linearScreenSize);
-		applicationInstance.BitmapRenderTarget.Colors														= {&applicationInstance.BitmapOffsceen[0], applicationInstance.MainWindow.Size.x, applicationInstance.MainWindow.Size.y};
-	}
+	const ::SDisplay																						& mainWindow								= applicationInstance.MainWindow;
 	::memset(&applicationInstance.BitmapRenderTarget.Colors[0][0], 0, sizeof(::ftwl::SColorBGRA) * applicationInstance.BitmapRenderTarget.Colors.size());
 	::std::vector<::ftwl::SColorBGRA>																		& bmpOffscreen								= applicationInstance.BitmapOffsceen;
-	::ftwl::SCoord2		<int32_t>																			screenCenter								= {(int32_t)applicationInstance.MainWindow.Size.x / 2, (int32_t)applicationInstance.MainWindow.Size.y / 2};
-	::ftwl::SRectangle2D<int32_t>																			geometry0									= {{2, 2}, {(int32_t)((applicationInstance.FrameInfo.FrameNumber / 2) % (applicationInstance.MainWindow.Size.x - 2)), 5}};
+	::ftwl::SCoord2		<int32_t>																			screenCenter								= {(int32_t)mainWindow.Size.x / 2, (int32_t)mainWindow.Size.y / 2};
+	::ftwl::SRectangle2D<int32_t>																			geometry0									= {{2, 2}, {(int32_t)((applicationInstance.FrameInfo.FrameNumber / 2) % (mainWindow.Size.x - 2)), 5}};
 	::ftwl::SCircle2D	<int32_t>																			geometry1									= {5.0 + (applicationInstance.FrameInfo.FrameNumber / 5) % 5, screenCenter};	
 	::ftwl::STriangle2D	<int32_t>																			geometry2									= {{0, 0}, {15, 15}, {-5, 10}};	
 	geometry2.A																							+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
 	geometry2.B																							+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
 	geometry2.C																							+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
-	::HWND																									windowHandle								= applicationInstance.MainWindow.PlatformDetail.WindowHandle;
+	::HWND																									windowHandle								= mainWindow.PlatformDetail.WindowHandle;
 	if(windowHandle) {
-		::ftwl::SBitmapTargetBGRA																				bmpTarget									= {{&bmpOffscreen[0], applicationInstance.MainWindow.Size.x, applicationInstance.MainWindow.Size.y},};
+		::ftwl::SBitmapTargetBGRA																				bmpTarget									= {{&bmpOffscreen[0], mainWindow.Size.x, mainWindow.Size.y},};
 		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), geometry0);
 		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
 		::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_GREEN		]), geometry1);
@@ -326,7 +312,7 @@ struct SOffscreenPlatformDetail {
 		return -1;	// return error because we couldn't allocate the main instance of our application.
 
 	::setup(*applicationInstance);	// Call setup()
-	
+
 	while(true) {	// Execute code between braces while the condition inside () evaluates to true.
 		::update	(*applicationInstance);		// Update frame.
 		::draw		(*applicationInstance);		// Render frame.
@@ -345,10 +331,10 @@ struct SOffscreenPlatformDetail {
 }
 
 		int	WINAPI																				WinMain										
-	(	_In_		HINSTANCE		hInstance
-	,	_In_opt_	HINSTANCE		hPrevInstance
-	,	_In_		LPSTR			lpCmdLine
-	,	_In_		INT				nShowCmd
+	(	_In_		::HINSTANCE		hInstance
+	,	_In_opt_	::HINSTANCE		hPrevInstance
+	,	_In_		::LPSTR			lpCmdLine
+	,	_In_		::INT			nShowCmd
 	)
 {
 	::SRuntimeValues																					runtimeValues								= 
