@@ -38,8 +38,8 @@ struct SBitmapOffscreen	{
 	typedef				_tColor																			TColor; 
 						TColor																			Colors[_nHeight][_nWidth]; 
 
-	static constexpr	const uint32_t																	Width						= _nWidth;	
-	static constexpr	const uint32_t																	Height						= _nHeight;
+	static constexpr	const uint32_t																	Width								= _nWidth;	
+	static constexpr	const uint32_t																	Height								= _nHeight;
 };
 
 struct SApplication {

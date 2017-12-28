@@ -101,15 +101,15 @@ static constexpr	const ::ftwl::SColorRGBA			g_DefaultPalette	[]							=
 	const uint16_t												colors[4]										= {colorRef, colorRef, colorRef, colorRef};
 	if(g_bufferClearColors[0] != colorRef) {
 		 if(0 == (g_bufferClearColors.size() % 4)) {
-			for(uint32_t iCell = 0, cellCount = g_bufferClearColors.size() / 4; iCell < cellCount; ++iCell)
+			for(uint32_t iCell = 0, cellCount = (uint32_t)g_bufferClearColors.size() / 4; iCell < cellCount; ++iCell)
 				*(uint64_t*)g_bufferClearColors[iCell]						= *(uint64_t*)colors;
 		}
 		else if(0 == (g_bufferClearColors.size() % 2)) {
-			for(uint32_t iCell = 0, cellCount = g_bufferClearColors.size() / 2; iCell < cellCount; ++iCell)
+			for(uint32_t iCell = 0, cellCount = (uint32_t)g_bufferClearColors.size() / 2; iCell < cellCount; ++iCell)
 				*(uint32_t*)g_bufferClearColors[iCell]						= *(uint32_t*)colors;
 		}
 		else {
-			for(uint32_t iCell = 0, cellCount = g_bufferClearColors.size(); iCell < cellCount; ++iCell)
+			for(uint32_t iCell = 0, cellCount = (uint32_t)g_bufferClearColors.size(); iCell < cellCount; ++iCell)
 				g_bufferClearColors[iCell]									= colorRef;
 		}
 	}
