@@ -33,15 +33,24 @@ struct SDisplay {
 						::SDisplayPlatformDetail														PlatformDetail							= {};
 };
 
+template<typename _tColor, size_t _nWidth, size_t _nHeight>
+struct SBitmapOffscreen	{ 
+	typedef				_tColor																			TColor; 
+						TColor																			Colors[_nHeight][_nWidth]; 
+
+	static constexpr	const uint32_t																	Width						= _nWidth;	
+	static constexpr	const uint32_t																	Height						= _nHeight;
+};
+
 struct SApplication {
 						::SDisplay																		MainWindow							= {};
-						::ftwl::SBitmapOffscreen<::ftwl::SColorBGRA, ::SCREEN_WIDTH, ::SCREEN_HEIGHT>	BitmapOffsceen						= {};
+						::SBitmapOffscreen<::ftwl::SColorBGRA, ::SCREEN_WIDTH, ::SCREEN_HEIGHT>			BitmapOffsceen						= {};
 						::SRuntimeValues																RuntimeValues						= {};
 						::SInput																		SystemInput							= {};
 						::ftwl::STimer																	Timer								= {};
 						::ftwl::SFrameInfo																FrameInfo							= {};
 						::ftwl::SASCIITarget															ASCIIRenderTarget					= {};
-						::ftwl::SBitmapTargetRGBA														BitmapRenderTarget					= {};
+						::ftwl::SBitmapTargetBGRA														BitmapRenderTarget					= {};
 						::ftwl::SPalette																Palette								= 
 		{	(uint32_t)::ftwl::ASCII_COLOR_INDEX_0		
 		,	(uint32_t)::ftwl::ASCII_COLOR_INDEX_1 	

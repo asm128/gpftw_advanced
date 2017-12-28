@@ -22,7 +22,7 @@
     <ProjectGuid>{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Tutorial5</RootNamespace>
-    <ProjectName>Tutorial5 (undefined)</ProjectName>
+    <ProjectName>Tutorial5 (particles)</ProjectName>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

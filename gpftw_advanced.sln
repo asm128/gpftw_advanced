@@ -30,14 +30,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial4 (velocity)", "Tut
 		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial5 (undefined)", "Tutorial5\Tutorial5.vcxproj", "{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial5 (particles)", "Tutorial5\Tutorial5.vcxproj", "{5F471C09-749A-4AF1-A3F9-5A1B43A0815D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Documents", "Documents\Documents.vcxproj", "{07B42A87-FF53-46CF-9788-A3A41AB99ADE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial6 (undefined)", "Tutorial6\Tutorial6.vcxproj", "{B98D78A4-F343-4FCD-AEBF-E82B6EDFADF0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial6 (ships)", "Tutorial6\Tutorial6.vcxproj", "{B98D78A4-F343-4FCD-AEBF-E82B6EDFADF0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
 	EndProjectSection
@@ -52,7 +52,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial8 (window)", "Tutor
 		{9D1728CE-9C73-45C2-97AE-6BBF5E4668C2} = {9D1728CE-9C73-45C2-97AE-6BBF5E4668C2}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial9", "Tutorial9\Tutorial9.vcxproj", "{7877ABAE-4B1B-4C12-BCBA-5862164E293F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial9 (graphics)", "Tutorial9\Tutorial9.vcxproj", "{7877ABAE-4B1B-4C12-BCBA-5862164E293F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,10 +8,10 @@
 
 #include <windows.h>    // for interacting with Windows
 
-static constexpr	const int																		BMP_SCREEN_WIDTH							= 640;
-static constexpr	const int																		BMP_SCREEN_HEIGHT							= 360;
-static constexpr	const int																		ASCII_SCREEN_WIDTH							= 132	;
-static constexpr	const int																		ASCII_SCREEN_HEIGHT							= 50	;
+static constexpr	const uint32_t																	BMP_SCREEN_WIDTH							= 512;
+static constexpr	const uint32_t																	BMP_SCREEN_HEIGHT							= uint32_t(::BMP_SCREEN_WIDTH * (9.0 / 16.0));
+static constexpr	const uint32_t																	ASCII_SCREEN_WIDTH							= 132	;
+static constexpr	const uint32_t																	ASCII_SCREEN_HEIGHT							= 50	;
 
 struct SInput {
 						uint8_t																			KeyboardPrevious	[256]					= {};
@@ -144,6 +144,8 @@ struct SOffscreenPlatformDetail {
 
 		void																						presentTarget								(::SApplication& applicationInstance)											{ 
 	::HWND																									windowHandle								= applicationInstance.MainWindow.PlatformDetail.WindowHandle;
+	if(0 == windowHandle)
+		return;
 	::HDC																									dc											= ::GetDC(windowHandle);
 	::std::vector<::ftwl::SColorBGRA>																		& bmpOffscreen								= applicationInstance.BitmapOffsceen;
 	::drawBuffer(dc, applicationInstance.MainWindow.Size.x, applicationInstance.MainWindow.Size.y, &bmpOffscreen[0]);
@@ -156,8 +158,6 @@ static	::RECT																						minClientRect								= {100, 100, 100 + 320, 
 		void																						draw										(::SApplication& applicationInstance);
 		LRESULT WINAPI																				mainWndProc									(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
 	::SApplication																							& applicationInstance						= *g_ApplicationInstance;
-	::RECT																									finalClientRect								= {100, 100, 100 + (LONG)applicationInstance.MainWindow.Size.x, 100 + (LONG)applicationInstance.MainWindow.Size.y};
-	::AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 	static	const int																						adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
 	::SDisplayPlatformDetail																				& displayDetail								= applicationInstance.MainWindow.PlatformDetail;
@@ -254,7 +254,7 @@ static	::RECT																						minClientRect								= {100, 100, 100 + 320, 
 	applicationInstance.MainWindow.Size																	= {::BMP_SCREEN_WIDTH, ::BMP_SCREEN_HEIGHT};
 	::RECT																									finalClientRect								= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
 	::AdjustWindowRectEx(&finalClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
-	mainWindow.PlatformDetail.WindowHandle																= CreateWindowEx(0, displayDetail.WindowClassName, TEXT("Window FTW"), WS_OVERLAPPEDWINDOW
+	mainWindow.PlatformDetail.WindowHandle																= ::CreateWindowEx(0, displayDetail.WindowClassName, TEXT("Window FTW"), WS_OVERLAPPEDWINDOW
 		, finalClientRect.left
 		, finalClientRect.top
 		, finalClientRect.right		- finalClientRect.left
@@ -291,23 +291,20 @@ static	::RECT																						minClientRect								= {100, 100, 100 + 320, 
 	geometry2.A																							+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
 	geometry2.B																							+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
 	geometry2.C																							+= screenCenter + ::ftwl::SCoord2<int32_t>{(int32_t)geometry1.Radius, (int32_t)geometry1.Radius};
-	::HWND																									windowHandle								= mainWindow.PlatformDetail.WindowHandle;
-	if(windowHandle) {
-		::ftwl::SBitmapTargetBGRA																				bmpTarget									= {{&bmpOffscreen[0], mainWindow.Size.x, mainWindow.Size.y},};
-		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), geometry0);
-		::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
-		::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_GREEN		]), geometry1);
-		::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_RED			]), {geometry1.Radius - 1, geometry1.Center});
-		::ftwl::drawTriangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_YELLOW		]), geometry2);
-		::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_MAGENTA		]), ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
-		::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_WHITE		]), ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
-		::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_LIGHTGREY	]), ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
-	}
+	::ftwl::SBitmapTargetBGRA																				bmpTarget									= {{&bmpOffscreen[0], mainWindow.Size.x, mainWindow.Size.y},};
+	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), geometry0);
+	::ftwl::drawRectangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_BLUE			]), {geometry0.Offset + ::ftwl::SCoord2<int32_t>{1, 1}, geometry0.Size - ::ftwl::SCoord2<int32_t>{2, 2}});
+	::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_GREEN		]), geometry1);
+	::ftwl::drawCircle		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_RED			]), {geometry1.Radius - 1, geometry1.Center});
+	::ftwl::drawTriangle	(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_YELLOW		]), geometry2);
+	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_MAGENTA		]), ::ftwl::SLine2D<int32_t>{geometry2.A, geometry2.B});
+	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_WHITE		]), ::ftwl::SLine2D<int32_t>{geometry2.B, geometry2.C});
+	::ftwl::drawLine		(bmpTarget, ::ftwl::SColorRGBA(applicationInstance.Palette[::ftwl::ASCII_COLOR_LIGHTGREY	]), ::ftwl::SLine2D<int32_t>{geometry2.C, geometry2.A});
 }
 
-		int																						rtMain										(::SRuntimeValues& runtimeValues)													{
+		int																							rtMain										(::SRuntimeValues& runtimeValues)													{
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	::SApplication																						* applicationInstance						= new ::SApplication(runtimeValues);		// Create a new instance of our application.
+	::SApplication																							* applicationInstance						= new ::SApplication(runtimeValues);		// Create a new instance of our application.
 	if(0 == applicationInstance)
 		return -1;	// return error because we couldn't allocate the main instance of our application.
 
@@ -325,19 +322,19 @@ static	::RECT																						minClientRect								= {100, 100, 100 + 320, 
 	return 0;
 }
 
-		int																						main										()																					{
-	::SRuntimeValues																					runtimeValues								= {GetModuleHandle(NULL), 0, 0, SW_SHOW};
+		int																							main										()																					{
+	::SRuntimeValues																						runtimeValues								= {GetModuleHandle(NULL), 0, 0, SW_SHOW};
 	return ::ftwl::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;	// just redirect to our generic main() function.		
 }
 
-		int	WINAPI																				WinMain										
+		int	WINAPI																					WinMain										
 	(	_In_		::HINSTANCE		hInstance
 	,	_In_opt_	::HINSTANCE		hPrevInstance
 	,	_In_		::LPSTR			lpCmdLine
 	,	_In_		::INT			nShowCmd
 	)
 {
-	::SRuntimeValues																					runtimeValues								= 
+	::SRuntimeValues																						runtimeValues								= 
 		{	hInstance
 		,	hPrevInstance
 		,	lpCmdLine

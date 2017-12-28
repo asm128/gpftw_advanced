@@ -8,19 +8,7 @@
 namespace ftwl
 {
 	struct SBitmapTargetBGRA	{ typedef SColorBGRA	TColor; ::ftwl::grid_view<TColor>	Colors; };
-	struct SBitmapTargetBGR		{ typedef SColorBGR		TColor; ::ftwl::grid_view<TColor>	Colors; };
-	struct SBitmapTargetRGBA	{ typedef SColorRGBA	TColor; ::ftwl::grid_view<TColor>	Colors; };
-	struct SBitmapTargetFloat32	{ typedef SColorFloat	TColor; ::ftwl::grid_view<TColor>	Colors; };
 	
-	template<typename _tColor, size_t _nWidth, size_t _nHeight>
-	struct SBitmapOffscreen	{ 
-		typedef				_tColor														TColor; 
-							TColor														Colors[_nHeight][_nWidth]; 
-
-		static constexpr	const uint32_t												Width						= _nWidth;	
-		static constexpr	const uint32_t												Height						= _nHeight;
-	};
-
 	template<typename _tTarget>
 	static					::ftwl::error_t									drawRectangle								(_tTarget& bitmapTarget, const typename _tTarget::TColor& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
 		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min(rectangle.Offset.y + rectangle.Size.y, (int32_t)bitmapTarget.Colors.height	()); y < yStop; ++y)
