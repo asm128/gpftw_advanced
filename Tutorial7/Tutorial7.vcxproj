@@ -97,6 +97,7 @@
       <AdditionalIncludeDirectories>..\..\gpftw_advanced\gpftw; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>/permissive-</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,6 +116,7 @@
       <AdditionalIncludeDirectories>..\..\gpftw_advanced\gpftw; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>/permissive-</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,6 +137,7 @@
       <AdditionalIncludeDirectories>..\..\gpftw_advanced\gpftw; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>/permissive-</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,6 +160,7 @@
       <AdditionalIncludeDirectories>..\..\gpftw_advanced\gpftw; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions>/permissive-</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
