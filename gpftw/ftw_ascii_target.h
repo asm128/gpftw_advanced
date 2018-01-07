@@ -35,8 +35,8 @@ namespace ftwl
 
 	template<typename _tCoord>
 	static inline			::ftwl::error_t									drawRectangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SRectangle2D<_tCoord>& rectangle)	{
-		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)asciiTarget.Height	()); y < yStop; ++y)
-		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min((int32_t)rectangle.Offset.x + (int32_t)rectangle.Size.x, (int32_t)asciiTarget.Width		()); x < xStop; ++x) {	
+		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min((int32_t)(rectangle.Offset.y + rectangle.Size.y), (int32_t)asciiTarget.Height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min((int32_t)(rectangle.Offset.x + rectangle.Size.x), (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
 			asciiTarget.Characters	[y][x]												= value.Character;
 			asciiTarget.Colors		[y][x]												= value.Color;
 		}
