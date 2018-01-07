@@ -99,24 +99,30 @@ namespace ftwl
 		float																		error										= dx / 2.0f;
 		const int32_t																ystep										= (y1 < y2) ? 1 : -1;
 		int32_t																		y											= (int32_t)y1;
-		for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
-			if(steep) {
+		if(steep) {
+			for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
 				if(false == ::ftwl::in_range(x, 0, (int32_t)asciiTarget.Height()) || false == ::ftwl::in_range(y, 0, (int32_t)asciiTarget.Width()))
 					continue;
 				asciiTarget.Characters	[x][y]											= value.Character;
 				asciiTarget.Colors		[x][y]											= value.Color;
+				error																	-= dy;
+				if(error < 0) {
+					y																		+= ystep;
+					error																	+= dx;
+				}
 			}
-			else {
+		}
+		else {
+			for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
 				if(false == ::ftwl::in_range(y, 0, (int32_t)asciiTarget.Height()) || false == ::ftwl::in_range(x, 0, (int32_t)asciiTarget.Width()))
 					continue;
 				asciiTarget.Characters	[y][x]											= value.Character;
 				asciiTarget.Colors		[y][x]											= value.Color;
-			}
- 
-			error																-= dy;
-			if(error < 0) {
-				y																	+= ystep;
-				error																+= dx;
+				error																	-= dy;
+				if(error < 0) {
+					y																		+= ystep;
+					error																	+= dx;
+				}
 			}
 		}
 		return 0;
