@@ -33,16 +33,18 @@ namespace ftwl
 								uint16_t										Color		;
 	};
 
-	static inline			::ftwl::error_t									drawRectangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SRectangle2D<int32_t>& rectangle)	{
-		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min(rectangle.Offset.y + rectangle.Size.y, (int32_t)asciiTarget.Height	()); y < yStop; ++y)
-		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min(rectangle.Offset.x + rectangle.Size.x, (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
+	template<typename _tCoord>
+	static inline			::ftwl::error_t									drawRectangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SRectangle2D<_tCoord>& rectangle)	{
+		for(int32_t y = ::ftwl::max(0, rectangle.Offset.y), yStop = ::ftwl::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)asciiTarget.Height	()); y < yStop; ++y)
+		for(int32_t x = ::ftwl::max(0, rectangle.Offset.x), xStop = ::ftwl::min((int32_t)rectangle.Offset.x + (int32_t)rectangle.Size.x, (int32_t)asciiTarget.Width		()); x < xStop; ++x) {	
 			asciiTarget.Characters	[y][x]												= value.Character;
 			asciiTarget.Colors		[y][x]												= value.Color;
 		}
 		return 0;
 	}
 
-	static inline			::ftwl::error_t									drawCircle									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SCircle2D<int32_t>& circle)			{
+	template<typename _tCoord>
+	static inline			::ftwl::error_t									drawCircle									(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::SCircle2D<_tCoord>& circle)			{
 		for(int32_t y = ::ftwl::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::ftwl::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.Height	()); y < yStop; ++y)
 		for(int32_t x = ::ftwl::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::ftwl::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
 			::ftwl::SCoord2<int32_t>														cellCurrent									= {x, y};
@@ -56,19 +58,20 @@ namespace ftwl
 	}
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/ 
-	static inline			::ftwl::error_t									drawTriangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::STriangle2D<int32_t>& triangle)		{
+	template<typename _tCoord>
+	static inline			::ftwl::error_t									drawTriangle								(::ftwl::SASCIITarget& asciiTarget, const ::ftwl::SASCIICell& value, const ::ftwl::STriangle2D<_tCoord>& triangle)		{
 		::ftwl::SCoord2		<int32_t>												areaMin										= {::ftwl::min(::ftwl::min(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::min(::ftwl::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::ftwl::SCoord2		<int32_t>												areaMax										= {::ftwl::max(::ftwl::max(triangle.A.x, triangle.B.x), triangle.C.x), ::ftwl::max(::ftwl::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		for(int32_t y = ::ftwl::max(areaMin.y, 0), yStop = ::ftwl::min(areaMax.y, (int32_t)asciiTarget.Height	()); y < yStop; ++y)
 		for(int32_t x = ::ftwl::max(areaMin.x, 0), xStop = ::ftwl::min(areaMax.x, (int32_t)asciiTarget.Width	()); x < xStop; ++x) {	
-			const ::ftwl::SCoord2<int32_t>													cellCurrent									= {x, y};
+			const ::ftwl::SCoord2<int32_t>												cellCurrent									= {x, y};
 			// Determine barycentric coordinates
-			int																				w0											= ::ftwl::orient2d({triangle.A, triangle.B}, cellCurrent);
-			int																				w1											= ::ftwl::orient2d({triangle.B, triangle.C}, cellCurrent);
-			int																				w2											= ::ftwl::orient2d({triangle.C, triangle.A}, cellCurrent);
+			int																			w0											= ::ftwl::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int																			w1											= ::ftwl::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int																			w2											= ::ftwl::orient2d({triangle.C, triangle.A}, cellCurrent);
 			if (w0 >= 0 && w1 >= 0 && w2 >= 0) { // If p is on or inside all edges, render pixel.
-				asciiTarget.Characters	[y][x]												= value.Character;
-				asciiTarget.Colors		[y][x]												= value.Color;
+				asciiTarget.Characters	[y][x]											= value.Character;
+				asciiTarget.Colors		[y][x]											= value.Color;
 			}
 		}
 		return 0;
