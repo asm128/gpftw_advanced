@@ -132,10 +132,10 @@ static		::ftwl::error_t																	updateShips														(::game::SGame&
 		const ::game::SShip																				& shootingShip														= shipInstances[iShip];
 		if(shootingShip.Unused || 95 > (rand() % 100))
 			continue;
-		const int32_t																					shotIndex															= ::game::addShot(gameInstance, shootingShip.SelectedShot, iShip); 
-		::game::SShot																					& newShot															= shotInstances[shotIndex];
-		particleEngine.ParticleNext[newShot.ParticleIndex].Position									= particleEngine.Particle[shootingShip.ParticleIndex].Position; 
-		particleEngine.ParticleNext[newShot.ParticleIndex].Forces.Velocity.x						= -(float)gameInstance.DefinitionsShot[newShot.ShotDescription].Speed + particleEngine.Particle[shootingShip.ParticleIndex].Forces.Velocity.x; 
+		const int32_t															shotIndex															= ::game::addShot(gameInstance, shootingShip.SelectedShot, iShip); 
+		::game::SShot															& newShot															= shotInstances[shotIndex];
+		particleEngine.ParticleNext[newShot.ParticleIndex].Position				= particleEngine.Particle[shootingShip.ParticleIndex].Position; 
+		particleEngine.ParticleNext[newShot.ParticleIndex].Forces.Velocity.x	= -(float)gameInstance.DefinitionsShot[newShot.ShotDescription].Speed + particleEngine.Particle[shootingShip.ParticleIndex].Forces.Velocity.x; 
 	}
 	return 0;
 }
