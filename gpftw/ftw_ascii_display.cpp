@@ -81,10 +81,7 @@ static constexpr	const ::ftwl::SColorRGBA			g_DefaultPalette	[]							=
 					::ftwl::error_t						ftwl::asciiDisplayResize						(uint32_t width, uint32_t height)																		{ return ::initWindowsConsoleProperties(width, height, (const ::ftwl::SColorRGBA*)g_ConsoleInfo.InfoScreenBufferCurrent.ColorTable); }
 					::ftwl::error_t						ftwl::asciiDisplayPaletteReset					()																										{ return ::initWindowsConsoleProperties(g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.X, g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.Y, g_DefaultPalette); }
 					::ftwl::error_t						ftwl::asciiDisplayPaletteSet					(const ::ftwl::array_view<::ftwl::SColorRGBA>& palette)													{
-	if(palette.size() < 16) {
-		OutputDebugString(TEXT("Palette too small. 16 colors are required for the console palette to be valid."));
-		return -1;
-	}
+	ree_if(palette.size() < 16, "Palette too small. 16 colors are required for the console palette to be valid.");
 	return ::initWindowsConsoleProperties(g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.X, g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.Y, palette.begin());
 }
 
