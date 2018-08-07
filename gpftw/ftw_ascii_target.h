@@ -25,7 +25,7 @@ namespace ftwl
 							::ftwl::error_t									asciiTargetClear							(::ftwl::SASCIITarget& target, uint8_t character = ' ', uint16_t color = ASCII_COLOR_WHITE);
 
 	template<typename _tUnit>
-	static inline			::ftwl::error_t									asciiTargetCreate							(::ftwl::SASCIITarget& target, const ::ftwl::SCoord2<_tUnit>& size)						{ return ::ftwl::asciiTargetCreate(console, (uint32_t)size.x, (uint32_t)size.y); }
+	static inline			::ftwl::error_t									asciiTargetCreate							(::ftwl::SASCIITarget& target, const ::ftwl::SCoord2<_tUnit>& size)						{ return ::ftwl::asciiTargetCreate(target, (uint32_t)size.x, (uint32_t)size.y); }
 
 	// ------------------------------------------------------ 
 	struct SASCIICell {

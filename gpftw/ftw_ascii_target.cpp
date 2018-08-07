@@ -16,8 +16,8 @@
 	uint8_t																* characters									= console.Characters	.begin();
 	uint16_t															* colors										= console.Colors		.begin();
 	for(uint32_t iCell = 0; iCell < console.Colors.size(); ++iCell) {
-		console.Characters	.begin()[iCell]								= character;
-		console.Colors		.begin()[iCell]								= color;
+		characters	[iCell]												= character;
+		colors		[iCell]												= color;
 	}
 	return 0; 
 }
