@@ -23,7 +23,7 @@
     <ProjectGuid>{241505C2-2904-4BBB-9607-72E8C3B6F402}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Tutorial8</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ProjectName>Tutorial8 (window)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
