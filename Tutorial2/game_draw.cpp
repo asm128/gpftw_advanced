@@ -2,6 +2,7 @@
 #include "ftw_ascii_color.h"
 
 #include <stdio.h>
+#include <string>		// for ::std::string
 
 // This function prints the game map on the console
 void																drawASCIIMap						( const ::game::SGame& gameObject, uint32_t targetWidth, uint8_t* targetCharacterGrid, uint16_t* targetColorGrid )		{

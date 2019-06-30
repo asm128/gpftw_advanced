@@ -4,6 +4,7 @@
 #include "ftw_error.h"	// for ::ftwl::error_t
 
 #include <vector>		// for ::std::vector
+#include <string>		// for ::std::string
 
 #ifndef GAME_H_90237409238740923749023
 #define GAME_H_90237409238740923749023

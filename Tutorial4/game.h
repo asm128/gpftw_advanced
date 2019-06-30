@@ -5,6 +5,7 @@
 #include "ftw_frameinfo.h"
 
 #include <vector>		// for ::std::vector
+#include <string>	// for ::std::string
 
 #ifndef GAME_H_90237409238740923749023
 #define GAME_H_90237409238740923749023
