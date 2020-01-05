@@ -1,10 +1,11 @@
+#include "ftw_eval.h"
 #include <cmath>
 #include <cstdint>
 
 #ifndef FTW_MATH_H_0237409283740982740928374
 #define FTW_MATH_H_0237409283740982740928374
 
-namespace ftwl 
+namespace ftwl
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	static					const double			math_pi				= 3.1415926535897932384626433832795;	// Pi
@@ -13,16 +14,16 @@ namespace ftwl
 	static					const double			math_pi_180			= math_pi / 180.0;						// Pi/180.0
 	static constexpr		const double			math_epsilon		= 0.00001;
 
-	template<typename _tNumber>	
+	template<typename _tNumber>
 	static inline constexpr	double					sqrt_safe			(_tNumber _valueSquared)													noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
-	
-	template<typename _tNumber>	
+
+	template<typename _tNumber>
 	static inline constexpr	_tNumber				clamp				(const _tNumber _value, const _tNumber _min, const _tNumber _max)			noexcept	{ return ::ftwl::min(_max, ::ftwl::max(_min, _value));	}
 
-	template<typename _tValue>	
+	template<typename _tValue>
 	static inline constexpr	bool					in_range			(const _tValue& value, const _tValue& minValue, const _tValue& maxValue)				{ return value < maxValue && value > minValue; }
 
-	struct					SPairSinCos				{ double Sin, Cos; };	
+	struct					SPairSinCos				{ double Sin, Cos; };
 
 	static inline			SPairSinCos				getSinCos			(double theta)																noexcept	{ return {sin(theta), cos(theta)};						}
 #pragma pack(pop)
